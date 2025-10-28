@@ -23,7 +23,7 @@
   }
 
   .primary-cta:hover {
-    animation: buttonBounce 0.6s ease;
+    animation: textFlip 0.6s ease;
   }
 
   .nav-link {
@@ -35,6 +35,36 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Header CTA with rotating gradient border */
+  .header-cta {
+    @apply relative inline-block px-6 py-3 text-white font-medium rounded-lg cursor-pointer;
+    background: black;
+    z-index: 1;
+  }
+
+  .header-cta::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 0.5rem;
+    padding: 2px;
+    background: conic-gradient(from 0deg, #491AE9, #D414E5, #FC03A1, #FF7715, #491AE9);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: rotateBorder 3s linear infinite;
+    z-index: -1;
+  }
+
+  .header-cta:hover {
+    animation: textFlip 0.6s ease;
   }
 }
 
@@ -152,19 +182,26 @@
   }
 }
 
-/* Button Bounce Animation */
-@keyframes buttonBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-8px);
+/* Text Flip Animation */
+@keyframes textFlip {
+  0% {
+    transform: rotateX(0deg);
   }
   50% {
-    transform: translateY(0);
+    transform: rotateX(180deg);
   }
-  75% {
-    transform: translateY(-4px);
+  100% {
+    transform: rotateX(360deg);
+  }
+}
+
+/* Rotating Border Animation */
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
