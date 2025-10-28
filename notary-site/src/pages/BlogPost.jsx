@@ -1,16 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import TableOfContents from '../components/TableOfContents';
 
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     fetchPost();
   }, [slug]);
+
+  // Add IDs to H2 elements after content is rendered
+  useEffect(() => {
+    if (post && contentRef.current) {
+      const h2Elements = contentRef.current.querySelectorAll('h2');
+      h2Elements.forEach((h2, index) => {
+        h2.id = `heading-${index}`;
+      });
+    }
+  }, [post]);
 
   const fetchPost = async () => {
     try {
@@ -172,27 +184,61 @@ const BlogPost = () => {
         </section>
       )}
 
-      {/* Content */}
+      {/* Content with Table of Contents */}
       <article className="px-[30px] pb-20">
-        <div className="max-w-[800px] mx-auto">
-          <div
-            className="prose prose-lg prose-gray max-w-none
-              prose-headings:font-bold prose-headings:text-gray-900
-              prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
-              prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-              prose-a:text-black prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-gray-900 prose-strong:font-bold
-              prose-ul:my-6 prose-ol:my-6
-              prose-li:text-gray-700 prose-li:my-2
-              prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic
-              prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-xl
-              prose-img:rounded-xl prose-img:shadow-lg
-              animate-fade-in animation-delay-600"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+        <div className="max-w-[1400px] mx-auto">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+            {/* Main Content */}
+            <div className="lg:col-span-8">
+              <div
+                ref={contentRef}
+                className="prose prose-lg prose-gray max-w-none
+                  prose-headings:font-bold prose-headings:text-gray-900
+                  prose-h1:text-4xl prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h3:text-2xl
+                  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
+                  prose-a:text-black prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-gray-900 prose-strong:font-bold
+                  prose-ul:my-6 prose-ol:my-6
+                  prose-li:text-gray-700 prose-li:my-2
+                  prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic
+                  prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
+                  prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-xl
+                  prose-img:rounded-xl prose-img:shadow-lg
+                  animate-fade-in animation-delay-600"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            </div>
+
+            {/* Table of Contents */}
+            <div className="lg:col-span-4">
+              {post.content && <TableOfContents content={post.content} />}
+            </div>
+          </div>
         </div>
       </article>
+
+      {/* CTA Section */}
+      <section className="px-[30px] pb-20">
+        <div className="max-w-[800px] mx-auto">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12 text-center border border-gray-200 shadow-lg">
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Ready to Get Started?
+            </h3>
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+              Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
+            </p>
+            <a
+              href="#"
+              className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300"
+            >
+              <span className="btn-text inline-block">Book an appointment</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* Author Bio */}
       {post.author_bio && (
