@@ -15,15 +15,35 @@ export const useScrollAnimation = () => {
       });
     }, observerOptions);
 
-    // Observe all elements with scroll animation classes
-    const animatedElements = document.querySelectorAll(
-      '.scroll-fade-in, .scroll-slide-up, .scroll-slide-left, .scroll-slide-right'
-    );
+    const observeAnimatedElements = () => {
+      const animatedElements = document.querySelectorAll(
+        '.scroll-fade-in, .scroll-slide-up, .scroll-slide-left, .scroll-slide-right'
+      );
 
-    animatedElements.forEach((el) => observer.observe(el));
+      animatedElements.forEach((el) => {
+        if (!el.dataset.scrollObserved) {
+          observer.observe(el);
+          el.dataset.scrollObserved = 'true';
+        }
+      });
+    };
+
+    // Observe existing animated elements
+    observeAnimatedElements();
+
+    // Watch for dynamically added animated elements (e.g., after data fetches)
+    const mutationObserver = new MutationObserver(() => {
+      observeAnimatedElements();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
     return () => {
-      animatedElements.forEach((el) => observer.unobserve(el));
+      mutationObserver.disconnect();
+      observer.disconnect();
     };
   }, []);
 };
