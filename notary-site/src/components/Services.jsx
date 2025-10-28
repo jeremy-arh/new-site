@@ -45,18 +45,18 @@ const Services = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-animation">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <a
               key={index}
               href={service.link}
-              className="group block bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 hover:border-purple-300 transform hover:-translate-y-2 hover:scale-105"
+              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 animate-slide-up"
               style={{
-                animation: `staggerFadeIn 0.5s ease-out ${index * 0.1}s both`
+                animationDelay: `${index * 0.1}s`
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                   <img
                     src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b6196784dbd395a2dfe_iconoir--badge-check%202.svg"
                     alt="Icon"
@@ -64,7 +64,7 @@ const Services = () => {
                     height="40"
                   />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 group-hover:gradient-text transition-all duration-300">{service.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900">{service.title}</h3>
               </div>
 
               <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed">{service.description}</p>
@@ -79,7 +79,7 @@ const Services = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500">From</span>
                   {service.price && (
-                    <span className="text-lg font-bold gradient-text">{service.price}</span>
+                    <span className="text-lg font-bold text-gray-900">{service.price}</span>
                   )}
                 </div>
               </div>
