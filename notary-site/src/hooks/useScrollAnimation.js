@@ -4,10 +4,10 @@ export const useScrollAnimation = () => {
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      rootMargin: '0px 0px -100px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
@@ -22,7 +22,7 @@ export const useScrollAnimation = () => {
 
       animatedElements.forEach((el) => {
         if (!el.dataset.scrollObserved) {
-          observer.observe(el);
+          intersectionObserver.observe(el);
           el.dataset.scrollObserved = 'true';
         }
       });
@@ -42,8 +42,8 @@ export const useScrollAnimation = () => {
     });
 
     return () => {
+      intersectionObserver.disconnect();
       mutationObserver.disconnect();
-      observer.disconnect();
     };
   }, []);
 };
