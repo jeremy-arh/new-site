@@ -5,8 +5,11 @@ import HowItWorks from './components/HowItWorks'
 import Testimonial from './components/Testimonial'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
+import { useScrollAnimation } from './hooks/useScrollAnimation'
 
 function App() {
+  useScrollAnimation();
+
   return (
     <div className="min-h-screen">
       <Navbar />

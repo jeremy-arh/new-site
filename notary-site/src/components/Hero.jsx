@@ -16,25 +16,23 @@ const Hero = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight typing-text-slow">
               <strong>
-                Notarize and Apostille <br />
-                Your Documents <br />
-                100% Online
+                Notarize and Apostille Your Documents 100% Online
               </strong>
             </h1>
 
-            <p className="text-lg sm:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl">
-              Secure, legally valid, recognized internationally through the Hague Convention<br />
+            <p className="text-lg sm:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-1000">
+              Secure, legally valid, recognized internationally through the Hague Convention
               from anywhere, in just a few minutes.
             </p>
 
-            <a href="#" className="primary-cta text-lg inline-block mb-12 bg-white text-black hover:bg-gray-100">
+            <a href="#" className="primary-cta text-lg inline-block mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-1000">
               <span className="btn-text inline-block">Book an appointement</span>
             </a>
 
             {/* Features */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 mt-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 mt-8 animate-fade-in animation-delay-1000">
               <div className="flex items-center gap-3">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"

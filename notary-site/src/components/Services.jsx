@@ -35,11 +35,11 @@ const Services = () => {
   return (
     <section id="servive" className="py-20 px-[30px] bg-white overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-slide-up">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             Our services
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 animate-slide-up animation-delay-100">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
             All the Notarial Services You Need.<br />
             <span className="gradient-text">In One Place</span>
           </h2>
@@ -50,10 +50,7 @@ const Services = () => {
             <a
               key={index}
               href={service.link}
-              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 animate-slide-up"
-              style={{
-                animationDelay: `${index * 0.1}s`
-              }}
+              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up"
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
