@@ -1,9 +1,9 @@
 const Hero = () => {
   return (
-    <section className="px-5 pt-5">
+    <section className="px-5 pt-24">
       {/* Hero Block with Background Image - 100vh */}
       <div
-        className="relative rounded-3xl overflow-hidden h-[calc(100vh-40px)] flex items-center"
+        className="relative rounded-3xl overflow-hidden h-[calc(100vh-120px)] flex items-center"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop)',
           backgroundSize: 'cover',
