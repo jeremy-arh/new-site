@@ -5,6 +5,7 @@ import MobileCTA from './components/MobileCTA'
 import Home from './pages/Home'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
+import ServiceDetail from './pages/ServiceDetail'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/services/:serviceId" element={<ServiceDetail />} />
         </Routes>
         <Footer />
         <MobileCTA />
