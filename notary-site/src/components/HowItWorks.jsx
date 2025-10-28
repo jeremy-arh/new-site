@@ -3,28 +3,28 @@ import { Icon } from '@iconify/react';
 const HowItWorks = () => {
   const steps = [
     {
-      icon: 'mdi:cloud-upload-outline',
+      icon: 'f7:doc',
       title: 'Upload your document',
       subtitle: '(secure upload)',
       description: 'Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.',
       image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5efbb1d5400424393_Group%2010.svg'
     },
     {
-      icon: 'mdi:calendar-clock',
+      icon: 'solar:calendar-broken',
       title: 'Book an appointment',
       subtitle: '',
       description: 'Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.',
       image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5fd4bae6a5650e0af_Group%2012.svg'
     },
     {
-      icon: 'mdi:shield-check-outline',
+      icon: 'icon-park-outline:camera-two',
       title: 'Verify & notarize online',
       subtitle: 'with an EU notary',
       description: 'During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is immediately uploaded to your secure dashboard.',
       image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5bc7e2c51e4e7fc90_Group%2014.svg'
     },
     {
-      icon: 'mdi:file-document-check-outline',
+      icon: 'f7:doc-checkmark',
       title: 'Receive your document',
       subtitle: 'certified, apostilled or notarized',
       description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
@@ -65,7 +65,7 @@ const HowItWorks = () => {
                   <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6 flex flex-col justify-between h-full`}>
                     <div>
                       <div className="flex items-start gap-4 mb-6">
-                        <Icon icon={step.icon} className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                        <Icon icon={step.icon} className="w-10 h-10 text-gray-400 flex-shrink-0" />
                         <div>
                           <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                             {step.title}
