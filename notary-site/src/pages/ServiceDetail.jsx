@@ -126,26 +126,26 @@ const ServiceDetail = () => {
       {/* What's Included Section */}
       <section className="py-20 px-[30px] bg-white">
         <div className="max-w-[1300px] mx-auto">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
             What's <span className="gradient-text">Included</span>
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 scroll-fade-in">
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
               <h3 className="font-bold text-gray-900 mb-2 text-lg">Secure Online Process</h3>
               <p className="text-gray-600 text-sm">Complete the entire process online through a secure encrypted platform</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 scroll-fade-in">
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
               <h3 className="font-bold text-gray-900 mb-2 text-lg">Licensed Notary</h3>
               <p className="text-gray-600 text-sm">Work with experienced, licensed notaries who guide you through every step</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 scroll-fade-in">
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
               <h3 className="font-bold text-gray-900 mb-2 text-lg">Internationally Recognized</h3>
               <p className="text-gray-600 text-sm">Documents are valid internationally through the Hague Convention</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 scroll-fade-in">
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
               <h3 className="font-bold text-gray-900 mb-2 text-lg">Fast Turnaround</h3>
               <p className="text-gray-600 text-sm">Receive your notarized documents within minutes of completion</p>
