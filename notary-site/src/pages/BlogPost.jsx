@@ -176,19 +176,7 @@ const BlogPost = () => {
       <article className="px-[30px] pb-20">
         <div className="max-w-[800px] mx-auto">
           <div
-            className="prose prose-lg prose-gray max-w-none
-              prose-headings:font-bold prose-headings:text-gray-900
-              prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
-              prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-              prose-a:text-black prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-gray-900 prose-strong:font-bold
-              prose-ul:my-6 prose-ol:my-6
-              prose-li:text-gray-700 prose-li:my-2
-              prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic
-              prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-xl
-              prose-img:rounded-xl prose-img:shadow-lg
-              animate-fade-in animation-delay-600"
+            className="blog-content animate-fade-in animation-delay-600"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>
