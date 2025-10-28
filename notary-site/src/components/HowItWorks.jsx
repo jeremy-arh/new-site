@@ -1,3 +1,5 @@
+import { Icon } from '@iconify/react';
+
 const HowItWorks = () => {
   return (
     <section className="py-32 px-[30px] bg-gray-50 relative overflow-hidden">
@@ -35,66 +37,78 @@ const HowItWorks = () => {
           {/* Right column - Nested stacking cards */}
           <div className="lg:col-span-7">
             {/* Card 1 - Transparent background */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-gray-200 animate-slide-up animation-delay-200">
-              <div className="mb-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Upload your document (secure upload)</h3>
-                <p className="text-gray-700 text-lg leading-relaxed">
-                  Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.
-                </p>
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-gray-200 animate-slide-up animation-delay-200 min-h-[420px] flex flex-col">
+              <div className="flex items-start gap-4 mb-6">
+                <Icon icon="mdi:cloud-upload-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Upload your document (secure upload)</h3>
+                  <p className="text-gray-700 text-lg leading-relaxed">
+                    Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center">
+              <div className="flex justify-center items-center flex-1">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5efbb1d5400424393_Group%2010.svg"
                   alt="Upload document"
-                  className="w-full max-w-[300px] h-auto"
+                  className="w-full max-w-[400px] h-auto"
                 />
               </div>
 
               {/* Card 2 - Nested inside Card 1 */}
-              <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-400">
-                <div className="mb-6">
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Book an appointment</h3>
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.
-                  </p>
+              <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-400 min-h-[420px] flex flex-col">
+                <div className="flex items-start gap-4 mb-6">
+                  <Icon icon="mdi:calendar-clock" className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Book an appointment</h3>
+                    <p className="text-gray-700 text-lg leading-relaxed">
+                      Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.
+                    </p>
+                  </div>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center flex-1">
                   <img
                     src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5fd4bae6a5650e0af_Group%2012.svg"
                     alt="Book appointment"
-                    className="w-full max-w-[300px] h-auto"
+                    className="w-full max-w-[400px] h-auto"
                   />
                 </div>
 
                 {/* Card 3 - Nested inside Card 2 */}
-                <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-600">
-                  <div className="mb-6">
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Verify & notarize online with an EU notary</h3>
-                    <p className="text-gray-700 text-lg leading-relaxed">
-                      During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is <strong>immediately uploaded to your secure dashboard</strong>.
-                    </p>
+                <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-600 min-h-[420px] flex flex-col">
+                  <div className="flex items-start gap-4 mb-6">
+                    <Icon icon="mdi:shield-check-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Verify & notarize online with an EU notary</h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">
+                        During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is <strong>immediately uploaded to your secure dashboard</strong>.
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center flex-1">
                     <img
                       src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5bc7e2c51e4e7fc90_Group%2014.svg"
                       alt="Verify and notarize"
-                      className="w-full max-w-[300px] h-auto"
+                      className="w-full max-w-[400px] h-auto"
                     />
                   </div>
 
                   {/* Card 4 - Nested inside Card 3 */}
-                  <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-800">
-                    <div className="mb-6">
-                      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Receive your document</h3>
-                      <p className="text-gray-700 text-lg leading-relaxed">
-                        If your document needs to be used internationally, an apostille is added <strong>in accordance with the Hague Convention of 5 October 1961</strong>, confirming its global legal validity.
-                      </p>
+                  <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-800 min-h-[420px] flex flex-col">
+                    <div className="flex items-start gap-4 mb-6">
+                      <Icon icon="mdi:file-document-check-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                      <div className="flex-1">
+                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Receive your document</h3>
+                        <p className="text-gray-700 text-lg leading-relaxed">
+                          If your document needs to be used internationally, an apostille is added <strong>in accordance with the Hague Convention of 5 October 1961</strong>, confirming its global legal validity.
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center flex-1">
                       <img
                         src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5635f02fe66ef88503_Group%2016.svg"
                         alt="Receive document"
-                        className="w-full max-w-[300px] h-auto"
+                        className="w-full max-w-[400px] h-auto"
                       />
                     </div>
                   </div>
