@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import TableOfContents from '../components/TableOfContents';
@@ -8,10 +8,17 @@ const BlogPost = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasHeadings, setHasHeadings] = useState(false);
   const contentRef = useRef(null);
 
   useEffect(() => {
     fetchPost();
+  }, [slug]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }, [slug]);
 
   // Add IDs to H2 elements after content is rendered
@@ -19,10 +26,39 @@ const BlogPost = () => {
     if (post && contentRef.current) {
       const h2Elements = contentRef.current.querySelectorAll('h2');
       h2Elements.forEach((h2, index) => {
-        h2.id = `heading-${index}`;
+        if (!h2.id) {
+          h2.id = `heading-${index}`;
+        }
+        h2.classList.add('scroll-fade-in');
       });
     }
   }, [post]);
+
+  useEffect(() => {
+    if (!post?.content || typeof DOMParser === 'undefined') {
+      setHasHeadings(false);
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.content, 'text/html');
+    const h2Elements = doc.querySelectorAll('h2');
+
+    setHasHeadings(h2Elements.length > 0);
+  }, [post]);
+
+  useEffect(() => {
+    if (!post?.title || typeof document === 'undefined') {
+      return undefined;
+    }
+
+    const previousTitle = document.title;
+    document.title = `${post.title} | Blog`;
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [post?.title]);
 
   const fetchPost = async () => {
     try {
@@ -52,6 +88,24 @@ const BlogPost = () => {
       setLoading(false);
     }
   };
+
+  const computedReadTime = useMemo(() => {
+    if (!post) return null;
+    if (post.read_time_minutes) return post.read_time_minutes;
+
+    if (!post.content || typeof DOMParser === 'undefined') {
+      return null;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.content, 'text/html');
+    const textContent = doc.body?.textContent || '';
+    const words = textContent.trim().split(/\s+/).filter(Boolean);
+
+    if (words.length === 0) return null;
+
+    return Math.max(1, Math.round(words.length / 200));
+  }, [post]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -140,10 +194,10 @@ const BlogPost = () => {
             </div>
             <div className="flex items-center gap-4 text-sm">
               <span>{formatDate(post.published_at)}</span>
-              {post.read_time_minutes && (
+              {computedReadTime && (
                 <>
                   <span>•</span>
-                  <span>{post.read_time_minutes} min read</span>
+                  <span>{computedReadTime} min read</span>
                 </>
               )}
               {post.views_count > 0 && (
@@ -199,7 +253,7 @@ const BlogPost = () => {
 
             {/* Table of Contents */}
             <div className="lg:col-span-4">
-              {post.content && <TableOfContents content={post.content} />}
+              {hasHeadings && post.content && <TableOfContents content={post.content} />}
             </div>
           </div>
         </div>
