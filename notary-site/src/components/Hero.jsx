@@ -1,20 +1,20 @@
 const Hero = () => {
   return (
-    <section className="pt-20 px-5 pb-12">
-      {/* Hero Block with Background Image */}
+    <section className="px-5 pt-5">
+      {/* Hero Block with Background Image - 100vh */}
       <div
-        className="relative rounded-3xl overflow-hidden min-h-[600px] flex items-center"
+        className="relative rounded-3xl overflow-hidden h-[calc(100vh-40px)] flex items-center"
         style={{
-          backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop)',
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
       >
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/20"></div>
+        {/* Dark Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/60"></div>
 
         {/* Content Container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
               <strong>
