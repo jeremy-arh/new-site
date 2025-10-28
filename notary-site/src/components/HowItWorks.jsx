@@ -65,13 +65,13 @@ const HowItWorks = () => {
                   <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6 flex flex-col justify-between h-full`}>
                     <div>
                       <div className="flex items-start gap-4 mb-6">
-                        <Icon icon={step.icon} className="w-10 h-10 text-gray-400 flex-shrink-0" />
+                        <Icon icon={step.icon} className="w-10 h-10 text-black flex-shrink-0" />
                         <div>
-                          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
                             {step.title}
                           </h3>
                           {step.subtitle && (
-                            <p className="text-gray-600 text-lg mt-1">{step.subtitle}</p>
+                            <p className="text-gray-600 text-base mt-1">{step.subtitle}</p>
                           )}
                         </div>
                       </div>
