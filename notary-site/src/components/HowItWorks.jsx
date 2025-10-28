@@ -27,8 +27,8 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 px-[30px] bg-gray-50">
+      <div className="max-w-[1300px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left Column - Sticky */}
           <div className="lg:col-span-5">
