@@ -7,10 +7,28 @@ const BlogPost = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showStickyCTA, setShowStickyCTA] = useState(false);
 
   useEffect(() => {
     fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isMobile = window.innerWidth < 640;
+      setShowStickyCTA(isMobile && window.scrollY > 80);
+    };
+
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   const fetchPost = async () => {
     try {
@@ -72,7 +90,7 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-24 sm:pb-0">
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-[30px] bg-gray-50">
         <div className="max-w-[900px] mx-auto">
@@ -162,7 +180,7 @@ const BlogPost = () => {
       {/* Cover Image */}
       {post.cover_image_url && (
         <section className="px-[30px] -mt-8 mb-12 animate-fade-in animation-delay-500">
-          <div className="max-w-[1100px] mx-auto">
+          <div className="max-w-[780px] mx-auto">
             <img
               src={post.cover_image_url}
               alt={post.cover_image_alt || post.title}
@@ -173,22 +191,10 @@ const BlogPost = () => {
       )}
 
       {/* Content */}
-      <article className="px-[30px] pb-20">
-        <div className="max-w-[800px] mx-auto">
+      <article className="px-[30px] pb-32 sm:pb-20">
+        <div className="max-w-[780px] mx-auto">
           <div
-            className="prose prose-lg prose-gray max-w-none
-              prose-headings:font-bold prose-headings:text-gray-900
-              prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
-              prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-              prose-a:text-black prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-gray-900 prose-strong:font-bold
-              prose-ul:my-6 prose-ol:my-6
-              prose-li:text-gray-700 prose-li:my-2
-              prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic
-              prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-xl
-              prose-img:rounded-xl prose-img:shadow-lg
-              animate-fade-in animation-delay-600"
+            className="blog-content animate-fade-in animation-delay-600"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>
@@ -196,8 +202,8 @@ const BlogPost = () => {
 
       {/* Author Bio */}
       {post.author_bio && (
-        <section className="px-[30px] pb-20">
-          <div className="max-w-[800px] mx-auto">
+        <section className="px-[30px] pb-32 sm:pb-20">
+          <div className="max-w-[780px] mx-auto">
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-4">About the Author</h3>
               <div className="flex items-start gap-4">
@@ -233,8 +239,8 @@ const BlogPost = () => {
       )}
 
       {/* Back to Blog */}
-      <section className="px-[30px] pb-20">
-        <div className="max-w-[800px] mx-auto text-center">
+      <section className="px-[30px] pb-32 sm:pb-20">
+        <div className="max-w-[780px] mx-auto text-center">
           <Link to="/blog" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3">
             <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -243,6 +249,11 @@ const BlogPost = () => {
           </Link>
         </div>
       </section>
+      {showStickyCTA && (
+        <a href="#" className="mobile-sticky-cta">
+          Book an appointement
+        </a>
+      )}
     </div>
   );
 };
