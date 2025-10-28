@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'tasa': ['"TASA Orbiter"', 'sans-serif'],
+        'sans': ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        'geist': ['Geist', 'sans-serif'],
       },
       colors: {
         'primary': '#1a1a1a',
