@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  @font-face {
+    font-family: 'TASA Orbiter';
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    font-weight: 400 800;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'TASA Orbiter', 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .primary-cta {
+    @apply inline-block px-6 py-3 bg-black text-white font-medium rounded-lg transition-all duration-300 hover:bg-gray-800 cursor-pointer;
+  }
+
+  .nav-link {
+    @apply text-gray-700 hover:text-black transition-colors duration-200 font-medium;
+  }
+}
