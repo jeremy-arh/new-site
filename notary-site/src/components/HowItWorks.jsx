@@ -1,121 +1,106 @@
 import { Icon } from '@iconify/react';
 
 const HowItWorks = () => {
+  const steps = [
+    {
+      icon: 'mdi:cloud-upload-outline',
+      title: 'Upload your document',
+      subtitle: '(secure upload)',
+      description: 'Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.',
+      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5efbb1d5400424393_Group%2010.svg'
+    },
+    {
+      icon: 'mdi:calendar-clock',
+      title: 'Book an appointment',
+      subtitle: '',
+      description: 'Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.',
+      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5fd4bae6a5650e0af_Group%2012.svg'
+    },
+    {
+      icon: 'mdi:shield-check-outline',
+      title: 'Verify & notarize online',
+      subtitle: 'with an EU notary',
+      description: 'During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is immediately uploaded to your secure dashboard.',
+      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5bc7e2c51e4e7fc90_Group%2014.svg'
+    },
+    {
+      icon: 'mdi:file-document-check-outline',
+      title: 'Receive your document',
+      subtitle: 'certified, apostilled or notarized',
+      description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
+      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5635f02fe66ef88503_Group%2016.svg'
+    }
+  ];
+
   return (
-    <section className="py-32 px-[30px] bg-gray-50 relative overflow-hidden">
+    <section className="py-32 px-[30px] bg-gray-50 relative">
       <div className="max-w-[1300px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Left column - Title and steps list */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-32">
-              <div className="mb-12 animate-fade-in">
-                <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-slide-up">
-                  How it work ?
-                </div>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 animate-slide-up animation-delay-100">
-                  Notarization <span className="gradient-text">Made Easy</span>
-                </h2>
-              </div>
-
-              <div className="space-y-6">
-                <div className="animate-slide-up animation-delay-200">
-                  <p className="text-lg font-semibold text-gray-900">1- Upload your document (secure upload)</p>
-                </div>
-                <div className="animate-slide-up animation-delay-300">
-                  <p className="text-lg font-semibold text-gray-900">2- Book an appointment</p>
-                </div>
-                <div className="animate-slide-up animation-delay-400">
-                  <p className="text-lg font-semibold text-gray-900">3- Verify & notarize online with an EU notary</p>
-                </div>
-                <div className="animate-slide-up animation-delay-500">
-                  <p className="text-lg font-semibold text-gray-900">4- Receive your certified, apostilled, or notarized document</p>
-                </div>
-              </div>
-            </div>
+        {/* Header */}
+        <div className="text-center mb-20 animate-fade-in">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-slide-up">
+            How it work ?
           </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 animate-slide-up animation-delay-100">
+            Notarization <span className="gradient-text">Made Easy</span>
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-slide-up animation-delay-200">
+            Four simple steps to get your documents notarized online
+          </p>
+        </div>
 
-          {/* Right column - Nested stacking cards */}
-          <div className="lg:col-span-7">
-            {/* Card 1 - Transparent background */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-gray-200 animate-slide-up animation-delay-200 min-h-[420px] flex flex-col">
-              <div className="flex items-start gap-4 mb-6">
-                <Icon icon="mdi:cloud-upload-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Upload your document (secure upload)</h3>
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.
-                  </p>
-                </div>
-              </div>
-              <div className="flex justify-center items-center flex-1">
-                <img
-                  src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5efbb1d5400424393_Group%2010.svg"
-                  alt="Upload document"
-                  className="w-full max-w-[400px] h-auto"
-                />
-              </div>
+        {/* Stacking Cards */}
+        <div className="space-y-8">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className="sticky transition-all duration-500"
+              style={{
+                top: `${100 + index * 30}px`,
+                animationDelay: `${index * 0.2}s`
+              }}
+            >
+              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 hover:shadow-3xl transition-shadow duration-300 animate-slide-up min-h-[500px] flex flex-col">
+                <div className="grid md:grid-cols-2 gap-8 items-start flex-1">
+                  {/* Content */}
+                  <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6 flex flex-col justify-between h-full`}>
+                    <div>
+                      <div className="flex items-start gap-4 mb-6">
+                        <Icon icon={step.icon} className="w-12 h-12 text-gray-400 flex-shrink-0" />
+                        <div>
+                          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                            {step.title}
+                          </h3>
+                          {step.subtitle && (
+                            <p className="text-gray-600 text-lg mt-1">{step.subtitle}</p>
+                          )}
+                        </div>
+                      </div>
 
-              {/* Card 2 - Nested inside Card 1 */}
-              <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-400 min-h-[420px] flex flex-col">
-                <div className="flex items-start gap-4 mb-6">
-                  <Icon icon="mdi:calendar-clock" className="w-12 h-12 text-gray-400 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Book an appointment</h3>
-                    <p className="text-gray-700 text-lg leading-relaxed">
-                      Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex justify-center items-center flex-1">
-                  <img
-                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5fd4bae6a5650e0af_Group%2012.svg"
-                    alt="Book appointment"
-                    className="w-full max-w-[400px] h-auto"
-                  />
-                </div>
-
-                {/* Card 3 - Nested inside Card 2 */}
-                <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-600 min-h-[420px] flex flex-col">
-                  <div className="flex items-start gap-4 mb-6">
-                    <Icon icon="mdi:shield-check-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
-                    <div className="flex-1">
-                      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Verify & notarize online with an EU notary</h3>
                       <p className="text-gray-700 text-lg leading-relaxed">
-                        During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is <strong>immediately uploaded to your secure dashboard</strong>.
+                        {step.description}
                       </p>
                     </div>
-                  </div>
-                  <div className="flex justify-center items-center flex-1">
-                    <img
-                      src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5bc7e2c51e4e7fc90_Group%2014.svg"
-                      alt="Verify and notarize"
-                      className="w-full max-w-[400px] h-auto"
-                    />
+
+                    <div className="flex items-center gap-3 pt-4">
+                      <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+                      <span className="text-gray-500 text-sm font-medium">
+                        Step {index + 1} of {steps.length}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Card 4 - Nested inside Card 3 */}
-                  <div className="mt-8 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-200 animate-slide-up animation-delay-800 min-h-[420px] flex flex-col">
-                    <div className="flex items-start gap-4 mb-6">
-                      <Icon icon="mdi:file-document-check-outline" className="w-12 h-12 text-gray-400 flex-shrink-0" />
-                      <div className="flex-1">
-                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Receive your document</h3>
-                        <p className="text-gray-700 text-lg leading-relaxed">
-                          If your document needs to be used internationally, an apostille is added <strong>in accordance with the Hague Convention of 5 October 1961</strong>, confirming its global legal validity.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex justify-center items-center flex-1">
-                      <img
-                        src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5635f02fe66ef88503_Group%2016.svg"
-                        alt="Receive document"
-                        className="w-full max-w-[400px] h-auto"
-                      />
-                    </div>
+                  {/* Image */}
+                  <div className={`${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} flex items-center justify-center h-full`}>
+                    <img
+                      src={step.image}
+                      alt={`Step ${index + 1}`}
+                      className="w-full max-w-[450px] h-auto transform hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
         {/* Bottom CTA */}
