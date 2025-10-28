@@ -1,9 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-
 const HowItWorks = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const sectionRef = useRef(null);
-
   const steps = [
     {
       number: 1,
@@ -35,30 +30,8 @@ const HowItWorks = () => {
     }
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-
-      const section = sectionRef.current;
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-
-      if (scrollPosition > sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        const progress = (scrollPosition - sectionTop) / sectionHeight;
-        const newActiveStep = Math.min(Math.floor(progress * steps.length), steps.length - 1);
-        setActiveStep(newActiveStep);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [steps.length]);
-
   return (
-    <section ref={sectionRef} className="py-32 px-[30px] bg-gray-50 relative" style={{ minHeight: '400vh' }}>
+    <section className="py-32 px-[30px] bg-gray-50 relative">
       <div className="max-w-[1300px] mx-auto">
         {/* Header */}
         <div className="text-center mb-20 animate-fade-in">
@@ -73,74 +46,63 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        {/* Stacking Cards Container */}
-        <div className="relative">
-          <div className="sticky top-32 h-[600px]">
-            {steps.map((step, index) => {
-              const isActive = index === activeStep;
-              const isPassed = index < activeStep;
-
-              return (
-                <div
-                  key={step.number}
-                  className="absolute inset-0 transition-all duration-700 ease-out"
-                  style={{
-                    transform: isPassed
-                      ? `translateY(-${(activeStep - index) * 100}%) scale(0.95)`
-                      : `translateY(${(index - activeStep) * 20}px) scale(${1 - (index - activeStep) * 0.05})`,
-                    opacity: isPassed ? 0 : 1,
-                    zIndex: steps.length - index,
-                    pointerEvents: isActive ? 'auto' : 'none'
-                  }}
-                >
-                  <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 h-full overflow-hidden">
-                    <div className="grid md:grid-cols-2 gap-12 items-center h-full">
-                      {/* Content */}
-                      <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6`}>
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
-                            {step.number}
-                          </div>
-                          <div>
-                            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-                              {step.title}
-                            </h3>
-                            {step.subtitle && (
-                              <p className="text-gray-600 text-lg mt-1">{step.subtitle}</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <p className="text-gray-700 text-lg leading-relaxed">
-                          {step.description}
-                        </p>
-
-                        <div className="flex items-center gap-3 pt-4">
-                          <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-                          <span className="text-gray-500 text-sm font-medium">
-                            Step {step.number} of {steps.length}
-                          </span>
-                        </div>
+        {/* Stacking Cards */}
+        <div className="space-y-8">
+          {steps.map((step, index) => (
+            <div
+              key={step.number}
+              className="sticky transition-all duration-500"
+              style={{
+                top: `${100 + index * 30}px`,
+                animationDelay: `${index * 0.2}s`
+              }}
+            >
+              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 hover:shadow-3xl transition-shadow duration-300 animate-slide-up">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  {/* Content */}
+                  <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6`}>
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+                        {step.number}
                       </div>
+                      <div>
+                        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                          {step.title}
+                        </h3>
+                        {step.subtitle && (
+                          <p className="text-gray-600 text-lg mt-1">{step.subtitle}</p>
+                        )}
+                      </div>
+                    </div>
 
-                      {/* Image */}
-                      <div className={`${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} flex justify-center`}>
-                        <div className="relative">
-                          <div className="bg-gray-100 rounded-3xl p-12">
-                            <img
-                              src={step.image}
-                              alt={`Step ${step.number}`}
-                              className="w-full h-auto max-w-[300px] mx-auto transform hover:scale-110 transition-transform duration-500"
-                            />
-                          </div>
-                        </div>
+                    <p className="text-gray-700 text-lg leading-relaxed">
+                      {step.description}
+                    </p>
+
+                    <div className="flex items-center gap-3 pt-4">
+                      <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+                      <span className="text-gray-500 text-sm font-medium">
+                        Step {step.number} of {steps.length}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Image */}
+                  <div className={`${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} flex justify-center`}>
+                    <div className="relative">
+                      <div className="bg-gray-100 rounded-3xl p-12">
+                        <img
+                          src={step.image}
+                          alt={`Step ${step.number}`}
+                          className="w-full h-auto max-w-[300px] mx-auto transform hover:scale-110 transition-transform duration-500"
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Bottom CTA */}

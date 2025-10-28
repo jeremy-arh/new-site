@@ -56,11 +56,11 @@ const Services = () => {
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                   <img
                     src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b6196784dbd395a2dfe_iconoir--badge-check%202.svg"
                     alt="Icon"
-                    className="w-6 h-6 brightness-0 invert"
+                    className="w-12 h-12"
                     height="40"
                   />
                 </div>
