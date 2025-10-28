@@ -2,15 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 @layer base {
-  @font-face {
-    font-family: 'TASA Orbiter';
-    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-    font-weight: 400 800;
-  }
-
   * {
     margin: 0;
     padding: 0;
@@ -18,7 +10,7 @@
   }
 
   body {
-    font-family: 'TASA Orbiter', 'Inter', sans-serif;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
