@@ -43,13 +43,13 @@ const BlogSection = () => {
       <div className="max-w-[1300px] mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-fade-in">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             Our Blog
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
             Latest Articles &amp; Insights
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto scroll-slide-up">
             Stay informed about notarization, legal documents, and industry news
           </p>
         </div>
@@ -69,8 +69,7 @@ const BlogSection = () => {
               <Link
                 key={post.id}
                 to={`/blog/${post.slug}`}
-                className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in"
-                style={{ animationDelay: `${index * 0.15}s` }}
+                className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 scroll-slide-up"
               >
                 {/* Cover Image */}
                 {post.cover_image_url ? (
@@ -159,7 +158,7 @@ const BlogSection = () => {
 
         {/* View All Button */}
         {posts.length > 0 && (
-          <div className="text-center mt-12 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="text-center mt-12 scroll-fade-in">
             <Link to="/blog" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
               <span className="btn-text inline-block">View All Articles</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

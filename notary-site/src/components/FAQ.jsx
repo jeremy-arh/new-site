@@ -41,20 +41,17 @@ const FAQ = () => {
   return (
     <section id="faq" className="py-20 px-[30px] bg-gray-50 overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-slide-up">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             Frequently Asked Questions
           </div>
         </div>
 
-        <div className="space-y-4 stagger-animation">
+        <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-              style={{
-                animation: `staggerFadeIn 0.5s ease-out ${index * 0.1}s both`
-              }}
+              className="border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 scroll-slide-up"
             >
               <button
                 onClick={() => toggleFAQ(index)}
