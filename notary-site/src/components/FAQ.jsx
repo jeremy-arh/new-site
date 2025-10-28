@@ -58,10 +58,10 @@ const FAQ = () => {
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 group"
+                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-all duration-300 group"
               >
-                <span className="text-lg font-bold text-gray-900 pr-4 group-hover:gradient-text transition-all">{faq.question}</span>
-                <div className={`w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 transition-transform duration-300 flex-shrink-0 ${
+                <span className="text-lg font-bold text-gray-900 pr-4 transition-all">{faq.question}</span>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full bg-black transition-transform duration-300 flex-shrink-0 ${
                   openIndex === index ? 'rotate-180' : ''
                 }`}>
                   <svg
