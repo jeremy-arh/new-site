@@ -15,28 +15,27 @@ export const useScrollAnimation = () => {
       });
     }, observerOptions);
 
-    // Function to observe all animated elements
-    const observeElements = () => {
+    const observeAnimatedElements = () => {
       const animatedElements = document.querySelectorAll(
         '.scroll-fade-in, .scroll-slide-up, .scroll-slide-left, .scroll-slide-right'
       );
 
       animatedElements.forEach((el) => {
-        if (!el.classList.contains('is-visible')) {
+        if (!el.dataset.scrollObserved) {
           intersectionObserver.observe(el);
+          el.dataset.scrollObserved = 'true';
         }
       });
     };
 
-    // Initial observation
-    observeElements();
+    // Observe existing animated elements
+    observeAnimatedElements();
 
-    // Set up a MutationObserver to watch for new elements
+    // Watch for dynamically added animated elements (e.g., after data fetches)
     const mutationObserver = new MutationObserver(() => {
-      observeElements();
+      observeAnimatedElements();
     });
 
-    // Observe changes in the entire document
     mutationObserver.observe(document.body, {
       childList: true,
       subtree: true

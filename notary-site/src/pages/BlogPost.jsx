@@ -174,7 +174,7 @@ const BlogPost = () => {
       {/* Cover Image */}
       {post.cover_image_url && (
         <section className="px-[30px] -mt-8 mb-12 animate-fade-in animation-delay-500">
-          <div className="max-w-[1100px] mx-auto">
+          <div className="max-w-[780px] mx-auto">
             <img
               src={post.cover_image_url}
               alt={post.cover_image_alt || post.title}
@@ -192,19 +192,7 @@ const BlogPost = () => {
             <div className="lg:col-span-8">
               <div
                 ref={contentRef}
-                className="prose prose-lg prose-gray max-w-none
-                  prose-headings:font-bold prose-headings:text-gray-900
-                  prose-h1:text-4xl prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h3:text-2xl
-                  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-                  prose-a:text-black prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-gray-900 prose-strong:font-bold
-                  prose-ul:my-6 prose-ol:my-6
-                  prose-li:text-gray-700 prose-li:my-2
-                  prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic
-                  prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-                  prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-xl
-                  prose-img:rounded-xl prose-img:shadow-lg
-                  animate-fade-in animation-delay-600"
+                className="blog-content animate-fade-in animation-delay-600"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             </div>
@@ -219,7 +207,7 @@ const BlogPost = () => {
 
       {/* CTA Section */}
       <section className="px-[30px] pb-20">
-        <div className="max-w-[800px] mx-auto">
+        <div className="max-w-[780px] mx-auto">
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12 text-center border border-gray-200 shadow-lg">
             <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Ready to Get Started?
@@ -243,7 +231,7 @@ const BlogPost = () => {
       {/* Author Bio */}
       {post.author_bio && (
         <section className="px-[30px] pb-20">
-          <div className="max-w-[800px] mx-auto">
+          <div className="max-w-[780px] mx-auto">
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-4">About the Author</h3>
               <div className="flex items-start gap-4">
@@ -280,7 +268,7 @@ const BlogPost = () => {
 
       {/* Back to Blog */}
       <section className="px-[30px] pb-20">
-        <div className="max-w-[800px] mx-auto text-center">
+        <div className="max-w-[780px] mx-auto text-center">
           <Link to="/blog" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3">
             <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
