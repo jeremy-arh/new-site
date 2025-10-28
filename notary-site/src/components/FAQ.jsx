@@ -39,35 +39,43 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="py-20 px-[30px] bg-gray-50">
+    <section id="faq" className="py-20 px-[30px] bg-gray-50 overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4">
+        <div className="text-center mb-12 animate-fade-in">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-slide-up">
             Frequently Asked Questions
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 stagger-animation">
           {faqs.map((faq, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+            <div
+              key={index}
+              className="border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              style={{
+                animation: `staggerFadeIn 0.5s ease-out ${index * 0.1}s both`
+              }}
+            >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 group"
               >
-                <span className="text-lg font-bold text-gray-900 pr-4">{faq.question}</span>
-                <svg
-                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 flex-shrink-0 ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8.00045 8.78092L11.3003 5.48111L12.2431 6.42392L8.00045 10.6666L3.75781 6.42392L4.70063 5.48111L8.00045 8.78092Z" />
-                </svg>
+                <span className="text-lg font-bold text-gray-900 pr-4 group-hover:gradient-text transition-all">{faq.question}</span>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 transition-transform duration-300 flex-shrink-0 ${
+                  openIndex === index ? 'rotate-180' : ''
+                }`}>
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8.00045 8.78092L11.3003 5.48111L12.2431 6.42392L8.00045 10.6666L3.75781 6.42392L4.70063 5.48111L8.00045 8.78092Z" />
+                  </svg>
+                </div>
               </button>
 
               {openIndex === index && (
-                <div className="px-6 pb-4">
+                <div className="px-6 pb-5 animate-slide-up">
                   <p className="text-gray-600 leading-relaxed whitespace-pre-line">
                     {faq.answer}
                   </p>
