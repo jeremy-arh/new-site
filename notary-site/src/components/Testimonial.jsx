@@ -26,7 +26,7 @@ const Testimonial = () => {
             </p>
             <div>
               <div className="text-lg font-bold text-gray-900 mb-1">Callum Davis</div>
-              <div className="text-sm text-blue-600 font-medium">CEO of Akkar</div>
+              <div className="text-sm gradient-text font-medium">CEO of Akkar</div>
             </div>
           </div>
         </div>
