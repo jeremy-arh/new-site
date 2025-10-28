@@ -33,7 +33,7 @@ const HowItWorks = () => {
           {/* Left Column - Sticky */}
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-32">
-              <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-4">
+              <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4">
                 How it work ?
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-8">
