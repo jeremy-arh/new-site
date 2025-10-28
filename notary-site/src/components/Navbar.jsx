@@ -79,7 +79,7 @@ const Navbar = () => {
               <div className="w-px h-6 bg-gray-300"></div>
 
               <a href="#" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="#" className="primary-cta text-sm">Book an appointement</a>
+              <a href="#" className="header-cta text-sm">Book an appointement</a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
