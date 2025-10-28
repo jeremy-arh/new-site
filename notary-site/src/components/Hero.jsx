@@ -30,7 +30,7 @@ const Hero = () => {
             </p>
 
             <a href="#" className="primary-cta text-lg inline-block mb-12 bg-white text-black hover:bg-gray-100">
-              Book an appointement
+              <span className="btn-text inline-block">Book an appointement</span>
             </a>
 
             {/* Features */}

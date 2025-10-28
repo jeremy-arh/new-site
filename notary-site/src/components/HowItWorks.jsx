@@ -106,7 +106,7 @@ const HowItWorks = () => {
         {/* Bottom CTA */}
         <div className="text-center mt-32 animate-fade-in animation-delay-1000">
           <a href="#" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-            Get Started Now
+            <span className="btn-text inline-block">Get Started Now</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>

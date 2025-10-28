@@ -79,7 +79,7 @@ const Navbar = () => {
               <div className="w-px h-6 bg-gray-300"></div>
 
               <a href="#" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="#" className="header-cta text-sm">Book an appointement</a>
+              <a href="#" className="header-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
@@ -198,7 +198,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
-              Book an appointement
+              <span className="btn-text inline-block">Book an appointement</span>
             </a>
           </div>
         </div>
