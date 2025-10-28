@@ -25,4 +25,11 @@
   .nav-link {
     @apply text-gray-700 hover:text-black transition-colors duration-200 font-medium;
   }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #491AE9 0%, #D414E5 33%, #FC03A1 66%, #FF7715 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }

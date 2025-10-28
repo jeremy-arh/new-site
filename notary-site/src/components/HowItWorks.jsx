@@ -37,7 +37,7 @@ const HowItWorks = () => {
                 How it work ?
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-8">
-                Notarization <span className="text-blue-600">Made Easy</span>
+                Notarization <span className="gradient-text">Made Easy</span>
               </h2>
 
               <div className="space-y-4">

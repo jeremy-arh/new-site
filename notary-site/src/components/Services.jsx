@@ -41,7 +41,7 @@ const Services = () => {
           </div>
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             All the Notarial Services You Need.<br />
-            <span className="text-blue-600">In One Place</span>
+            <span className="gradient-text">In One Place</span>
           </h2>
         </div>
 
