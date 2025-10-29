@@ -128,7 +128,7 @@ const BlogPost = () => {
   if (error || !post) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Article Not Found</h1>
+        <h1 className="text-3xl sm:text-5xl lg:text-7xl text-gray-900 mb-4 md:mb-6 leading-tight">Article Not Found</h1>
         <p className="text-gray-600 mb-8">{error || 'The article you\'re looking for doesn\'t exist.'}</p>
         <Link to="/" className="primary-cta text-lg px-8 py-4">
           <span className="btn-text inline-block">Back to Home</span>
@@ -165,7 +165,7 @@ const BlogPost = () => {
           )}
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in animation-delay-200">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl text-gray-900 mb-4 md:mb-6 leading-tight animate-fade-in animation-delay-200">
             {post.title}
           </h1>
 
