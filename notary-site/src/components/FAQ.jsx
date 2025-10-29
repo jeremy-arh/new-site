@@ -62,10 +62,18 @@ const FAQ = () => {
                   openIndex === index ? 'rotate-180' : ''
                 }`}>
                   <svg
-                    className="w-5 h-5 text-gray-900"
-                    fill="currentColor"
+                    className={`w-5 h-5 ${openIndex === index ? '' : 'text-gray-900'}`}
+                    fill={openIndex === index ? "url(#faq-gradient)" : "currentColor"}
                     viewBox="0 0 16 16"
                   >
+                    <defs>
+                      <linearGradient id="faq-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#491AE9" />
+                        <stop offset="33%" stopColor="#D414E5" />
+                        <stop offset="66%" stopColor="#FC03A1" />
+                        <stop offset="100%" stopColor="#FF7715" />
+                      </linearGradient>
+                    </defs>
                     <path d="M8.00045 8.78092L11.3003 5.48111L12.2431 6.42392L8.00045 10.6666L3.75781 6.42392L4.70063 5.48111L8.00045 8.78092Z" />
                   </svg>
                 </div>
