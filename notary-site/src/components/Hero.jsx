@@ -3,7 +3,7 @@ const Hero = () => {
     <section className="md:px-5 md:pt-24">
       {/* Hero Block with Background Image - 100vh */}
       <div
-        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center justify-center"
+        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center"
         style={{
           backgroundImage: 'url(https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68dd8da2cc1795ec7351681a_ChatGPT%20Image%201%20oct.%202025%2C%2022_22_46.png)',
           backgroundSize: 'cover',
@@ -15,14 +15,14 @@ const Hero = () => {
 
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
-          <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
+          <div className="max-w-3xl">
             <h1 className="text-3xl sm:text-5xl lg:text-7xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
               Notarize and Apostille <br />
               Your Documents <br />
               100% Online
             </h1>
 
-            <p className="text-base sm:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0 animate-fade-in animation-delay-200">
+            <p className="text-base sm:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
               Secure, legally valid, recognized internationally through the Hague Convention<br />
               from anywhere, in just a few minutes.
             </p>
@@ -32,7 +32,7 @@ const Hero = () => {
             </a>
 
             {/* Features */}
-            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
               <div className="flex items-center gap-2">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"

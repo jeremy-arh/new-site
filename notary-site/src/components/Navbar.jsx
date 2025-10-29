@@ -5,15 +5,34 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+
+      setIsScrolled(currentScrollY > 50);
+
+      // Only apply hide/show logic on mobile
+      if (window.innerWidth < 768) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          // Scrolling down
+          setIsHeaderVisible(false);
+        } else {
+          // Scrolling up
+          setIsHeaderVisible(true);
+        }
+      } else {
+        setIsHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,26 +47,37 @@ const Navbar = () => {
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('mobile-menu-open');
     } else {
       document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-menu-open');
     }
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-menu-open');
     };
   }, [isMenuOpen]);
 
   return (
     <>
-      <nav className="fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0">
+      <nav className={`fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0 ${
+        !isHeaderVisible && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
+      }`}>
         <div
           className="transition-all duration-300 rounded-2xl md:rounded-none md:bg-[#FEFEFE]"
-          style={isMobile ? {
+          style={isMobile ? (isMenuOpen ? {
+            background: 'transparent',
+            borderRadius: '16px',
+            boxShadow: 'none',
+            backdropFilter: 'none',
+            WebkitBackdropFilter: 'none',
+          } : {
             background: 'rgba(0, 0, 0, 0.26)',
             borderRadius: '16px',
             boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             backdropFilter: 'blur(15.6px)',
             WebkitBackdropFilter: 'blur(15.6px)',
-          } : {
+          }) : {
             background: '#FEFEFE',
           }}
         >
@@ -58,7 +88,9 @@ const Navbar = () => {
               <img
                 src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ded4e7d28006679024b42f_Group%208.svg"
                 alt="Logo"
-                className="h-6 md:h-8 w-auto brightness-0 invert md:brightness-100 md:invert-0"
+                className={`h-6 md:h-8 w-auto md:brightness-100 md:invert-0 ${
+                  isMenuOpen ? 'brightness-100 invert-0' : 'brightness-0 invert'
+                }`}
                 width="130"
               />
             </a>
@@ -108,18 +140,18 @@ const Navbar = () => {
             >
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span
-                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                    isMenuOpen ? 'rotate-45 translate-y-1.5 bg-gray-900' : 'bg-white'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 ${
-                    isMenuOpen ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
+                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 ${
+                    isMenuOpen ? 'opacity-0 scale-0 bg-gray-900' : 'opacity-100 scale-100 bg-white'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                    isMenuOpen ? '-rotate-45 -translate-y-1.5 bg-gray-900' : 'bg-white'
                   }`}
                 ></span>
               </div>

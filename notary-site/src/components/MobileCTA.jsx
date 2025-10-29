@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 const MobileCTA = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,10 +18,25 @@ const MobileCTA = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const checkMenuState = () => {
+      setIsMenuOpen(document.body.classList.contains('mobile-menu-open'));
+    };
+
+    // Check initial state
+    checkMenuState();
+
+    // Observe changes to body classes
+    const observer = new MutationObserver(checkMenuState);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       className={`fixed bottom-0 left-0 right-0 z-50 md:hidden transition-transform duration-300 ${
-        isVisible ? 'translate-y-0' : 'translate-y-full'
+        isVisible && !isMenuOpen ? 'translate-y-0' : 'translate-y-full'
       }`}
     >
       <div className="bg-white border-t border-gray-200 shadow-2xl">
