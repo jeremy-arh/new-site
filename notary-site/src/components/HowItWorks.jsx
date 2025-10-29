@@ -67,7 +67,7 @@ const HowItWorks = () => {
               key={index}
               className="sticky transition-all duration-500"
               style={{
-                top: isMobile ? `70px` : `${100 + index * 30}px`,
+                top: isMobile ? '0px' : `${100 + index * 30}px`,
                 animationDelay: `${index * 0.2}s`
               }}
             >
