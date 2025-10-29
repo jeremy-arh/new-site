@@ -45,10 +45,10 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-32 px-[30px] bg-gray-50 relative">
+    <section className="py-16 md:py-32 px-0 md:px-[30px] bg-gray-50 relative">
       <div className="max-w-[1300px] mx-auto">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20 px-[30px] md:px-0">
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             How it work ?
           </div>
@@ -61,39 +61,39 @@ const HowItWorks = () => {
         </div>
 
         {/* Stacking Cards */}
-        <div className="space-y-8">
+        <div className="space-y-0 md:space-y-8">
           {steps.map((step, index) => (
             <div
               key={index}
               className="sticky transition-all duration-500"
               style={{
-                top: isMobile ? `${80 + index * 15}px` : `${100 + index * 30}px`,
+                top: isMobile ? `70px` : `${100 + index * 30}px`,
                 animationDelay: `${index * 0.2}s`
               }}
             >
-              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 hover:shadow-3xl transition-shadow duration-300 animate-slide-up min-h-[500px] flex flex-col">
-                <div className="grid md:grid-cols-2 gap-8 items-start flex-1">
+              <div className="bg-white md:rounded-3xl p-6 md:p-12 shadow-2xl border-0 md:border border-gray-200 hover:shadow-3xl transition-shadow duration-300 animate-slide-up min-h-screen md:min-h-[500px] flex flex-col pb-24 md:pb-0">
+                <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center flex-1">
                   {/* Content */}
-                  <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-6 flex flex-col justify-between h-full`}>
+                  <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-4 md:space-y-6 flex flex-col justify-center`}>
                     <div>
-                      <div className="flex items-start gap-4 mb-6">
-                        <Icon icon={step.icon} className="w-10 h-10 text-black flex-shrink-0" />
+                      <div className="flex items-start gap-4 mb-4 md:mb-6">
+                        <Icon icon={step.icon} className="w-8 h-8 md:w-10 md:h-10 text-black flex-shrink-0" />
                         <div>
-                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
+                          <h3 className="text-lg md:text-2xl font-bold text-gray-900 leading-tight">
                             {step.title}
                           </h3>
                           {step.subtitle && (
-                            <p className="text-gray-600 text-base mt-1">{step.subtitle}</p>
+                            <p className="text-gray-600 text-sm md:text-base mt-1">{step.subtitle}</p>
                           )}
                         </div>
                       </div>
 
-                      <p className="text-gray-700 text-lg leading-relaxed">
+                      <p className="text-gray-700 text-base md:text-lg leading-relaxed">
                         {step.description}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3 pt-4">
+                    <div className="flex items-center gap-3 pt-2 md:pt-4">
                       <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
                       <span className="text-gray-500 text-sm font-medium">
                         Step {index + 1} of {steps.length}
@@ -102,11 +102,11 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Image */}
-                  <div className={`${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} flex items-center justify-center h-full`}>
+                  <div className={`${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} flex items-center justify-center`}>
                     <img
                       src={step.image}
                       alt={`Step ${index + 1}`}
-                      className="w-full max-w-[450px] h-auto transform hover:scale-105 transition-transform duration-500"
+                      className="w-full max-w-[300px] md:max-w-[450px] h-auto transform hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                 </div>
@@ -116,7 +116,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-32 animate-fade-in animation-delay-1000">
+        <div className="text-center mt-16 md:mt-32 px-[30px] md:px-0 animate-fade-in animation-delay-1000">
           <a href="#" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
             <span className="btn-text inline-block">Get Started Now</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
