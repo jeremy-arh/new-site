@@ -1,1 +1,6 @@
+# Serve static files directly (don't redirect to index.html)
+/robots.txt /robots.txt 200
+/sitemap.xml /sitemap.xml 200
+
+# SPA fallback - redirect all other requests to index.html
 /* /index.html 200
