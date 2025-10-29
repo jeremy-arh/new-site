@@ -5,7 +5,7 @@ const Hero = () => {
       <div
         className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop)',
+          backgroundImage: 'url(https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68dd8da2cc1795ec7351681a_ChatGPT%20Image%201%20oct.%202025%2C%2022_22_46.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
