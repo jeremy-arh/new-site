@@ -16,12 +16,10 @@ const Hero = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
-              <strong>
-                Notarize and Apostille <br />
-                Your Documents <br />
-                100% Online
-              </strong>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl text-white mb-6 leading-tight animate-fade-in">
+              Notarize and Apostille <br />
+              Your Documents <br />
+              100% Online
             </h1>
 
             <p className="text-lg sm:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
