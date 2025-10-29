@@ -45,7 +45,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-16 md:py-32 px-0 md:px-[30px] bg-gray-50 relative">
+    <section id="how-it-works" className="py-16 md:py-32 px-0 md:px-[30px] bg-gray-50 relative">
       <div className="max-w-[1300px] mx-auto">
         {/* Header */}
         <div className="text-center mb-12 md:mb-20 px-[30px] md:px-0">
