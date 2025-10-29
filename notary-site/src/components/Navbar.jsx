@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -97,34 +96,9 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="nav-link text-base">Feature</a>
-              <a href="#" className="nav-link text-base">User Examples</a>
-              <a href="#" className="nav-link text-base">Pricing</a>
-
-              {/* Resources Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="nav-link text-base flex items-center space-x-1"
-                >
-                  <span>Resources</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-lg py-2">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 1</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 2</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 3</a>
-                  </div>
-                )}
-              </div>
+              <a href="/#services" className="nav-link text-base">Our services</a>
+              <a href="/#how-it-works" className="nav-link text-base">How it work</a>
+              <a href="/#faq" className="nav-link text-base">FAQ</a>
 
               <div className="w-px h-6 bg-gray-300"></div>
 
@@ -172,68 +146,26 @@ const Navbar = () => {
         <div className="h-full flex flex-col justify-center items-center px-8 pt-24 pb-12">
           <div className="w-full max-w-md space-y-6">
             <a
-              href="#"
+              href="/#services"
               onClick={() => setIsMenuOpen(false)}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              Feature
+              Our services
             </a>
             <a
-              href="#"
+              href="/#how-it-works"
               onClick={() => setIsMenuOpen(false)}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              User Examples
+              How it work
             </a>
             <a
-              href="#"
+              href="/#faq"
               onClick={() => setIsMenuOpen(false)}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              Pricing
+              FAQ
             </a>
-
-            {/* Mobile Resources */}
-            <div>
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full flex items-center justify-between text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
-              >
-                <span>Resources</span>
-                <svg
-                  className={`w-6 h-6 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-              {isDropdownOpen && (
-                <div className="pl-6 mt-2 space-y-3">
-                  <a
-                    href="#"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-xl text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
-                  >
-                    Resource Link 1
-                  </a>
-                  <a
-                    href="#"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-xl text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
-                  >
-                    Resource Link 2
-                  </a>
-                  <a
-                    href="#"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-xl text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
-                  >
-                    Resource Link 3
-                  </a>
-                </div>
-              )}
-            </div>
 
             <div className="border-t border-gray-200 my-6"></div>
 
