@@ -1,9 +1,9 @@
 const Hero = () => {
   return (
-    <section className="px-5 pt-24">
+    <section className="md:px-5 pt-20 md:pt-24">
       {/* Hero Block with Background Image - 100vh */}
       <div
-        className="relative rounded-3xl overflow-hidden h-[calc(100vh-120px)] flex items-center"
+        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop)',
           backgroundSize: 'cover',
@@ -16,7 +16,7 @@ const Hero = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
               <strong>
                 Notarize and Apostille <br />
                 Your Documents <br />

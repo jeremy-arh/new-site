@@ -28,13 +28,14 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/80 backdrop-blur-lg shadow-lg'
-          : 'bg-white shadow-lg'
-      }`}>
-        <div className="max-w-[1300px] mx-auto px-[30px]">
-          <div className="flex justify-between items-center h-20">
+      <nav className="fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0">
+        <div className={`transition-all duration-300 md:rounded-none rounded-2xl ${
+          isScrolled
+            ? 'bg-white/80 backdrop-blur-lg md:bg-[#FEFEFE] md:backdrop-blur-none'
+            : 'bg-white/80 backdrop-blur-lg md:bg-[#FEFEFE] md:backdrop-blur-none'
+        }`}>
+          <div className="max-w-[1300px] mx-auto px-[30px]">
+            <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <a href="#" className="flex-shrink-0 relative z-[60]">
               <img
@@ -68,7 +69,7 @@ const Navbar = () => {
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-lg shadow-lg py-2">
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-lg py-2">
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 1</a>
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 2</a>
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Resource Link 3</a>
@@ -107,6 +108,7 @@ const Navbar = () => {
               </div>
             </button>
           </div>
+        </div>
         </div>
       </nav>
 
