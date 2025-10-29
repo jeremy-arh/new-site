@@ -61,7 +61,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Stacking Cards */}
-        <div className="space-y-0 md:space-y-8">
+        <div className="space-y-5 md:space-y-8">
           {steps.map((step, index) => (
             <div
               key={index}
