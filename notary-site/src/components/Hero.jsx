@@ -3,7 +3,7 @@ const Hero = () => {
     <section className="md:px-5 md:pt-24">
       {/* Hero Block with Background Image - 100vh */}
       <div
-        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center"
+        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center justify-center"
         style={{
           backgroundImage: 'url(https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68dd8da2cc1795ec7351681a_ChatGPT%20Image%201%20oct.%202025%2C%2022_22_46.png)',
           backgroundSize: 'cover',
@@ -14,53 +14,53 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/60"></div>
 
         {/* Content Container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-16 w-full">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl text-white mb-6 leading-tight animate-fade-in">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
+          <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
               Notarize and Apostille <br />
               Your Documents <br />
               100% Online
             </h1>
 
-            <p className="text-lg sm:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
+            <p className="text-base sm:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0 animate-fade-in animation-delay-200">
               Secure, legally valid, recognized internationally through the Hague Convention<br />
               from anywhere, in just a few minutes.
             </p>
 
-            <a href="#" className="primary-cta text-lg inline-block mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+            <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
               <span className="btn-text inline-block">Book an appointement</span>
             </a>
 
             {/* Features */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 mt-8 animate-fade-in animation-delay-600">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
+              <div className="flex items-center gap-2">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"
                   alt="Legal"
-                  className="w-6 h-6 brightness-0 invert"
+                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
                   height="25"
                 />
-                <span className="text-white font-medium">Legally valid worldwide</span>
+                <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8ab39dbcffc87b0adbfb_fluent--flash-16-regular%201.svg"
                   alt="Fast"
-                  className="w-6 h-6 brightness-0 invert"
+                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
                   height="25"
                 />
-                <span className="text-white font-medium">Fast &amp; fully online</span>
+                <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <img
                   src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8adc0d66d2c2a71c35cd_iconoir--badge-check%201.svg"
                   alt="Secure"
-                  className="w-6 h-6 brightness-0 invert"
+                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
                   height="25"
                 />
-                <span className="text-white font-medium">Secure &amp; privacy-focused</span>
+                <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
               </div>
             </div>
           </div>
