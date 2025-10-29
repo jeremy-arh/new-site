@@ -4,6 +4,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +13,15 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -29,19 +39,26 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0">
-        <div className={`transition-all duration-300 md:rounded-none rounded-2xl ${
-          isScrolled
-            ? 'bg-white/80 backdrop-blur-lg md:bg-[#FEFEFE] md:backdrop-blur-none'
-            : 'bg-white/80 backdrop-blur-lg md:bg-[#FEFEFE] md:backdrop-blur-none'
-        }`}>
-          <div className="max-w-[1300px] mx-auto px-[30px]">
-            <div className="flex justify-between items-center h-20">
+        <div
+          className="transition-all duration-300 rounded-2xl md:rounded-none md:bg-[#FEFEFE]"
+          style={isMobile ? {
+            background: 'rgba(0, 0, 0, 0.26)',
+            borderRadius: '16px',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(15.6px)',
+            WebkitBackdropFilter: 'blur(15.6px)',
+          } : {
+            background: '#FEFEFE',
+          }}
+        >
+          <div className="max-w-[1300px] mx-auto px-[20px] md:px-[30px]">
+            <div className="flex justify-between items-center h-14 md:h-20">
             {/* Logo */}
             <a href="#" className="flex-shrink-0 relative z-[60]">
               <img
                 src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ded4e7d28006679024b42f_Group%208.svg"
                 alt="Logo"
-                className="h-8 w-auto"
+                className="h-6 md:h-8 w-auto brightness-0 invert md:brightness-100 md:invert-0"
                 width="130"
               />
             </a>
@@ -86,23 +103,23 @@ const Navbar = () => {
             {/* Animated Hamburger Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden relative z-[60] w-10 h-10 flex flex-col items-center justify-center focus:outline-none"
+              className="md:hidden relative z-[60] w-8 h-8 flex flex-col items-center justify-center focus:outline-none"
               aria-label="Toggle menu"
             >
-              <div className="w-6 h-5 flex flex-col justify-between">
+              <div className="w-5 h-4 flex flex-col justify-between">
                 <span
-                  className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? 'rotate-45 translate-y-2' : ''
+                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                    isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${
+                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 ${
                     isMenuOpen ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                  className={`w-full h-0.5 bg-white md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                    isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
                   }`}
                 ></span>
               </div>
