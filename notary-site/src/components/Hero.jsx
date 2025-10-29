@@ -1,6 +1,6 @@
 const Hero = () => {
   return (
-    <section className="md:px-5 pt-20 md:pt-24">
+    <section className="md:px-5 md:pt-24">
       {/* Hero Block with Background Image - 100vh */}
       <div
         className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-[calc(100vh-120px)] flex items-center"
