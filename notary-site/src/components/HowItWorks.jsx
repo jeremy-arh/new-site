@@ -1,6 +1,18 @@
 import { Icon } from '@iconify/react';
+import { useState, useEffect } from 'react';
 
 const HowItWorks = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const steps = [
     {
       icon: 'f7:doc',
@@ -55,7 +67,7 @@ const HowItWorks = () => {
               key={index}
               className="sticky transition-all duration-500"
               style={{
-                top: `${100 + index * 30}px`,
+                top: isMobile ? `${80 + index * 15}px` : `${100 + index * 30}px`,
                 animationDelay: `${index * 0.2}s`
               }}
             >
