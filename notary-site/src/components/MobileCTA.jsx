@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 const MobileCTA = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [ctaText, setCtaText] = useState('Book an appointment');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +35,28 @@ const MobileCTA = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    fetchCTA();
+  }, []);
+
+  const fetchCTA = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('cta')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+
+      if (data?.cta) {
+        setCtaText(data.cta);
+      }
+    } catch (error) {
+      console.error('Error fetching CTA:', error);
+    }
+  };
+
   return (
     <div
       className={`fixed bottom-0 left-0 right-0 z-50 md:hidden transition-transform duration-300 ${
@@ -45,7 +69,7 @@ const MobileCTA = () => {
             href="#"
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg"
           >
-            Book an appointment
+            {ctaText}
           </a>
         </div>
       </div>
