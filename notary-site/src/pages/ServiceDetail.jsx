@@ -98,30 +98,45 @@ const ServiceDetail = () => {
       {/* What's Included Section */}
       <section className="py-20 px-[30px] bg-white">
         <div className="max-w-[1300px] mx-auto">
-          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-12 text-center animate-fade-in">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
             What's <span className="gradient-text">Included</span>
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
+              <Icon icon="mdi:shield-lock" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-lg">Secure Online Process</h3>
               <p className="text-gray-600 text-sm">Complete the entire process online through a secure encrypted platform</p>
             </div>
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
+              <Icon icon="mdi:certificate" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-lg">Licensed Notary</h3>
               <p className="text-gray-600 text-sm">Work with experienced, licensed notaries who guide you through every step</p>
             </div>
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
+              <Icon icon="mdi:earth" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-lg">Internationally Recognized</h3>
               <p className="text-gray-600 text-sm">Documents are valid internationally through the Hague Convention</p>
             </div>
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Icon icon="carbon:checkmark-filled" className="w-12 h-12 text-black mb-4" />
+              <Icon icon="mdi:lightning-bolt" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-lg">Fast Turnaround</h3>
               <p className="text-gray-600 text-sm">Receive your notarized documents within minutes of completion</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What is Section */}
+      <section className="py-20 px-[30px] bg-gray-50">
+        <div className="max-w-[1300px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
+            What is <span className="gradient-text">{service.name}</span>?
+          </h2>
+          <div className="max-w-4xl mx-auto">
+            <div
+              className="blog-content animate-fade-in animation-delay-200"
+              dangerouslySetInnerHTML={{ __html: service.detailed_description || service.description }}
+            />
           </div>
         </div>
       </section>
