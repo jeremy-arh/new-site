@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { Icon } from '@iconify/react';
 
 const Hero = () => {
   const [ctaText, setCtaText] = useState('Book an appointment');
@@ -61,32 +62,17 @@ const Hero = () => {
             {/* Features */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
               <div className="flex items-center gap-2">
-                <img
-                  src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"
-                  alt="Legal"
-                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                  height="25"
-                />
+                <Icon icon="hugeicons:legal-hammer" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <img
-                  src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8ab39dbcffc87b0adbfb_fluent--flash-16-regular%201.svg"
-                  alt="Fast"
-                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                  height="25"
-                />
+                <Icon icon="mingcute:flash-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <img
-                  src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8adc0d66d2c2a71c35cd_iconoir--badge-check%201.svg"
-                  alt="Secure"
-                  className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                  height="25"
-                />
+                <Icon icon="meteor-icons:badge-check" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
               </div>
             </div>
