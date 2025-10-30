@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
+import bgService from '../assets/bg-service.svg';
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
@@ -62,63 +63,34 @@ const ServiceDetail = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - 100vh */}
-      <section className="min-h-screen flex items-center justify-center px-[30px] bg-gray-50 relative">
-        <div className="max-w-[1100px] mx-auto w-full">
-          {/* Breadcrumb - Positioned at top */}
-          <nav className="flex items-center gap-2 text-sm mb-12 animate-fade-in absolute top-32 left-[30px] right-[30px]">
-            <Link to="/" className="text-gray-600 hover:text-gray-900 transition-colors">
-              Home
-            </Link>
-            <span className="text-gray-400">/</span>
-            <Link to="/#services" className="text-gray-600 hover:text-gray-900 transition-colors">
-              Services
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-medium">{service.name}</span>
-          </nav>
+      {/* Hero Section - Similar to Home Hero */}
+      <section className="md:px-5 md:pt-[90px]">
+        <div
+          className="relative md:rounded-3xl overflow-hidden min-h-screen md:min-h-0 md:h-[calc(100vh-110px)] flex items-center"
+          style={{
+            backgroundImage: `url(${bgService})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/60"></div>
 
-          {/* Service Header - Centered */}
-          <div className="flex flex-col items-center text-center animate-fade-in animation-delay-100">
-            <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center mb-8">
-              {service.icon ? (
-                <Icon icon={service.icon} className="w-14 h-14 text-black" />
-              ) : (
-                <Icon icon="iconoir:badge-check" className="w-14 h-14 text-black" />
-              )}
+          {/* Content Container */}
+          <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
+            <div className="max-w-3xl">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+                {service.name}
+              </h1>
+
+              <p className="text-base sm:text-lg text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
+                {service.short_description || service.description}
+              </p>
+
+              <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+                <span className="btn-text inline-block">{service.cta || 'Book an appointment'}</span>
+              </a>
             </div>
-
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl text-gray-900 mb-4 md:mb-6 leading-tight max-w-4xl">
-              {service.name}
-            </h1>
-
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl leading-relaxed">
-              {service.description}
-            </p>
-
-            {service.base_price && (
-              <div className="flex items-baseline gap-2 mb-8">
-                <span className="text-gray-600 text-xl">Starting from</span>
-                <span className="text-5xl text-gray-900">${service.base_price}</span>
-              </div>
-            )}
-
-            <a
-              href="#"
-              className="primary-cta text-lg px-10 py-5 inline-flex items-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-xl"
-            >
-              <span className="btn-text inline-block">Book an appointment</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
           </div>
         </div>
       </section>
