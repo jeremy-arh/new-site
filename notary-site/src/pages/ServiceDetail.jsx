@@ -79,7 +79,7 @@ const ServiceDetail = () => {
           {/* Content Container */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
             <div className="max-w-3xl">
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
                 {service.name}
               </h1>
 
@@ -90,6 +90,39 @@ const ServiceDetail = () => {
               <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
                 <span className="btn-text inline-block">{service.cta || 'Book an appointment'}</span>
               </a>
+
+              {/* Features */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"
+                    alt="Legal"
+                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
+                    height="25"
+                  />
+                  <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8ab39dbcffc87b0adbfb_fluent--flash-16-regular%201.svg"
+                    alt="Fast"
+                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
+                    height="25"
+                  />
+                  <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8adc0d66d2c2a71c35cd_iconoir--badge-check%201.svg"
+                    alt="Secure"
+                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
+                    height="25"
+                  />
+                  <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -98,8 +131,8 @@ const ServiceDetail = () => {
       {/* What's Included Section */}
       <section className="py-20 px-[30px] bg-white">
         <div className="max-w-[1300px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-            What's <span className="gradient-text">Included</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
+            What's <span className="gradient-text">Included</span>?
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -129,7 +162,7 @@ const ServiceDetail = () => {
       {/* What is Section */}
       <section className="py-20 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
             What is <span className="gradient-text">{service.name}</span>?
           </h2>
           <div className="max-w-4xl mx-auto">

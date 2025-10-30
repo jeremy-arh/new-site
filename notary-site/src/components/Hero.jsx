@@ -16,7 +16,7 @@ const Hero = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
               Notarize and Apostille <br />
               Your Documents <br />
               100% Online
