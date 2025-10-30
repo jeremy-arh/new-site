@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
 
@@ -8,6 +9,7 @@ const Navbar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [ctaText, setCtaText] = useState('Book an appointment');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +61,28 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    fetchCTA();
+  }, []);
+
+  const fetchCTA = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('cta')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+
+      if (data?.cta) {
+        setCtaText(data.cta);
+      }
+    } catch (error) {
+      console.error('Error fetching CTA:', error);
+    }
+  };
+
   return (
     <>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0 ${
@@ -103,7 +127,7 @@ const Navbar = () => {
               <div className="w-px h-6 bg-gray-300"></div>
 
               <a href="#" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="#" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
+              <a href="#" className="primary-cta text-sm"><span className="btn-text inline-block">{ctaText}</span></a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
@@ -181,7 +205,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
-              <span className="btn-text inline-block">Book an appointement</span>
+              <span className="btn-text inline-block">{ctaText}</span>
             </a>
           </div>
         </div>

@@ -1,4 +1,31 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
 const Hero = () => {
+  const [ctaText, setCtaText] = useState('Book an appointment');
+
+  useEffect(() => {
+    fetchCTA();
+  }, []);
+
+  const fetchCTA = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('cta')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+
+      if (data?.cta) {
+        setCtaText(data.cta);
+      }
+    } catch (error) {
+      console.error('Error fetching CTA:', error);
+    }
+  };
+
   return (
     <section className="md:px-5 md:pt-[90px]">
       {/* Hero Block with Background Image */}
@@ -28,7 +55,7 @@ const Hero = () => {
             </p>
 
             <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
-              <span className="btn-text inline-block">Book an appointement</span>
+              <span className="btn-text inline-block">{ctaText}</span>
             </a>
 
             {/* Features */}

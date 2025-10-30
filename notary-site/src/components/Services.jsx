@@ -68,7 +68,7 @@ const Services = () => {
                   <h3 className="text-xl font-bold text-gray-900">{service.name}</h3>
                 </div>
 
-                <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed">{service.description}</p>
+                <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed">{service.short_description || service.description}</p>
 
                 <div className="flex items-center justify-between">
                   <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
