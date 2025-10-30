@@ -49,11 +49,20 @@ const MobileCTA = () => {
         .limit(1)
         .single();
 
+      console.log('MobileCTA - Fetched data:', data);
+
       if (data?.cta) {
+        console.log('MobileCTA - Setting CTA text to:', data.cta);
         setCtaText(data.cta);
+      } else {
+        console.log('MobileCTA - No CTA found in data');
+      }
+
+      if (error) {
+        console.error('MobileCTA - Supabase error:', error);
       }
     } catch (error) {
-      console.error('Error fetching CTA:', error);
+      console.error('MobileCTA - Error fetching CTA:', error);
     }
   };
 
