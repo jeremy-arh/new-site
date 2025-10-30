@@ -51,7 +51,7 @@ const ServiceDetail = () => {
   if (error || !service) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
-        <h1 className="text-3xl sm:text-5xl lg:text-7xl text-gray-900 mb-4 md:mb-6 leading-tight">Service Not Found</h1>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">Service Not Found</h1>
         <p className="text-gray-600 mb-8">{error || 'The service you\'re looking for doesn\'t exist.'}</p>
         <Link to="/" className="primary-cta text-lg px-8 py-4">
           <span className="btn-text inline-block">Back to Home</span>
@@ -88,11 +88,11 @@ const ServiceDetail = () => {
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl text-gray-900 mb-4 md:mb-6 leading-tight max-w-4xl">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl text-gray-900 mb-4 md:mb-6 leading-tight max-w-4xl">
               {service.name}
             </h1>
 
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed">
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl leading-relaxed">
               {service.description}
             </p>
 

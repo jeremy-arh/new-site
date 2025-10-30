@@ -52,10 +52,10 @@ const HowItWorks = () => {
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             How it work ?
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 scroll-slide-up">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 scroll-slide-up">
             Notarization <span className="gradient-text">Made Easy</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto scroll-slide-up">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto scroll-slide-up">
             Four simple steps to get your documents notarized online
           </p>
         </div>

@@ -35,7 +35,7 @@ const Services = () => {
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             Our services
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 scroll-slide-up">
             All the Notarial Services You Need.<br />
             <span className="gradient-text">In One Place</span>
           </h2>
