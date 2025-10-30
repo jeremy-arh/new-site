@@ -46,7 +46,7 @@ const BlogSection = () => {
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
             Our Blog
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 scroll-slide-up">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
             Latest Articles &amp; Insights
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto scroll-slide-up">
