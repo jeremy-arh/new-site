@@ -1,5 +1,3 @@
-@import './assets/fonts/fonts.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,14 +10,14 @@
   }
 
   body {
-    font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Clash Display', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-weight: 500;
   }
 }
@@ -49,7 +47,7 @@
   }
 
   .blog-content {
-    font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #4b5563;
     font-size: 1.125rem;
     line-height: 1.85;
