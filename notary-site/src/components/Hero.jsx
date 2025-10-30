@@ -1,9 +1,9 @@
 const Hero = () => {
   return (
-    <section className="md:px-5 md:mt-[90px] md:h-[calc(100vh-110px)]">
-      {/* Hero Block with Background Image - 100vh */}
+    <section className="md:px-5 md:pt-[90px]">
+      {/* Hero Block with Background Image */}
       <div
-        className="relative md:rounded-3xl overflow-hidden min-h-screen md:h-full flex items-center"
+        className="relative md:rounded-3xl overflow-hidden min-h-screen md:min-h-0 md:h-[calc(100vh-110px)] flex items-center"
         style={{
           backgroundImage: 'url(https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68dd8da2cc1795ec7351681a_ChatGPT%20Image%201%20oct.%202025%2C%2022_22_46.png)',
           backgroundSize: 'cover',
