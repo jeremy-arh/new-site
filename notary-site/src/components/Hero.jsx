@@ -16,13 +16,13 @@ const Hero = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
               Notarize and Apostille <br />
               Your Documents <br />
               100% Online
             </h1>
 
-            <p className="text-base sm:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
+            <p className="text-base sm:text-lg text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
               Secure, legally valid, recognized internationally through the Hague Convention<br />
               from anywhere, in just a few minutes.
             </p>

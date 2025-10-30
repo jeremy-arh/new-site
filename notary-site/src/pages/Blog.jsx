@@ -70,10 +70,10 @@ const Blog = () => {
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-fade-in">
             Our Blog
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in animation-delay-100">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in animation-delay-100">
             Articles &amp; Insights
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in animation-delay-200">
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-fade-in animation-delay-200">
             Stay informed about notarization, legal documents, apostilles, and industry news
           </p>
         </div>
