@@ -94,32 +94,17 @@ const ServiceDetail = () => {
               {/* Features */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
                 <div className="flex items-center gap-2">
-                  <img
-                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8b02c6344234e55e6908_hugeicons--legal-hammer%20(2)%201.svg"
-                    alt="Legal"
-                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                    height="25"
-                  />
+                  <Icon icon="hugeicons:legal-hammer" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <img
-                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8ab39dbcffc87b0adbfb_fluent--flash-16-regular%201.svg"
-                    alt="Fast"
-                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                    height="25"
-                  />
+                  <Icon icon="mingcute:flash-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <img
-                    src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ff8adc0d66d2c2a71c35cd_iconoir--badge-check%201.svg"
-                    alt="Secure"
-                    className="w-5 h-5 md:w-6 md:h-6 brightness-0 invert"
-                    height="25"
-                  />
+                  <Icon icon="meteor-icons:badge-check" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
                 </div>
               </div>
@@ -134,26 +119,21 @@ const ServiceDetail = () => {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
             What's <span className="gradient-text">Included</span>?
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <Icon icon="mdi:shield-lock" className="w-12 h-12 text-black mb-4" />
-              <h3 className="text-gray-900 mb-2 text-lg">Secure Online Process</h3>
-              <p className="text-gray-600 text-sm">Complete the entire process online through a secure encrypted platform</p>
+              <Icon icon="hugeicons:legal-hammer" className="w-12 h-12 text-black mb-4" />
+              <h3 className="text-gray-900 mb-2 text-lg font-semibold">Legally valid worldwide</h3>
+              <p className="text-gray-600 text-sm">Your documents are legally recognized and valid across all countries, ensuring international acceptance and compliance with legal standards worldwide.</p>
             </div>
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Icon icon="mdi:certificate" className="w-12 h-12 text-black mb-4" />
-              <h3 className="text-gray-900 mb-2 text-lg">Licensed Notary</h3>
-              <p className="text-gray-600 text-sm">Work with experienced, licensed notaries who guide you through every step</p>
+              <Icon icon="mingcute:flash-line" className="w-12 h-12 text-black mb-4" />
+              <h3 className="text-gray-900 mb-2 text-lg font-semibold">Fast & fully online</h3>
+              <p className="text-gray-600 text-sm">Complete the entire notarization process online from anywhere in the world, with fast turnaround times and no need for in-person visits.</p>
             </div>
             <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <Icon icon="mdi:earth" className="w-12 h-12 text-black mb-4" />
-              <h3 className="text-gray-900 mb-2 text-lg">Internationally Recognized</h3>
-              <p className="text-gray-600 text-sm">Documents are valid internationally through the Hague Convention</p>
-            </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Icon icon="mdi:lightning-bolt" className="w-12 h-12 text-black mb-4" />
-              <h3 className="text-gray-900 mb-2 text-lg">Fast Turnaround</h3>
-              <p className="text-gray-600 text-sm">Receive your notarized documents within minutes of completion</p>
+              <Icon icon="meteor-icons:badge-check" className="w-12 h-12 text-black mb-4" />
+              <h3 className="text-gray-900 mb-2 text-lg font-semibold">Secure & privacy-focused</h3>
+              <p className="text-gray-600 text-sm">Your data and documents are protected with bank-level encryption and strict privacy measures, ensuring complete confidentiality throughout the process.</p>
             </div>
           </div>
         </div>
