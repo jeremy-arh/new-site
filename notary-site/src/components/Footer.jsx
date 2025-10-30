@@ -1,3 +1,5 @@
+import logoBlanc from '../assets/logo-blanc.svg';
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
@@ -7,7 +9,7 @@ const Footer = () => {
           <div className="md:col-span-1">
             <a href="#" className="inline-block">
               <img
-                src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68e137d2627b68238ea4b20d_Group%209%20(3).svg"
+                src={logoBlanc}
                 alt="Logo"
                 width="120"
                 className="h-8 w-auto"

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import logoNoir from '../assets/logo-noir.svg';
+import logoBlanc from '../assets/logo-blanc.svg';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,11 +87,9 @@ const Navbar = () => {
             {/* Logo */}
             <a href="#" className="flex-shrink-0 relative z-[60]">
               <img
-                src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ded4e7d28006679024b42f_Group%208.svg"
+                src={isMobile && !isMenuOpen ? logoBlanc : logoNoir}
                 alt="Logo"
-                className={`h-6 md:h-8 w-auto md:brightness-100 md:invert-0 ${
-                  isMenuOpen ? 'brightness-100 invert-0' : 'brightness-0 invert'
-                }`}
+                className="h-6 md:h-8 w-auto"
                 width="130"
               />
             </a>
