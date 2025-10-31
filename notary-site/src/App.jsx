@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import MobileCTA from './components/MobileCTA'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import Blog from './pages/Blog'
@@ -24,7 +23,6 @@ function App() {
           <Route path="/services/:serviceId" element={<ServiceDetail />} />
         </Routes>
         <Footer />
-        <MobileCTA />
       </div>
     </Router>
   )

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import MobileCTA from '../components/MobileCTA';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
@@ -217,6 +218,7 @@ const Blog = () => {
           )}
         </div>
       </section>
+      <MobileCTA />
     </div>
   );
 };

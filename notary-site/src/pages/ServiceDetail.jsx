@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
+import MobileCTA from '../components/MobileCTA';
 import bgService from '../assets/bg-service.svg';
 
 const ServiceDetail = () => {
@@ -174,6 +175,9 @@ const ServiceDetail = () => {
           </Link>
         </div>
       </section>
+
+      {/* Mobile CTA with service-specific text */}
+      <MobileCTA ctaText={service.cta || 'Book an appointment'} />
     </div>
   );
 };
