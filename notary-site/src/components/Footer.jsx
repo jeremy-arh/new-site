@@ -1,6 +1,31 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import logoBlanc from '../assets/logo-blanc.svg';
 
 const Footer = () => {
+  const [recentPosts, setRecentPosts] = useState([]);
+
+  useEffect(() => {
+    fetchRecentPosts();
+  }, []);
+
+  const fetchRecentPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('slug, title')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      setRecentPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching recent posts:', error);
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">
@@ -36,11 +61,6 @@ const Footer = () => {
                   FAQ
                 </a>
               </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Contact us
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -48,25 +68,23 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-bold text-white mb-4">Resources</h3>
             <ul className="space-y-2">
+              {recentPosts.map((post) => (
+                <li key={post.slug}>
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm line-clamp-1"
+                  >
+                    {post.title}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Blog post name list goes here
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Blog post name list goes here
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Blog post name list goes here
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <Link
+                  to="/blog"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                >
                   See all resources &gt;
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -76,14 +94,14 @@ const Footer = () => {
             <h3 className="text-sm font-bold text-white mb-4">About</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <Link to="/terms-conditions" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
                   Terms &amp; Conditions
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
                   Privacy policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
