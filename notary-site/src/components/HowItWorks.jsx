@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
+import { getImageUrl } from '../utils/imageLoader';
 
 const HowItWorks = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -19,28 +20,28 @@ const HowItWorks = () => {
       title: 'Upload your document',
       subtitle: '(secure upload)',
       description: 'Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.',
-      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5efbb1d5400424393_Group%2010.svg'
+      image: getImageUrl('step-1')
     },
     {
       icon: 'solar:calendar-broken',
       title: 'Book an appointment',
       subtitle: '',
       description: 'Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.',
-      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5fd4bae6a5650e0af_Group%2012.svg'
+      image: getImageUrl('step-2')
     },
     {
       icon: 'icon-park-outline:camera-two',
       title: 'Verify & notarize online',
       subtitle: 'with an EU notary',
       description: 'During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is immediately uploaded to your secure dashboard.',
-      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5bc7e2c51e4e7fc90_Group%2014.svg'
+      image: getImageUrl('step-3')
     },
     {
       icon: 'f7:doc-checkmark',
       title: 'Receive your document',
       subtitle: 'certified, apostilled or notarized',
       description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
-      image: 'https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68ffa5c5635f02fe66ef88503_Group%2016.svg'
+      image: getImageUrl('step-4')
     }
   ];
 
