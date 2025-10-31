@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Logo */}
           <div className="md:col-span-1">
-            <a href="#" className="inline-block">
+            <a href="/" className="inline-block">
               <img
                 src={logoBlanc}
                 alt="Logo"
@@ -22,17 +22,17 @@ const Footer = () => {
             <h3 className="text-sm font-bold text-white mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#servive" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <a href="/#services" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
                   Our services
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <a href="/#how-it-works" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
                   How it work
                 </a>
               </li>
               <li>
-                <a href="#faq" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                <a href="/#faq" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
                   FAQ
                 </a>
               </li>
