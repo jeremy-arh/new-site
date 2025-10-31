@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
-const MobileCTA = () => {
+const MobileCTA = ({ ctaText = 'Book an appointment' }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [ctaText, setCtaText] = useState('Book an appointment');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,37 +32,6 @@ const MobileCTA = () => {
 
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    fetchCTA();
-  }, []);
-
-  const fetchCTA = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('services')
-        .select('cta')
-        .eq('is_active', true)
-        .order('created_at', { ascending: true })
-        .limit(1)
-        .single();
-
-      console.log('MobileCTA - Fetched data:', data);
-
-      if (data?.cta) {
-        console.log('MobileCTA - Setting CTA text to:', data.cta);
-        setCtaText(data.cta);
-      } else {
-        console.log('MobileCTA - No CTA found in data');
-      }
-
-      if (error) {
-        console.error('MobileCTA - Supabase error:', error);
-      }
-    } catch (error) {
-      console.error('MobileCTA - Error fetching CTA:', error);
-    }
-  };
 
   return (
     <div

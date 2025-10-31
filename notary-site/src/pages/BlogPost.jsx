@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import TableOfContents from '../components/TableOfContents';
+import MobileCTA from '../components/MobileCTA';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -331,6 +332,7 @@ const BlogPost = () => {
           </Link>
         </div>
       </section>
+      <MobileCTA />
     </div>
   );
 };

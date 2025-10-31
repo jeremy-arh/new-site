@@ -4,6 +4,7 @@ import HowItWorks from '../components/HowItWorks'
 import Testimonial from '../components/Testimonial'
 import FAQ from '../components/FAQ'
 import BlogSection from '../components/BlogSection'
+import MobileCTA from '../components/MobileCTA'
 
 function Home() {
   return (
@@ -14,6 +15,7 @@ function Home() {
       <Testimonial />
       <FAQ />
       <BlogSection />
+      <MobileCTA />
     </>
   )
 }
