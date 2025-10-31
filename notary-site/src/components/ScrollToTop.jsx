@@ -7,22 +7,21 @@ const ScrollToTop = () => {
   useEffect(() => {
     // If there's a hash in the URL, scroll to that element
     if (hash) {
-      // Longer delay to ensure DOM is ready and sections are loaded
+      // Scroll to top first
+      window.scrollTo(0, 0);
+
+      // Wait longer to ensure all components are mounted and rendered
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
-          // Get element position relative to document
-          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-          // Offset for fixed header (80px header height + 20px padding)
-          const offsetPosition = elementPosition - 100;
-
-          // Scroll to the calculated position
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
           });
+        } else {
+          console.warn(`Element with hash ${hash} not found`);
         }
-      }, 300);
+      }, 500);
     } else {
       // Otherwise, scroll to top
       window.scrollTo(0, 0);
