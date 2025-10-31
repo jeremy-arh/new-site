@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
 import HowItWorks from '../components/HowItWorks';
@@ -64,6 +65,10 @@ const ServiceDetail = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{service.meta_title || service.name || 'Service'}</title>
+        <meta name="description" content={service.meta_description || service.short_description || service.description || ''} />
+      </Helmet>
       {/* Hero Section - Similar to Home Hero */}
       <section className="md:px-5 md:pt-[90px]">
         <div
