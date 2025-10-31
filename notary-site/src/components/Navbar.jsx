@@ -85,7 +85,7 @@ const Navbar = () => {
           <div className="max-w-[1300px] mx-auto px-[20px] md:px-[30px]">
             <div className="flex justify-between items-center h-14 md:h-20">
             {/* Logo */}
-            <a href="#" className="flex-shrink-0 relative z-[60]">
+            <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
                 src={isMobile && !isMenuOpen ? logoBlanc : logoNoir}
                 alt="Logo"
