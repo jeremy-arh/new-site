@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
@@ -48,18 +49,6 @@ const BlogPost = () => {
     setHasHeadings(h2Elements.length > 0);
   }, [post]);
 
-  useEffect(() => {
-    if (!post?.title || typeof document === 'undefined') {
-      return undefined;
-    }
-
-    const previousTitle = document.title;
-    document.title = `${post.title} | Blog`;
-
-    return () => {
-      document.title = previousTitle;
-    };
-  }, [post?.title]);
 
   const fetchPost = async () => {
     try {
@@ -140,6 +129,10 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{post.meta_title || post.title || 'Blog Post'}</title>
+        <meta name="description" content={post.meta_description || post.excerpt || ''} />
+      </Helmet>
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-[30px] bg-gray-50">
         <div className="max-w-[900px] mx-auto">
