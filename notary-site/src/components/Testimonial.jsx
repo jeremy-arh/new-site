@@ -1,4 +1,8 @@
+import { getImageUrl } from '../utils/imageLoader';
+
 const Testimonial = () => {
+  const testimonialAvatar = getImageUrl('testimonial-avatar');
+
   return (
     <section className="py-20 px-[30px] bg-white overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
@@ -6,9 +10,7 @@ const Testimonial = () => {
           {/* Image */}
           <div className="h-64 lg:h-auto relative overflow-hidden group scroll-slide-left">
             <img
-              src="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68e9011bb4012069cfcd1c3c_1685977246323%20(1).jpg"
-              srcSet="https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68e9011bb4012069cfcd1c3c_1685977246323%20(1)-p-500.jpg 500w, https://cdn.prod.website-files.com/68bb128cac235707a59a2c06/68e9011bb4012069cfcd1c3c_1685977246323%20(1).jpg 800w"
-              sizes="(max-width: 800px) 100vw, 800px"
+              src={testimonialAvatar}
               alt="Callum Davis"
               className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             />
