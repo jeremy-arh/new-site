@@ -1,18 +1,20 @@
+import { memo, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
 
-const Hero = () => {
-  const heroBg = getImageUrl('hero-bg');
+const Hero = memo(() => {
+  const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
 
   return (
     <section className="md:px-5 md:pt-[90px]">
-      {/* Hero Block with Background Image */}
+      {/* Hero Block with Background Image - LCP Element */}
       <div
         className="relative md:rounded-3xl overflow-hidden min-h-screen md:min-h-0 md:h-[calc(100vh-110px)] flex items-center"
         style={{
           backgroundImage: `url(${heroBg})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          willChange: 'auto'
         }}
       >
         {/* Dark Overlay for better text readability */}
@@ -58,6 +60,8 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;
