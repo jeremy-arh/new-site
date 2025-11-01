@@ -1,20 +1,20 @@
 import { Icon } from '@iconify/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
 
-const HowItWorks = () => {
+const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
-  const steps = [
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
+
+  const steps = useMemo(() => [
     {
       icon: 'f7:doc',
       title: 'Upload your document',
@@ -43,7 +43,7 @@ const HowItWorks = () => {
       description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
       image: getImageUrl('step-4')
     }
-  ];
+  ], []);
 
   return (
     <section id="how-it-works" className="py-16 md:py-32 px-0 md:px-[30px] bg-gray-50 relative">
@@ -107,6 +107,9 @@ const HowItWorks = () => {
                     <img
                       src={step.image}
                       alt={`Step ${index + 1}`}
+                      loading="lazy"
+                      width="450"
+                      height="450"
                       className="w-full max-w-[300px] md:max-w-[450px] h-auto transform hover:scale-105 transition-transform duration-500"
                     />
                   </div>
@@ -128,6 +131,8 @@ const HowItWorks = () => {
       </div>
     </section>
   );
-};
+});
+
+HowItWorks.displayName = 'HowItWorks';
 
 export default HowItWorks;

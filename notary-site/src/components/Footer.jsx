@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import logoBlanc from '../assets/logo-blanc.svg';
 
-const Footer = () => {
+const Footer = memo(() => {
   const [recentPosts, setRecentPosts] = useState([]);
 
-  useEffect(() => {
-    fetchRecentPosts();
-  }, []);
-
-  const fetchRecentPosts = async () => {
+  const fetchRecentPosts = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -24,7 +20,11 @@ const Footer = () => {
     } catch (error) {
       console.error('Error fetching recent posts:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchRecentPosts();
+  }, [fetchRecentPosts]);
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -117,6 +117,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';
 
 export default Footer;

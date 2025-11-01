@@ -1,28 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 
-const MobileCTA = ({ ctaText = 'Book an appointment' }) => {
+const MobileCTA = memo(({ ctaText = 'Book an appointment' }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Show CTA after scrolling 200px
-      if (window.scrollY > 200) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
+  const handleScroll = useCallback(() => {
+    // Show CTA after scrolling 200px
+    if (window.scrollY > 200) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, []);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  const checkMenuState = useCallback(() => {
+    setIsMenuOpen(document.body.classList.contains('mobile-menu-open'));
   }, []);
 
   useEffect(() => {
-    const checkMenuState = () => {
-      setIsMenuOpen(document.body.classList.contains('mobile-menu-open'));
-    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
+  useEffect(() => {
     // Check initial state
     checkMenuState();
 
@@ -31,7 +31,7 @@ const MobileCTA = ({ ctaText = 'Book an appointment' }) => {
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
     return () => observer.disconnect();
-  }, []);
+  }, [checkMenuState]);
 
   return (
     <div
@@ -51,6 +51,8 @@ const MobileCTA = ({ ctaText = 'Book an appointment' }) => {
       </div>
     </div>
   );
-};
+});
+
+MobileCTA.displayName = 'MobileCTA';
 
 export default MobileCTA;
