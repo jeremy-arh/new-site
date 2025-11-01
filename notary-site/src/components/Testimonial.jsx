@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
 
-const Testimonial = () => {
+const Testimonial = memo(() => {
   const testimonialAvatar = getImageUrl('testimonial-avatar');
 
   return (
@@ -12,6 +13,9 @@ const Testimonial = () => {
             <img
               src={testimonialAvatar}
               alt="Callum Davis"
+              loading="lazy"
+              width="600"
+              height="400"
               className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -46,6 +50,8 @@ const Testimonial = () => {
       </div>
     </section>
   );
-};
+});
+
+Testimonial.displayName = 'Testimonial';
 
 export default Testimonial;

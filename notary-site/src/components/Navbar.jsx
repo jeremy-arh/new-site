@@ -1,48 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
 
-      setIsScrolled(currentScrollY > 50);
+    setIsScrolled(currentScrollY > 50);
 
-      // Only apply hide/show logic on mobile
-      if (window.innerWidth < 768) {
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          // Scrolling down
-          setIsHeaderVisible(false);
-        } else {
-          // Scrolling up
-          setIsHeaderVisible(true);
-        }
+    // Only apply hide/show logic on mobile
+    if (window.innerWidth < 768) {
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setIsHeaderVisible(false);
       } else {
+        // Scrolling up
         setIsHeaderVisible(true);
       }
+    } else {
+      setIsHeaderVisible(true);
+    }
 
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    setLastScrollY(currentScrollY);
   }, [lastScrollY]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [handleResize]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -108,7 +116,7 @@ const Navbar = () => {
 
             {/* Animated Hamburger Menu Button */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={toggleMenu}
               className="md:hidden relative z-[60] w-8 h-8 flex flex-col items-center justify-center focus:outline-none"
               aria-label="Toggle menu"
             >
@@ -147,21 +155,21 @@ const Navbar = () => {
           <div className="w-full max-w-md space-y-6">
             <a
               href="/#services"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               Our services
             </a>
             <a
               href="/#how-it-works"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               How it work
             </a>
             <a
               href="/#faq"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               FAQ
@@ -171,14 +179,14 @@ const Navbar = () => {
 
             <a
               href="#"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               Connexion
             </a>
             <a
               href="#"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
               <span className="btn-text inline-block">Book an appointment</span>
@@ -188,6 +196,8 @@ const Navbar = () => {
       </div>
     </>
   );
-};
+});
+
+Navbar.displayName = 'Navbar';
 
 export default Navbar;
