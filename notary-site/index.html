@@ -19,16 +19,27 @@
     <meta name="twitter:title" content="Notary - Notarize and Apostille Your Documents 100% Online" />
     <meta name="twitter:description" content="Notarize and apostille your documents 100% online. Secure, legally valid, and recognized internationally through the Hague Convention." />
 
-    <!-- Google Fonts - Geist -->
+    <!-- DNS Prefetch & Preconnect for performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" />
+
+    <!-- Google Fonts - Geist with font-display: swap for better performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Preload critical images for LCP optimization -->
+    <link rel="preload" as="image" href="/src/assets/hero-bg.svg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/src/assets/bg-service.svg" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Crisp Chat -->
+    <!-- Crisp Chat - Loaded async to not block rendering -->
     <script type="text/javascript">
       window.$crisp=[];
       window.CRISP_WEBSITE_ID="fd0c2560-46ba-4da6-8979-47748ddf247a";

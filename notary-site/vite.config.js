@@ -5,7 +5,10 @@ import { imagetools } from 'vite-imagetools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Enable automatic JSX runtime
+      jsxRuntime: 'automatic'
+    }),
     imagetools({
       defaultDirectives: (url) => {
         if (url.searchParams.has('responsive')) {
@@ -19,15 +22,55 @@ export default defineConfig({
     })
   ],
   build: {
+    // Enable minification
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log']
+      },
+      format: {
+        comments: false
+      }
+    },
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Generate sourcemaps for debugging (disable in production if not needed)
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'supabase': ['@supabase/supabase-js'],
           'icons': ['@iconify/react'],
+          'helmet': ['react-helmet-async']
         },
+        // Optimize chunk file names for better caching
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       },
     },
     chunkSizeWarningLimit: 1000,
+    // Enable build optimizations
+    target: 'esnext',
+    assetsInlineLimit: 4096, // Inline assets smaller than 4kb
   },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom']
+  },
+  // Performance optimizations
+  server: {
+    // Enable warm-up of frequently used files
+    warmup: {
+      clientFiles: [
+        './src/App.jsx',
+        './src/pages/Home.jsx',
+        './src/components/Hero.jsx',
+        './src/components/Navbar.jsx'
+      ]
+    }
+  }
 })
