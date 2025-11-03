@@ -47,14 +47,17 @@ const TableOfContents = ({ content }) => {
   const scrollToHeading = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 100;
+      const offset = 120; // Account for sticky header
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      const offsetPosition = elementPosition + window.scrollY - offset;
 
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
+
+      // Update active state immediately for better UX
+      setActiveId(id);
     }
   };
 
