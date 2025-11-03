@@ -164,43 +164,20 @@ const BlogPost = () => {
           </h1>
 
           {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-8 animate-fade-in animation-delay-300">
-            <div className="flex items-center gap-3">
-              {post.author_avatar_url ? (
-                <img
-                  src={post.author_avatar_url}
-                  alt={post.author_name}
-                  className="w-12 h-12 rounded-full"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                  <span className="text-lg font-semibold text-gray-600">
-                    {post.author_name.charAt(0)}
-                  </span>
-                </div>
-              )}
-              <div>
-                <div className="font-semibold text-gray-900">{post.author_name}</div>
-                {post.author_bio && (
-                  <div className="text-sm text-gray-500 line-clamp-1">{post.author_bio}</div>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              <span>{formatDate(post.published_at)}</span>
-              {computedReadTime && (
-                <>
-                  <span>•</span>
-                  <span>{computedReadTime} min read</span>
-                </>
-              )}
-              {post.views_count > 0 && (
-                <>
-                  <span>•</span>
-                  <span>{post.views_count} views</span>
-                </>
-              )}
-            </div>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-8 animate-fade-in animation-delay-300">
+            <span>{formatDate(post.published_at)}</span>
+            {computedReadTime && (
+              <>
+                <span>•</span>
+                <span>{computedReadTime} min read</span>
+              </>
+            )}
+            {post.views_count > 0 && (
+              <>
+                <span>•</span>
+                <span>{post.views_count} views</span>
+              </>
+            )}
           </div>
 
           {/* Tags */}
@@ -276,43 +253,6 @@ const BlogPost = () => {
         </div>
       </section>
 
-      {/* Author Bio */}
-      {post.author_bio && (
-        <section className="px-[30px] pb-20">
-          <div className="max-w-[780px] mx-auto">
-            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">About the Author</h3>
-              <div className="flex items-start gap-4">
-                {post.author_avatar_url ? (
-                  <img
-                    src={post.author_avatar_url}
-                    alt={post.author_name}
-                    className="w-16 h-16 rounded-full flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl font-semibold text-gray-600">
-                      {post.author_name.charAt(0)}
-                    </span>
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="font-bold text-gray-900 text-lg mb-2">{post.author_name}</div>
-                  <p className="text-gray-600 leading-relaxed">{post.author_bio}</p>
-                  {post.author_email && (
-                    <a
-                      href={`mailto:${post.author_email}`}
-                      className="text-black font-semibold text-sm mt-2 inline-block hover:underline"
-                    >
-                      Contact author
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Back to Blog */}
       <section className="px-[30px] pb-20">
