@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
+import { cache } from '../utils/cache';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
 
@@ -11,11 +12,19 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hasHeadings, setHasHeadings] = useState(false);
+  const [relatedPosts, setRelatedPosts] = useState([]);
   const contentRef = useRef(null);
 
   useEffect(() => {
     fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    if (post) {
+      fetchRelatedPosts();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post, slug]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -51,6 +60,21 @@ const BlogPost = () => {
 
 
   const fetchPost = async () => {
+    // Check cache first
+    const cachedPost = cache.get('blog_post', slug);
+    if (cachedPost) {
+      setPost(cachedPost);
+      setLoading(false);
+      // Still increment view count in background (fire and forget)
+      supabase
+        .from('blog_posts')
+        .update({ views_count: (cachedPost.views_count || 0) + 1 })
+        .eq('id', cachedPost.id)
+        .then(() => {})
+        .catch((err) => console.error('Error updating view count:', err));
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -62,6 +86,8 @@ const BlogPost = () => {
       if (error) throw error;
 
       if (data) {
+        // Cache the data
+        cache.set('blog_post', slug, data, 5 * 60 * 1000);
         setPost(data);
         // Increment view count
         await supabase
@@ -76,6 +102,31 @@ const BlogPost = () => {
       setError('Failed to load article');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchRelatedPosts = async () => {
+    if (!slug) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('status', 'published')
+        .neq('slug', slug) // Exclude current post
+        .order('published_at', { ascending: false })
+        .limit(3); // Get 3 latest articles
+
+      if (error) {
+        console.error('Error fetching related posts:', error);
+        setRelatedPosts([]);
+        return;
+      }
+      
+      setRelatedPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching related posts:', error);
+      setRelatedPosts([]);
     }
   };
 
@@ -134,19 +185,21 @@ const BlogPost = () => {
         <meta name="description" content={post.meta_description || post.excerpt || ''} />
       </Helmet>
       {/* Hero Section */}
-      <section className="pt-32 pb-12 px-[30px] bg-gray-50">
-        <div className="max-w-[900px] mx-auto">
+      <section className="pt-32 pb-20 px-[30px] bg-gray-50">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-8">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm mb-6 animate-fade-in">
-            <Link to="/" className="text-gray-600 hover:text-gray-900 transition-colors">
+          <nav className="flex items-center gap-2 text-sm mb-6 animate-fade-in overflow-hidden">
+            <Link to="/" className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
               Home
             </Link>
-            <span className="text-gray-400">/</span>
-            <Link to="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <span className="text-gray-400 flex-shrink-0">/</span>
+            <Link to="/blog" className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
               Blog
             </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-medium">{post.title}</span>
+            <span className="text-gray-400 flex-shrink-0">/</span>
+            <span className="text-gray-900 font-medium truncate min-w-0">{post.title}</span>
           </nav>
 
           {/* Category Badge */}
@@ -193,38 +246,27 @@ const BlogPost = () => {
               ))}
             </div>
           )}
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* Cover Image */}
-      {post.cover_image_url && (
-        <section className="px-[30px] -mt-8 mb-12 animate-fade-in animation-delay-500">
-          <div className="max-w-[780px] mx-auto">
-            <img
-              src={post.cover_image_url}
-              alt={post.cover_image_alt || post.title}
-              className="w-full h-auto rounded-3xl shadow-2xl"
-            />
-          </div>
-        </section>
-      )}
 
       {/* Content with Table of Contents */}
       <article className="px-[30px] pb-20">
         <div className="max-w-[1400px] mx-auto">
           <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+            {/* Table of Contents - Mobile first, then right side on desktop */}
+            <div className="lg:col-span-4 lg:order-2">
+              {hasHeadings && post.content && <TableOfContents content={post.content} />}
+            </div>
+
             {/* Main Content */}
-            <div className="lg:col-span-8">
+            <div className="lg:col-span-8 lg:order-1">
               <div
                 ref={contentRef}
                 className="blog-content animate-fade-in animation-delay-600"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
-            </div>
-
-            {/* Table of Contents */}
-            <div className="lg:col-span-4">
-              {hasHeadings && post.content && <TableOfContents content={post.content} />}
             </div>
           </div>
         </div>
@@ -232,40 +274,151 @@ const BlogPost = () => {
 
       {/* CTA Section */}
       <section className="px-[30px] pb-20">
-        <div className="max-w-[780px] mx-auto">
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12 text-center border border-gray-200 shadow-lg">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Ready to Get Started?
-            </h3>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
-            </p>
-            <a
-              href="#"
-              className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300"
-            >
-              <span className="btn-text inline-block">Book an appointment</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                Ready to Get Started?
+              </h3>
+              <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
+              </p>
+              <a
+                href="#"
+                className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
+              >
+                <span className="btn-text inline-block">{post.cta || 'Book an appointement'}</span>
+                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
 
+      {/* Related Posts Section */}
+      <section className="px-[30px] py-20 bg-gray-50">
+        <div className="max-w-[1400px] mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 text-center">
+            Latest Articles
+          </h2>
+          {relatedPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  to={`/blog/${relatedPost.slug}`}
+                  className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                >
+                  {/* Cover Image */}
+                  {relatedPost.cover_image_url ? (
+                    <div className="relative h-48 overflow-hidden bg-gray-100">
+                      <img
+                        src={relatedPost.cover_image_url}
+                        alt={relatedPost.cover_image_alt || relatedPost.title}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      />
+                      {relatedPost.category && (
+                        <span className="absolute top-4 left-4 px-3 py-1 bg-black text-white text-xs font-semibold rounded-full">
+                          {relatedPost.category}
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                      <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                      </svg>
+                      {relatedPost.category && (
+                        <span className="absolute top-4 left-4 px-3 py-1 bg-black text-white text-xs font-semibold rounded-full">
+                          {relatedPost.category}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Meta Info */}
+                    <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
+                      <div className="flex items-center gap-2">
+                        {relatedPost.author_avatar_url ? (
+                          <img
+                            src={relatedPost.author_avatar_url}
+                            alt={relatedPost.author_name}
+                            className="w-6 h-6 rounded-full"
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-gray-600">
+                              {relatedPost.author_name?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                        )}
+                        <span className="font-medium text-gray-700">{relatedPost.author_name || 'Author'}</span>
+                      </div>
+                      {relatedPost.read_time_minutes && (
+                        <>
+                          <span>•</span>
+                          <span>{relatedPost.read_time_minutes} min read</span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
+                      {relatedPost.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    {relatedPost.excerpt && (
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {relatedPost.excerpt}
+                      </p>
+                    )}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <span className="text-sm text-gray-500">
+                        {formatDate(relatedPost.published_at)}
+                      </span>
+                      <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
+                        Read more
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No other articles available at the moment.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Back to Blog */}
       <section className="px-[30px] pb-20">
-        <div className="max-w-[780px] mx-auto text-center">
-          <Link to="/blog" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3">
+        <div className="max-w-[1400px] mx-auto text-center">
+          <Link to="/blog" className="inline-flex items-center gap-3 text-gray-900 hover:text-black transition-colors font-medium">
             <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-            <span className="btn-text inline-block">Back to Blog</span>
+            <span className="inline-block">Back to Blog</span>
           </Link>
         </div>
       </section>
-      <MobileCTA />
+      <MobileCTA ctaText={post?.cta || 'Book an appointment'} />
     </div>
   );
 };

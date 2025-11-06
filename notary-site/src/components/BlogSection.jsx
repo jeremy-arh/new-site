@@ -159,8 +159,8 @@ const BlogSection = () => {
         {/* View All Button */}
         {posts.length > 0 && (
           <div className="text-center mt-12 scroll-fade-in">
-            <Link to="/blog" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-              <span className="btn-text inline-block">View All Articles</span>
+            <Link to="/blog" className="inline-flex items-center gap-3 text-gray-900 hover:text-black font-semibold text-lg">
+              <span className="inline-block">View All Articles</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

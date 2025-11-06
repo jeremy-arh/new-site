@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 
-const MobileCTA = memo(({ ctaText = 'Book an appointment' }) => {
+const MobileCTA = memo(({ ctaText = 'Book an appointement' }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

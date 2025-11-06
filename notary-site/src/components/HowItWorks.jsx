@@ -72,7 +72,7 @@ const HowItWorks = memo(() => {
                 animationDelay: `${index * 0.2}s`
               }}
             >
-              <div className="bg-white md:rounded-3xl p-6 md:p-12 shadow-2xl border-0 md:border border-gray-200 hover:shadow-3xl transition-shadow duration-300 animate-slide-up min-h-screen md:min-h-[500px] flex flex-col pb-24 md:pb-0">
+              <div className="bg-white md:rounded-3xl p-6 md:p-12 shadow-none md:shadow-2xl border-0 md:border border-gray-200 md:hover:shadow-3xl transition-shadow duration-300 animate-slide-up min-h-screen md:min-h-[500px] flex flex-col pb-24 md:pb-0">
                 <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center flex-1">
                   {/* Content */}
                   <div className={`${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} space-y-4 md:space-y-6 flex flex-col justify-center`}>
@@ -119,14 +119,31 @@ const HowItWorks = memo(() => {
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16 md:mt-32 px-[30px] md:px-0 animate-fade-in animation-delay-1000">
-          <a href="#" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-            <span className="btn-text inline-block">Get Started Now</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
+        {/* Bottom CTA (blog-detail style) */}
+        <div className="px-[30px] md:px-0 mt-16 md:mt-32 animate-fade-in animation-delay-1000">
+          <div className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl"></div>
+
+            <div className="relative z-10">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                Ready to Get Started?
+              </h3>
+              <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
+              </p>
+              <a
+                href="#"
+                className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
+              >
+                <span className="btn-text inline-block">Book an appointement</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

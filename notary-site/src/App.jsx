@@ -1,10 +1,11 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
+import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('./pages/Home'))
@@ -24,6 +25,32 @@ const PageLoader = () => (
 
 function App() {
   useScrollAnimation();
+
+  // Initialize prefetching on app load
+  useEffect(() => {
+    // Setup link hover prefetch immediately
+    setupLinkPrefetch();
+
+    // Wait for DOM to be ready
+    const initPrefetch = () => {
+      // Prefetch visible links
+      prefetchVisibleLinks();
+
+      // Prefetch initial data (blog posts and services) in background
+      // These will be cached and available instantly when needed
+      prefetchBlogPosts(10).catch(console.error);
+      prefetchServices().catch(console.error);
+    };
+
+    // Run immediately if DOM is ready, otherwise wait
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(initPrefetch, 500);
+    } else {
+      window.addEventListener('load', () => {
+        setTimeout(initPrefetch, 500);
+      });
+    }
+  }, []);
 
   return (
     <HelmetProvider>

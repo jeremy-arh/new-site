@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
 
@@ -8,6 +10,9 @@ const Navbar = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [ctaText, setCtaText] = useState('Book an appointement');
+  const location = useLocation();
+  // Note: Navbar is outside specific Route elements, so useParams is not reliable here
 
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
@@ -67,6 +72,63 @@ const Navbar = memo(() => {
     };
   }, [isMenuOpen]);
 
+  // Fetch CTA from blog post or service detail page based on pathname
+  useEffect(() => {
+    const fetchBlogCTA = async () => {
+      const path = location.pathname || '';
+
+      // Blog post detail
+      const blogMatch = path.match(/^\/blog\/([^/]+)/);
+      if (blogMatch && blogMatch[1]) {
+        const slug = decodeURIComponent(blogMatch[1]);
+        try {
+          const { data, error } = await supabase
+            .from('blog_posts')
+            .select('cta')
+            .eq('slug', slug)
+            .eq('status', 'published')
+            .single();
+
+          if (!error && data?.cta) {
+            setCtaText(data.cta);
+          } else {
+            setCtaText('Book an appointement');
+          }
+        } catch (error) {
+          console.error('Error fetching blog CTA:', error);
+          setCtaText('Book an appointement');
+        }
+      } else {
+        // Service detail
+        const serviceMatch = path.match(/^\/services\/([^/]+)/);
+        if (serviceMatch && serviceMatch[1]) {
+          const serviceId = decodeURIComponent(serviceMatch[1]);
+          try {
+            const { data, error } = await supabase
+              .from('services')
+              .select('cta')
+              .eq('service_id', serviceId)
+              .single();
+
+            if (!error && data?.cta) {
+              setCtaText(data.cta);
+            } else {
+              setCtaText('Book an appointement');
+            }
+          } catch (error) {
+            console.error('Error fetching service CTA:', error);
+            setCtaText('Book an appointement');
+          }
+        } else {
+          // Reset to default if not on blog/service detail page
+          setCtaText('Book an appointement');
+        }
+      }
+    };
+
+    fetchBlogCTA();
+  }, [location.pathname]);
+
   return (
     <>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0 ${
@@ -111,7 +173,7 @@ const Navbar = memo(() => {
               <div className="w-px h-6 bg-gray-300"></div>
 
               <a href="#" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="#" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointment</span></a>
+              <a href="#" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
@@ -189,7 +251,7 @@ const Navbar = memo(() => {
               onClick={closeMenu}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
-              <span className="btn-text inline-block">Book an appointment</span>
+              <span className="btn-text inline-block">Book an appointement</span>
             </a>
           </div>
         </div>

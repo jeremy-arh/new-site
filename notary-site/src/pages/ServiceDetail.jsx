@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
+import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
@@ -20,6 +21,14 @@ const ServiceDetail = () => {
   }, [serviceId]);
 
   const fetchService = async () => {
+    // Check cache first
+    const cachedService = cache.get('service', serviceId);
+    if (cachedService) {
+      setService(cachedService);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('services')
@@ -31,6 +40,8 @@ const ServiceDetail = () => {
       if (error) throw error;
 
       if (data) {
+        // Cache the data
+        cache.set('service', serviceId, data, 10 * 60 * 1000);
         setService(data);
       } else {
         setError('Service not found');
@@ -94,7 +105,7 @@ const ServiceDetail = () => {
               </p>
 
               <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
-                <span className="btn-text inline-block">{service.cta || 'Book an appointment'}</span>
+                <span className="btn-text inline-block">{service.cta || 'Book an appointement'}</span>
               </a>
 
               {/* Features */}
@@ -182,7 +193,7 @@ const ServiceDetail = () => {
       </section>
 
       {/* Mobile CTA with service-specific text */}
-      <MobileCTA ctaText={service.cta || 'Book an appointment'} />
+      <MobileCTA ctaText={service.cta || 'Book an appointement'} />
     </div>
   );
 };
