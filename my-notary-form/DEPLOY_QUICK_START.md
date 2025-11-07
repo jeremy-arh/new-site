@@ -15,16 +15,16 @@ npm install
 2. Sélectionnez "Pages" dans le menu latéral
 3. Cliquez sur "Create a project"
 4. Sélectionnez "Connect to Git"
-5. Choisissez votre dépôt GitHub `my-notary-form`
+5. Choisissez votre dépôt GitHub `new-site` (le projet est dans le sous-dossier `my-notary-form`)
 
 ### 3. Configurer le build
 
 Dans la configuration du projet :
 
+- **Root directory** : `my-notary-form` ⚠️ **IMPORTANT - Le projet est dans un sous-dossier**
 - **Framework preset** : `Vite`
 - **Build command** : `npm run build`
 - **Build output directory** : `dist`
-- **Root directory** : `/` (laisser vide)
 
 ### 4. Ajouter les variables d'environnement
 
@@ -32,8 +32,10 @@ Dans **Settings** > **Environment Variables**, ajoutez :
 
 | Variable | Valeur | Environnements |
 |----------|--------|----------------|
-| `VITE_SUPABASE_URL` | Votre URL Supabase | Production, Preview, Development |
-| `VITE_SUPABASE_ANON_KEY` | Votre clé anonyme Supabase | Production, Preview, Development |
+| `SUPABASE_URL` | Votre URL Supabase | Production, Preview, Development |
+| `SUPABASE_ANON_KEY` | Votre clé anonyme Supabase | Production, Preview, Development |
+
+**Note :** Dans Cloudflare Pages Functions, utilisez `SUPABASE_URL` et `SUPABASE_ANON_KEY` (sans préfixe `VITE_`).
 
 **Où trouver ces valeurs :**
 - Allez sur [Supabase Dashboard](https://app.supabase.com/)

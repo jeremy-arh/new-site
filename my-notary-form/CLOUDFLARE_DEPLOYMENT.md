@@ -24,10 +24,12 @@ Dans le dashboard Cloudflare Pages, ajoutez les variables d'environnement suivan
 
 ### 2. Configuration du build
 
-Le projet est déjà configuré avec :
+**⚠️ IMPORTANT :** Comme le projet est dans un sous-dossier `my-notary-form` du dépôt GitHub, vous devez configurer le **Root directory** dans Cloudflare Pages.
+
+Le projet est configuré avec :
+- **Root directory** : `my-notary-form` ⚠️ **OBLIGATOIRE**
 - **Build command** : `npm run build`
 - **Build output directory** : `dist`
-- **Root directory** : `/` (racine du projet)
 
 ### 3. Sitemap dynamique
 
@@ -50,10 +52,10 @@ Le sitemap est accessible à : `https://votre-domaine.pages.dev/sitemap.xml`
    - Choisissez votre dépôt `my-notary-form`
 
 2. **Configurer le build :**
+   - **Root directory** : `my-notary-form` ⚠️ **IMPORTANT - Le projet est dans un sous-dossier**
    - **Framework preset** : Vite
    - **Build command** : `npm run build`
    - **Build output directory** : `dist`
-   - **Root directory** : `/` (laisser vide)
 
 3. **Ajouter les variables d'environnement :**
    - Allez dans "Settings" > "Environment Variables"
