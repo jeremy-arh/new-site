@@ -172,8 +172,8 @@ const Navbar = memo(() => {
 
               <div className="w-px h-6 bg-gray-300"></div>
 
-              <a href="#" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="#" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
+              <a href="https://app.mynotary.io/login" className="nav-link text-base font-semibold">Connexion</a>
+              <a href="https://app.mynotary.io/form" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
@@ -240,14 +240,14 @@ const Navbar = memo(() => {
             <div className="border-t border-gray-200 my-6"></div>
 
             <a
-              href="#"
+              href="https://app.mynotary.io/login"
               onClick={closeMenu}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               Connexion
             </a>
             <a
-              href="#"
+              href="https://app.mynotary.io/form"
               onClick={closeMenu}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >

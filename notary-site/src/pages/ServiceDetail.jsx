@@ -104,7 +104,7 @@ const ServiceDetail = () => {
                 {service.short_description || service.description}
               </p>
 
-              <a href="#" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+              <a href="https://app.mynotary.io/form" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
                 <span className="btn-text inline-block">{service.cta || 'Book an appointement'}</span>
               </a>
 

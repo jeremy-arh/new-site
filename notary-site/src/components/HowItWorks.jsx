@@ -134,7 +134,7 @@ const HowItWorks = memo(() => {
                 Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
               </p>
               <a
-                href="#"
+                href="https://app.mynotary.io/form"
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
               >
                 <span className="btn-text inline-block">Book an appointement</span>

@@ -288,7 +288,7 @@ const BlogPost = () => {
                 Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
               </p>
               <a
-                href="#"
+                href="https://app.mynotary.io/form"
                 className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
               >
                 <span className="btn-text inline-block">{post.cta || 'Book an appointement'}</span>

@@ -42,7 +42,7 @@ const MobileCTA = memo(({ ctaText = 'Book an appointement' }) => {
       <div className="bg-white border-t border-gray-200 shadow-2xl">
         <div className="px-4 py-3">
           <a
-            href="#"
+            href="https://app.mynotary.io/form"
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg"
           >
             {ctaText}
