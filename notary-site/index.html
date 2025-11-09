@@ -31,9 +31,8 @@
     <!-- Google Fonts - Geist with font-display: swap for better performance -->
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Preload critical images for LCP optimization -->
-    <link rel="preload" as="image" href="/src/assets/hero-bg.svg" fetchpriority="high" />
-    <link rel="preload" as="image" href="/src/assets/bg-service.svg" />
+    <!-- Preload critical fonts and styles only -->
+    <!-- Images are loaded via React components, no need to preload in HTML -->
   </head>
   <body>
     <div id="root"></div>
