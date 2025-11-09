@@ -22,18 +22,9 @@ export default defineConfig({
     })
   ],
   build: {
-    // Enable minification
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log']
-      },
-      format: {
-        comments: false
-      }
-    },
+    // Enable minification - use esbuild instead of terser for better compatibility
+    minify: 'esbuild',
+    // Removed terserOptions as we're using esbuild
     // Enable CSS code splitting
     cssCodeSplit: true,
     // Generate sourcemaps for debugging (disable in production if not needed)
