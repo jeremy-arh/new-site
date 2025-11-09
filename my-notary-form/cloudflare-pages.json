@@ -1,0 +1,19 @@
+{
+  "build": {
+    "command": "npm run build",
+    "cwd": "",
+    "watchPaths": [
+      "src/**",
+      "public/**"
+    ]
+  },
+  "deploy": {
+    "env": {
+      "NODE_VERSION": "18"
+    }
+  },
+  "functions": {
+    "directory": "functions"
+  }
+}
+

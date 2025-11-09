@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap will be set dynamically by Cloudflare Function
+# The sitemap is available at /sitemap.xml
+
+# Disallow admin and dashboard routes
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /notary-admin/
+Disallow: /client-dashboard/
+Disallow: /api/
+Disallow: /functions/
+
