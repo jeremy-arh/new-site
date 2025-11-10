@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
+import { trackCTAClick } from '../utils/gtm';
 
 const Hero = memo(() => {
   const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
@@ -34,7 +35,11 @@ const Hero = memo(() => {
               from anywhere, in just a few minutes.
             </p>
 
-            <a href="https://app.mynotary.io/form" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+            <a 
+              href="https://app.mynotary.io/form" 
+              className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400"
+              onClick={() => trackCTAClick('hero')}
+            >
               <span className="btn-text inline-block">Book an appointment</span>
             </a>
 

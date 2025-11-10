@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
+import { trackPageView } from './utils/gtm'
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('./pages/Home'))
@@ -22,6 +23,19 @@ const PageLoader = () => (
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
   </div>
 )
+
+// Component to track page views
+function PageViewTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Track page view on route change
+    const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
+    trackPageView(pageName, location.pathname);
+  }, [location]);
+
+  return null;
+}
 
 function App() {
   useScrollAnimation();
@@ -56,6 +70,7 @@ function App() {
     <HelmetProvider>
       <Router>
         <ScrollToTop />
+        <PageViewTracker />
         <div className="min-h-screen">
           <Navbar />
           <Suspense fallback={<PageLoader />}>

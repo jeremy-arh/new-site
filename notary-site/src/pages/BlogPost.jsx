@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
+import { trackBlogPostView } from '../utils/gtm';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
 
@@ -65,6 +66,8 @@ const BlogPost = () => {
     if (cachedPost) {
       setPost(cachedPost);
       setLoading(false);
+      // Track blog post view
+      trackBlogPostView(slug, cachedPost.title);
       // Still increment view count in background (fire and forget)
       supabase
         .from('blog_posts')
@@ -89,6 +92,8 @@ const BlogPost = () => {
         // Cache the data
         cache.set('blog_post', slug, data, 5 * 60 * 1000);
         setPost(data);
+        // Track blog post view
+        trackBlogPostView(slug, data.title);
         // Increment view count
         await supabase
           .from('blog_posts')

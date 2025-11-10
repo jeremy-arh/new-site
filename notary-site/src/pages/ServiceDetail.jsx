@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
+import { trackServiceClick } from '../utils/gtm';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
@@ -43,6 +44,8 @@ const ServiceDetail = () => {
         // Cache the data
         cache.set('service', serviceId, data, 10 * 60 * 1000);
         setService(data);
+        // Track service view
+        trackServiceClick(serviceId, data.name, 'service_detail_page');
       } else {
         setError('Service not found');
       }

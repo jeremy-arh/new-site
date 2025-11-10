@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
+import { trackCTAClick } from '../utils/gtm';
 
 const MobileCTA = memo(({ ctaText = 'Book an appointement' }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,6 +45,7 @@ const MobileCTA = memo(({ ctaText = 'Book an appointement' }) => {
           <a
             href="https://app.mynotary.io/form"
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg"
+            onClick={() => trackCTAClick('mobile_cta')}
           >
             {ctaText}
           </a>

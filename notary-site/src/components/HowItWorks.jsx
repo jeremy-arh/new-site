@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
+import { trackCTAClick } from '../utils/gtm';
 
 const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -136,6 +137,7 @@ const HowItWorks = memo(() => {
               <a
                 href="https://app.mynotary.io/form"
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
+                onClick={() => trackCTAClick('how_it_works')}
               >
                 <span className="btn-text inline-block">Book an appointement</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
+import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/gtm';
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -166,14 +167,44 @@ const Navbar = memo(() => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="/#services" className="nav-link text-base">Our services</a>
-              <a href="/#how-it-works" className="nav-link text-base">How it work</a>
-              <a href="/#faq" className="nav-link text-base">FAQ</a>
+              <a 
+                href="/#services" 
+                className="nav-link text-base"
+                onClick={() => trackNavigationClick('Our services', '/#services')}
+              >
+                Our services
+              </a>
+              <a 
+                href="/#how-it-works" 
+                className="nav-link text-base"
+                onClick={() => trackNavigationClick('How it work', '/#how-it-works')}
+              >
+                How it work
+              </a>
+              <a 
+                href="/#faq" 
+                className="nav-link text-base"
+                onClick={() => trackNavigationClick('FAQ', '/#faq')}
+              >
+                FAQ
+              </a>
 
               <div className="w-px h-6 bg-gray-300"></div>
 
-              <a href="https://app.mynotary.io/login" className="nav-link text-base font-semibold">Connexion</a>
-              <a href="https://app.mynotary.io/form" className="primary-cta text-sm"><span className="btn-text inline-block">Book an appointement</span></a>
+              <a 
+                href="https://app.mynotary.io/login" 
+                className="nav-link text-base font-semibold"
+                onClick={() => trackLoginClick('navbar_desktop')}
+              >
+                Connexion
+              </a>
+              <a 
+                href="https://app.mynotary.io/form" 
+                className="primary-cta text-sm"
+                onClick={() => trackCTAClick('navbar_desktop')}
+              >
+                <span className="btn-text inline-block">Book an appointement</span>
+              </a>
             </div>
 
             {/* Animated Hamburger Menu Button */}
@@ -217,21 +248,30 @@ const Navbar = memo(() => {
           <div className="w-full max-w-md space-y-6">
             <a
               href="/#services"
-              onClick={closeMenu}
+              onClick={() => {
+                trackNavigationClick('Our services', '/#services');
+                closeMenu();
+              }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               Our services
             </a>
             <a
               href="/#how-it-works"
-              onClick={closeMenu}
+              onClick={() => {
+                trackNavigationClick('How it work', '/#how-it-works');
+                closeMenu();
+              }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               How it work
             </a>
             <a
               href="/#faq"
-              onClick={closeMenu}
+              onClick={() => {
+                trackNavigationClick('FAQ', '/#faq');
+                closeMenu();
+              }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               FAQ
@@ -241,14 +281,20 @@ const Navbar = memo(() => {
 
             <a
               href="https://app.mynotary.io/login"
-              onClick={closeMenu}
+              onClick={() => {
+                trackLoginClick('navbar_mobile');
+                closeMenu();
+              }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
               Connexion
             </a>
             <a
               href="https://app.mynotary.io/form"
-              onClick={closeMenu}
+              onClick={() => {
+                trackCTAClick('navbar_mobile');
+                closeMenu();
+              }}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
               <span className="btn-text inline-block">Book an appointement</span>
