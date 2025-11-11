@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
-import { trackPageView } from './utils/gtm'
+import { trackPageView } from './utils/plausible'
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('./pages/Home'))

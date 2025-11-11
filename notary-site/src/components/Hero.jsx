@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
-import { trackCTAClick } from '../utils/gtm';
+import { trackCTAClick } from '../utils/plausible';
 
 const Hero = memo(() => {
   const heroBg = useMemo(() => getImageUrl('hero-bg'), []);

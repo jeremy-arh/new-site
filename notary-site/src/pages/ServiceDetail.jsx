@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
-import { trackServiceClick } from '../utils/gtm';
+import { trackServiceClick } from '../utils/plausible';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
-import { trackServiceClick } from '../utils/gtm';
+import { trackServiceClick } from '../utils/plausible';
 
 const Services = () => {
   const [services, setServices] = useState([]);

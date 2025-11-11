@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
-import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/gtm';
+import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/plausible';
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

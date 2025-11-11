@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { trackCTAClick } from '../utils/gtm';
+import { trackCTAClick } from '../utils/plausible';
 
 const MobileCTA = memo(({ ctaText = 'Book an appointement' }) => {
   const [isVisible, setIsVisible] = useState(false);

@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
-import { trackBlogPostView } from '../utils/gtm';
+import { trackBlogPostView } from '../utils/plausible';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
 

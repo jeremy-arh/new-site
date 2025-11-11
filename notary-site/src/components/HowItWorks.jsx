@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
-import { trackCTAClick } from '../utils/gtm';
+import { trackCTAClick } from '../utils/plausible';
 
 const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
