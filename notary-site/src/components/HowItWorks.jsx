@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick } from '../utils/plausible';
+import ctaBg from '../assets/cta-bg.webp';
 
 const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -122,7 +123,17 @@ const HowItWorks = memo(() => {
 
         {/* Bottom CTA (blog-detail style) */}
         <div className="px-[30px] md:px-0 mt-16 md:mt-32 animate-fade-in animation-delay-1000">
-          <div className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+          <div 
+            className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
+            style={{
+              backgroundImage: `url(${ctaBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/60"></div>
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl"></div>
@@ -139,7 +150,7 @@ const HowItWorks = memo(() => {
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
                 onClick={() => trackCTAClick('how_it_works')}
               >
-                <span className="btn-text inline-block">Book an appointement</span>
+                <span className="btn-text inline-block">Notarize now</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

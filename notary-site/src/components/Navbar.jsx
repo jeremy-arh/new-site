@@ -198,13 +198,51 @@ const Navbar = memo(() => {
               >
                 Connexion
               </a>
-              <a 
-                href="https://app.mynotary.io/form" 
-                className="primary-cta text-sm"
-                onClick={() => trackCTAClick('navbar_desktop')}
-              >
-                <span className="btn-text inline-block">Book an appointement</span>
-              </a>
+              <div className="relative inline-block md:overflow-visible">
+                <a 
+                  href="https://app.mynotary.io/form" 
+                  className="primary-cta text-sm relative z-10 cta-animated-border"
+                  onClick={() => trackCTAClick('navbar_desktop')}
+                >
+                  <svg className="cta-border-svg" viewBox="0 0 200 50" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="cta-gradient" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="objectBoundingBox">
+                        <stop offset="0%" stopColor="#491AE9" />
+                        <stop offset="25%" stopColor="#D414E5" />
+                        <stop offset="50%" stopColor="#FC03A1" />
+                        <stop offset="75%" stopColor="#FF7715" />
+                        <stop offset="100%" stopColor="#491AE9" />
+                        <animateTransform
+                          attributeName="gradientTransform"
+                          type="rotate"
+                          values="0 0.5 0.5;360 0.5 0.5"
+                          dur="5s"
+                          repeatCount="indefinite"
+                        />
+                      </linearGradient>
+                      <filter id="glow" x="-200%" y="-200%" width="500%" height="500%">
+                        <feGaussianBlur stdDeviation="6" result="haloBlur"/>
+                        <feOffset in="SourceGraphic" dx="0" dy="5" result="shadow"/>
+                        <feGaussianBlur in="shadow" stdDeviation="15" result="shadowBlur"/>
+                        <feMerge>
+                          <feMergeNode in="haloBlur" opacity="0.5"/>
+                          <feMergeNode in="shadowBlur" opacity="0.9"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    {/* Main border with halo */}
+                    <path
+                      d="M 8,0 Q 0,0 0,8 L 0,42 Q 0,50 8,50 L 192,50 Q 200,50 200,42 L 200,8 Q 200,0 192,0 Z"
+                      stroke="url(#cta-gradient)"
+                      strokeWidth="2.5"
+                      fill="none"
+                      filter="url(#glow)"
+                    />
+                  </svg>
+                  <span className="btn-text inline-block">Notarize now</span>
+                </a>
+              </div>
             </div>
 
             {/* Animated Hamburger Menu Button */}

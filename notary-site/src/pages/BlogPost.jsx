@@ -6,6 +6,7 @@ import { cache } from '../utils/cache';
 import { trackBlogPostView } from '../utils/plausible';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
+import ctaBg from '../assets/cta-bg.webp';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -280,7 +281,17 @@ const BlogPost = () => {
       {/* CTA Section */}
       <section className="px-[30px] pb-20">
         <div className="max-w-[1400px] mx-auto">
-          <div className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+          <div 
+            className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
+            style={{
+              backgroundImage: `url(${ctaBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/60"></div>
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl"></div>
@@ -296,7 +307,7 @@ const BlogPost = () => {
                 href="https://app.mynotary.io/form"
                 className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
               >
-                <span className="btn-text inline-block">{post.cta || 'Book an appointement'}</span>
+                <span className="btn-text inline-block">{post.cta || 'Notarize now'}</span>
                 <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -423,7 +434,7 @@ const BlogPost = () => {
           </Link>
         </div>
       </section>
-      <MobileCTA ctaText={post?.cta || 'Book an appointment'} />
+      <MobileCTA ctaText={post?.cta || 'Notarize now'} />
     </div>
   );
 };

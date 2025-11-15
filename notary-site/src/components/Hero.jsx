@@ -40,7 +40,7 @@ const Hero = memo(() => {
               className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400"
               onClick={() => trackCTAClick('hero')}
             >
-              <span className="btn-text inline-block">Book an appointment</span>
+              <span className="btn-text inline-block">Notarize now</span>
             </a>
 
             {/* Features */}
