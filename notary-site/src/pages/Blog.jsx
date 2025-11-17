@@ -162,30 +162,11 @@ const Blog = () => {
                   {/* Content */}
                   <div className="p-6">
                     {/* Meta Info */}
-                    <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        {post.author_avatar_url ? (
-                          <img
-                            src={post.author_avatar_url}
-                            alt={post.author_name}
-                            className="w-6 h-6 rounded-full"
-                          />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
-                            <span className="text-xs font-semibold text-gray-600">
-                              {post.author_name.charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                        <span className="font-medium text-gray-700">{post.author_name}</span>
+                    {post.read_time_minutes && (
+                      <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
+                        <span>{post.read_time_minutes} min read</span>
                       </div>
-                      {post.read_time_minutes && (
-                        <>
-                          <span>•</span>
-                          <span>{post.read_time_minutes} min read</span>
-                        </>
-                      )}
-                    </div>
+                    )}
 
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">

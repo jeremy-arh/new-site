@@ -335,7 +335,7 @@ const Navbar = memo(() => {
               }}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
-              <span className="btn-text inline-block">Book an appointement</span>
+              <span className="btn-text inline-block">Notarize now</span>
             </a>
           </div>
         </div>
