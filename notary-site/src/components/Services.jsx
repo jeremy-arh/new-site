@@ -82,7 +82,7 @@ const Services = () => {
                   {service.base_price && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">From</span>
-                      <span className="text-lg font-bold text-gray-900">${service.base_price}</span>
+                      <span className="text-lg font-bold text-gray-900">{service.base_price}€</span>
                     </div>
                   )}
                 </div>

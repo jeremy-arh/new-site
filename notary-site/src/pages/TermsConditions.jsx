@@ -161,7 +161,7 @@ const TermsConditions = () => {
             
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">8.1 Service Prices</h3>
             <p className="text-gray-600 mb-6">
-              Our Services rates are indicated on the Platform in euros (€) and US dollars ($) and include:
+              Our Services rates are indicated on the Platform in euros (€) and include:
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
               <li>Notary fees</li>
