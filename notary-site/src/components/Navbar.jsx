@@ -11,7 +11,7 @@ const Navbar = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [ctaText, setCtaText] = useState('Book an appointement');
+  const [ctaText, setCtaText] = useState('Notarize now');
   const [servicePrice, setServicePrice] = useState(null);
   const location = useLocation();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
@@ -94,11 +94,11 @@ const Navbar = memo(() => {
           if (!error && data?.cta) {
             setCtaText(data.cta);
           } else {
-            setCtaText('Book an appointement');
+            setCtaText('Notarize now');
           }
         } catch (error) {
           console.error('Error fetching blog CTA:', error);
-          setCtaText('Book an appointement');
+          setCtaText('Notarize now');
         }
       } else {
         // Service detail
@@ -113,22 +113,22 @@ const Navbar = memo(() => {
               .single();
 
             if (!error && data) {
-              setCtaText(data.cta || 'Book an appointement');
+              setCtaText(data.cta || 'Notarize now');
               // Set price only if it exists and is not empty/null
               const price = data.base_price;
               setServicePrice(price != null && price !== '' && price !== undefined ? price : null);
             } else {
-              setCtaText('Book an appointement');
+              setCtaText('Notarize now');
               setServicePrice(null);
             }
           } catch (error) {
             console.error('Error fetching service CTA:', error);
-            setCtaText('Book an appointement');
+            setCtaText('Notarize now');
             setServicePrice(null);
           }
         } else {
           // Reset to default if not on blog/service detail page
-          setCtaText('Book an appointement');
+          setCtaText('Notarize now');
           setServicePrice(null);
         }
       }
