@@ -11,6 +11,105 @@ import FAQ from '../components/FAQ';
 import MobileCTA from '../components/MobileCTA';
 import bgService from '../assets/bg-service.svg';
 
+// Other Services Section Component
+const OtherServicesSection = ({ currentServiceId }) => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchServices();
+  }, [currentServiceId]);
+
+  const fetchServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .eq('is_active', true)
+        .neq('service_id', currentServiceId)
+        .order('created_at', { ascending: true })
+        .limit(6);
+
+      if (error) throw error;
+      setServices(data || []);
+    } catch (error) {
+      console.error('Error fetching other services:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section id="other-services" className="py-20 px-[30px] bg-white">
+        <div className="max-w-[1300px] mx-auto">
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (services.length === 0) {
+    return null;
+  }
+
+  return (
+    <section id="other-services" className="py-20 px-[30px] bg-white overflow-hidden">
+      <div className="max-w-[1300px] mx-auto">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
+            Other services
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
+            Explore Our <span className="gradient-text">Other Services</span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((serviceItem) => (
+            <Link
+              key={serviceItem.id}
+              to={`/services/${serviceItem.service_id}`}
+              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up"
+              onClick={() => trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services')}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                  {serviceItem.icon ? (
+                    <Icon icon={serviceItem.icon} className="w-10 h-10 text-black" />
+                  ) : (
+                    <Icon icon="iconoir:badge-check" className="w-10 h-10 text-black" />
+                  )}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">{serviceItem.name}</h3>
+              </div>
+
+              <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed">{serviceItem.short_description || serviceItem.description}</p>
+
+              <div className="flex items-center justify-between">
+                <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                  <span className="btn-text inline-block">Learn more</span>
+                  <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+                {serviceItem.base_price && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">From</span>
+                    <span className="text-lg font-bold text-gray-900">{serviceItem.base_price}€</span>
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const ServiceDetail = () => {
   const { serviceId } = useParams();
   const [service, setService] = useState(null);
@@ -178,6 +277,9 @@ const ServiceDetail = () => {
 
       {/* How It Works Section */}
       <HowItWorks />
+
+      {/* Other Services Section */}
+      <OtherServicesSection currentServiceId={service.service_id} />
 
       {/* Testimonial Section */}
       <Testimonial />

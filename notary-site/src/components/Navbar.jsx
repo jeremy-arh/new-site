@@ -175,23 +175,56 @@ const Navbar = memo(() => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <a 
-                href="/#services" 
+                href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'} 
                 className="nav-link text-base"
-                onClick={() => trackNavigationClick('Our services', '/#services')}
+                onClick={(e) => {
+                  if (location.pathname.startsWith('/services/')) {
+                    e.preventDefault();
+                    const element = document.getElementById('other-services');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    trackNavigationClick('Our services', '#other-services');
+                  } else {
+                    trackNavigationClick('Our services', '/#services');
+                  }
+                }}
               >
                 Our services
               </a>
               <a 
-                href="/#how-it-works" 
+                href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'} 
                 className="nav-link text-base"
-                onClick={() => trackNavigationClick('How it work', '/#how-it-works')}
+                onClick={(e) => {
+                  if (location.pathname.startsWith('/services/')) {
+                    e.preventDefault();
+                    const element = document.getElementById('how-it-works');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    trackNavigationClick('How it work', '#how-it-works');
+                  } else {
+                    trackNavigationClick('How it work', '/#how-it-works');
+                  }
+                }}
               >
                 How it work
               </a>
               <a 
-                href="/#faq" 
+                href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'} 
                 className="nav-link text-base"
-                onClick={() => trackNavigationClick('FAQ', '/#faq')}
+                onClick={(e) => {
+                  if (location.pathname.startsWith('/services/')) {
+                    e.preventDefault();
+                    const element = document.getElementById('faq');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    trackNavigationClick('FAQ', '#faq');
+                  } else {
+                    trackNavigationClick('FAQ', '/#faq');
+                  }
+                }}
               >
                 FAQ
               </a>
@@ -294,9 +327,18 @@ const Navbar = memo(() => {
         <div className="h-full flex flex-col justify-center items-center px-8 pt-24 pb-12">
           <div className="w-full max-w-md space-y-6">
             <a
-              href="/#services"
-              onClick={() => {
-                trackNavigationClick('Our services', '/#services');
+              href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'}
+              onClick={(e) => {
+                if (location.pathname.startsWith('/services/')) {
+                  e.preventDefault();
+                  const element = document.getElementById('other-services');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                  trackNavigationClick('Our services', '#other-services');
+                } else {
+                  trackNavigationClick('Our services', '/#services');
+                }
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -304,9 +346,18 @@ const Navbar = memo(() => {
               Our services
             </a>
             <a
-              href="/#how-it-works"
-              onClick={() => {
-                trackNavigationClick('How it work', '/#how-it-works');
+              href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'}
+              onClick={(e) => {
+                if (location.pathname.startsWith('/services/')) {
+                  e.preventDefault();
+                  const element = document.getElementById('how-it-works');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                  trackNavigationClick('How it work', '#how-it-works');
+                } else {
+                  trackNavigationClick('How it work', '/#how-it-works');
+                }
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -314,9 +365,18 @@ const Navbar = memo(() => {
               How it work
             </a>
             <a
-              href="/#faq"
-              onClick={() => {
-                trackNavigationClick('FAQ', '/#faq');
+              href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'}
+              onClick={(e) => {
+                if (location.pathname.startsWith('/services/')) {
+                  e.preventDefault();
+                  const element = document.getElementById('faq');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                  trackNavigationClick('FAQ', '#faq');
+                } else {
+                  trackNavigationClick('FAQ', '/#faq');
+                }
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
