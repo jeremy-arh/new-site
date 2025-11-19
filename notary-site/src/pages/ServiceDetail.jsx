@@ -108,7 +108,9 @@ const ServiceDetail = () => {
               </p>
 
               <a href="https://app.mynotary.io/form" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
-                <span className="btn-text inline-block">{service.cta || 'Notarize now'}</span>
+                <span className="btn-text inline-block">
+                  {service.cta || 'Notarize now'}{service.base_price ? ` - ${service.base_price}€` : ''}
+                </span>
               </a>
 
               {/* Features */}
@@ -196,7 +198,7 @@ const ServiceDetail = () => {
       </section>
 
       {/* Mobile CTA with service-specific text */}
-      <MobileCTA ctaText={service.cta || 'Notarize now'} />
+      <MobileCTA ctaText={service.cta || 'Notarize now'} price={service.base_price} />
     </div>
   );
 };

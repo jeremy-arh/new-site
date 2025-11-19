@@ -12,6 +12,7 @@ const Navbar = memo(() => {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [ctaText, setCtaText] = useState('Book an appointement');
+  const [servicePrice, setServicePrice] = useState(null);
   const location = useLocation();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
 
@@ -107,22 +108,28 @@ const Navbar = memo(() => {
           try {
             const { data, error } = await supabase
               .from('services')
-              .select('cta')
+              .select('cta, base_price')
               .eq('service_id', serviceId)
               .single();
 
-            if (!error && data?.cta) {
-              setCtaText(data.cta);
+            if (!error && data) {
+              setCtaText(data.cta || 'Book an appointement');
+              // Set price only if it exists and is not empty/null
+              const price = data.base_price;
+              setServicePrice(price != null && price !== '' && price !== undefined ? price : null);
             } else {
               setCtaText('Book an appointement');
+              setServicePrice(null);
             }
           } catch (error) {
             console.error('Error fetching service CTA:', error);
             setCtaText('Book an appointement');
+            setServicePrice(null);
           }
         } else {
           // Reset to default if not on blog/service detail page
           setCtaText('Book an appointement');
+          setServicePrice(null);
         }
       }
     };
@@ -240,7 +247,9 @@ const Navbar = memo(() => {
                       filter="url(#glow)"
                     />
                   </svg>
-                  <span className="btn-text inline-block">Notarize now</span>
+                  <span className="btn-text inline-block">
+                    {ctaText}{servicePrice ? ` - ${servicePrice}€` : ''}
+                  </span>
                 </a>
               </div>
             </div>
@@ -335,7 +344,9 @@ const Navbar = memo(() => {
               }}
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
-              <span className="btn-text inline-block">Notarize now</span>
+              <span className="btn-text inline-block">
+                {ctaText}{servicePrice ? ` - ${servicePrice}€` : ''}
+              </span>
             </a>
           </div>
         </div>

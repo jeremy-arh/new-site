@@ -1,11 +1,15 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect, useCallback, memo, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick } from '../utils/plausible';
 import ctaBg from '../assets/cta-bg.webp';
 
 const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [servicePrice, setServicePrice] = useState(null);
+  const location = useLocation();
 
   const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth < 768);
@@ -15,6 +19,38 @@ const HowItWorks = memo(() => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [handleResize]);
+
+  // Fetch service price if on a service detail page
+  useEffect(() => {
+    const fetchServicePrice = async () => {
+      const path = location.pathname || '';
+      const serviceMatch = path.match(/^\/services\/([^/]+)/);
+      
+      if (serviceMatch && serviceMatch[1]) {
+        const serviceId = decodeURIComponent(serviceMatch[1]);
+        try {
+          const { data, error } = await supabase
+            .from('services')
+            .select('base_price')
+            .eq('service_id', serviceId)
+            .single();
+
+          if (!error && data?.base_price) {
+            setServicePrice(data.base_price);
+          } else {
+            setServicePrice(null);
+          }
+        } catch (error) {
+          console.error('Error fetching service price:', error);
+          setServicePrice(null);
+        }
+      } else {
+        setServicePrice(null);
+      }
+    };
+
+    fetchServicePrice();
+  }, [location.pathname]);
 
   const steps = useMemo(() => [
     {
@@ -150,7 +186,9 @@ const HowItWorks = memo(() => {
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
                 onClick={() => trackCTAClick('how_it_works')}
               >
-                <span className="btn-text inline-block">Notarize now</span>
+                <span className="btn-text inline-block">
+                  Notarize now{servicePrice ? ` - ${servicePrice}€` : ''}
+                </span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

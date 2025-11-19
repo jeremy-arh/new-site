@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { trackCTAClick } from '../utils/plausible';
 
-const MobileCTA = memo(({ ctaText = 'Notarize now' }) => {
+const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -83,7 +83,9 @@ const MobileCTA = memo(({ ctaText = 'Notarize now' }) => {
                 filter="url(#glow-mobile)"
               />
             </svg>
-            <span className="btn-text inline-block relative z-10">{ctaText}</span>
+            <span className="btn-text inline-block relative z-10">
+              {ctaText}{price ? ` - ${price}€` : ''}
+            </span>
           </a>
         </div>
       </div>

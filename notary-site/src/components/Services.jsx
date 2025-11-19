@@ -74,17 +74,13 @@ const Services = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-                    <span className="btn-text inline-block">Learn more</span>
+                    <span className="btn-text inline-block">
+                      Learn more{service.base_price ? ` - ${service.base_price}€` : ''}
+                    </span>
                     <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
-                  {service.base_price && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">From</span>
-                      <span className="text-lg font-bold text-gray-900">{service.base_price}€</span>
-                    </div>
-                  )}
                 </div>
               </Link>
             ))}
