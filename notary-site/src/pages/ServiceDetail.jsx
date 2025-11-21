@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
 import { trackServiceClick } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import { getFormUrl } from '../utils/formUrl';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
 import MobileCTA from '../components/MobileCTA';
+import PriceDisplay from '../components/PriceDisplay';
 import bgService from '../assets/bg-service.svg';
 
 // Other Services Section Component
@@ -97,8 +101,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
                 </div>
                 {serviceItem.base_price && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">From</span>
-                    <span className="text-lg font-bold text-gray-900">{serviceItem.base_price}€</span>
+                    <PriceDisplay price={serviceItem.base_price} showFrom className="text-lg font-bold text-gray-900" />
                   </div>
                 )}
               </div>
@@ -112,13 +115,23 @@ const OtherServicesSection = ({ currentServiceId }) => {
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
+  const location = useLocation();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const { formatPrice, currency } = useCurrency();
+  const [ctaPrice, setCtaPrice] = useState('');
 
   useEffect(() => {
     fetchService();
   }, [serviceId]);
+
+  useEffect(() => {
+    if (service?.base_price) {
+      formatPrice(service.base_price).then(setCtaPrice);
+    }
+  }, [service?.base_price, formatPrice]);
 
   const fetchService = async () => {
     // Check cache first
@@ -180,7 +193,9 @@ const ServiceDetail = () => {
     <div className="min-h-screen">
       <Helmet>
         <title>{service.meta_title || service.name || 'Service'}</title>
+        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
         <meta name="description" content={service.meta_description || service.short_description || service.description || ''} />
+        <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
       </Helmet>
       {/* Hero Section - Similar to Home Hero */}
       <section className="md:px-5 md:pt-[90px]">
@@ -206,9 +221,9 @@ const ServiceDetail = () => {
                 {service.short_description || service.description}
               </p>
 
-              <a href="https://app.mynotary.io/form" className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+              <a href={getFormUrl(currency)} className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
                 <span className="btn-text inline-block">
-                  {service.cta || 'Notarize now'}{service.base_price ? ` - ${service.base_price}€` : ''}
+                  {service.cta || 'Notarize now'}{ctaPrice ? ` - ${ctaPrice}` : ''}
                 </span>
               </a>
 
@@ -267,10 +282,37 @@ const ServiceDetail = () => {
             What is <span className="gradient-text">{service.name}</span>?
           </h2>
           <div className="max-w-4xl mx-auto">
-            <div
-              className="blog-content animate-fade-in animation-delay-200"
-              dangerouslySetInnerHTML={{ __html: service.detailed_description || service.description }}
-            />
+            <div className="relative animate-fade-in animation-delay-200">
+              <div
+                className={`blog-content ${!isDescriptionExpanded ? 'max-h-[400px] overflow-hidden' : ''}`}
+                dangerouslySetInnerHTML={{ __html: service.detailed_description || service.description }}
+              />
+              {!isDescriptionExpanded && (
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+              )}
+            </div>
+            <div className="text-center mt-6">
+              <button
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                className="text-black font-semibold hover:text-gray-600 transition-colors duration-200 inline-flex items-center gap-2"
+              >
+                {isDescriptionExpanded ? (
+                  <>
+                    <span>Show less</span>
+                    <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    <span>Read more</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </section>

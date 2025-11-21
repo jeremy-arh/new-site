@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { trackBlogPostView } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import { getFormUrl } from '../utils/formUrl';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
 import ctaBg from '../assets/cta-bg.webp';
@@ -16,6 +19,8 @@ const BlogPost = () => {
   const [hasHeadings, setHasHeadings] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const contentRef = useRef(null);
+  const location = useLocation();
+  const { currency } = useCurrency();
 
   useEffect(() => {
     fetchPost();
@@ -188,7 +193,9 @@ const BlogPost = () => {
     <div className="min-h-screen">
       <Helmet>
         <title>{post.meta_title || post.title || 'Blog Post'}</title>
+        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
         <meta name="description" content={post.meta_description || post.excerpt || ''} />
+        <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
       </Helmet>
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-[30px] bg-gray-50">
@@ -304,7 +311,7 @@ const BlogPost = () => {
                 Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
               </p>
               <a
-                href="https://app.mynotary.io/form"
+                href={getFormUrl(currency)}
                 className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
               >
                 <span className="btn-text inline-block">{post.cta || 'Notarize now'}</span>

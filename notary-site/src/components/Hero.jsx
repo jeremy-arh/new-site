@@ -2,9 +2,12 @@ import { memo, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import { getFormUrl } from '../utils/formUrl';
 
 const Hero = memo(() => {
   const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
+  const { currency } = useCurrency();
 
   return (
     <section className="md:px-5 md:pt-[90px]">
@@ -36,7 +39,7 @@ const Hero = memo(() => {
             </p>
 
             <a 
-              href="https://app.mynotary.io/form" 
+              href={getFormUrl(currency)} 
               className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400"
               onClick={() => trackCTAClick('hero')}
             >

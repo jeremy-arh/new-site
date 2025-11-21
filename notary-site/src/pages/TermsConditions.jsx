@@ -1,9 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import MobileCTA from '../components/MobileCTA';
 
 const TermsConditions = () => {
+  const location = useLocation();
+  
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Terms & Conditions - My notary</title>
+        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
+        <meta name="description" content="Terms and Conditions for My notary services" />
+      </Helmet>
       {/* Hero Section */}
       <section className="bg-gray-900 text-white pt-32 pb-16 px-[30px]">
         <div className="max-w-[1100px] mx-auto">

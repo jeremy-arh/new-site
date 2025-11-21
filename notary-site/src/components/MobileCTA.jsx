@@ -1,9 +1,13 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { trackCTAClick } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import { getFormUrl } from '../utils/formUrl';
 
 const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { formatPrice, currency } = useCurrency();
+  const [formattedPrice, setFormattedPrice] = useState('');
 
   const handleScroll = useCallback(() => {
     // Show CTA after scrolling 200px
@@ -34,6 +38,14 @@ const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
     return () => observer.disconnect();
   }, [checkMenuState]);
 
+  useEffect(() => {
+    if (price) {
+      formatPrice(price).then(setFormattedPrice);
+    } else {
+      setFormattedPrice('');
+    }
+  }, [price, formatPrice]);
+
   return (
     <div
       className={`fixed bottom-0 left-0 right-0 z-50 md:hidden transition-transform duration-300 ${
@@ -43,7 +55,7 @@ const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
       <div className="bg-white border-t border-gray-200 shadow-2xl">
         <div className="px-4 py-3">
           <a
-            href="https://app.mynotary.io/form"
+            href={getFormUrl(currency)}
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg relative cta-animated-border"
             onClick={() => trackCTAClick('mobile_cta')}
           >
@@ -84,7 +96,7 @@ const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
               />
             </svg>
             <span className="btn-text inline-block relative z-10">
-              {ctaText}{price ? ` - ${price}€` : ''}
+              {ctaText}{formattedPrice ? ` - ${formattedPrice}` : ''}
             </span>
           </a>
         </div>

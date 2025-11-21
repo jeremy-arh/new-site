@@ -4,6 +4,9 @@ import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
 import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import CurrencySelector from './CurrencySelector';
+import { getFormUrl } from '../utils/formUrl';
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +16,9 @@ const Navbar = memo(() => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [ctaText, setCtaText] = useState('Notarize now');
   const [servicePrice, setServicePrice] = useState(null);
+  const [formattedPrice, setFormattedPrice] = useState('');
   const location = useLocation();
+  const { formatPrice, currency } = useCurrency();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
 
   const handleScroll = useCallback(() => {
@@ -137,6 +142,14 @@ const Navbar = memo(() => {
     fetchBlogCTA();
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (servicePrice) {
+      formatPrice(servicePrice).then(setFormattedPrice);
+    } else {
+      setFormattedPrice('');
+    }
+  }, [servicePrice, formatPrice]);
+
   return (
     <>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0 ${
@@ -231,6 +244,10 @@ const Navbar = memo(() => {
 
               <div className="w-px h-6 bg-gray-300"></div>
 
+              <div className="flex items-center">
+                <CurrencySelector />
+              </div>
+
               <a 
                 href="https://app.mynotary.io/login" 
                 className="nav-link text-base font-semibold"
@@ -240,7 +257,7 @@ const Navbar = memo(() => {
               </a>
               <div className="relative inline-block md:overflow-visible">
                 <a 
-                  href="https://app.mynotary.io/form" 
+                  href={getFormUrl(currency)} 
                   className="primary-cta text-sm relative z-10 cta-animated-border"
                   onClick={() => trackCTAClick('navbar_desktop')}
                 >
@@ -281,7 +298,7 @@ const Navbar = memo(() => {
                     />
                   </svg>
                   <span className="btn-text inline-block">
-                    {ctaText}{servicePrice ? ` - ${servicePrice}€` : ''}
+                    {ctaText}{formattedPrice ? ` - ${formattedPrice}` : ''}
                   </span>
                 </a>
               </div>
@@ -386,6 +403,11 @@ const Navbar = memo(() => {
 
             <div className="border-t border-gray-200 my-6"></div>
 
+            <div className="px-4 py-4">
+              <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Currency</div>
+              <CurrencySelector />
+            </div>
+
             <a
               href="https://app.mynotary.io/login"
               onClick={() => {
@@ -397,7 +419,7 @@ const Navbar = memo(() => {
               Connexion
             </a>
             <a
-              href="https://app.mynotary.io/form"
+              href={getFormUrl(currency)}
               onClick={() => {
                 trackCTAClick('navbar_mobile');
                 closeMenu();
@@ -405,7 +427,7 @@ const Navbar = memo(() => {
               className="block text-center primary-cta text-lg py-4 mt-8"
             >
               <span className="btn-text inline-block">
-                {ctaText}{servicePrice ? ` - ${servicePrice}€` : ''}
+                {ctaText}{formattedPrice ? ` - ${formattedPrice}` : ''}
               </span>
             </a>
           </div>

@@ -158,6 +158,9 @@ export const setupLinkPrefetch = () => {
 
   // Handle hover with debounce
   const handleHover = (e) => {
+    // Check if closest is available (for older browsers or edge cases)
+    if (!e.target || typeof e.target.closest !== 'function') return;
+    
     const link = e.target.closest('a[href*="/blog/"], a[href*="/services/"]');
     if (!link) return;
 

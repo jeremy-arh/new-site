@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import Hero from '../components/Hero'
 import Services from '../components/Services'
 import HowItWorks from '../components/HowItWorks'
@@ -12,6 +13,7 @@ function Home() {
     <>
       <Helmet>
         <title>My notary - Notarize and Apostille Your Documents 100% Online</title>
+        <link rel="canonical" href={getCanonicalUrl('/')} />
         <meta property="og:title" content="My notary - Notarize and Apostille Your Documents 100% Online" />
         <meta name="twitter:title" content="My notary - Notarize and Apostille Your Documents 100% Online" />
       </Helmet>

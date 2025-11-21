@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
 import { trackServiceClick } from '../utils/plausible';
+import PriceDisplay from './PriceDisplay';
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -81,8 +82,7 @@ const Services = () => {
                   </div>
                   {service.base_price && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">From</span>
-                      <span className="text-lg font-bold text-gray-900">{service.base_price}€</span>
+                      <PriceDisplay price={service.base_price} showFrom className="text-lg font-bold text-gray-900" />
                     </div>
                   )}
                 </div>

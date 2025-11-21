@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import MobileCTA from '../components/MobileCTA';
 
 const Blog = () => {
+  const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -65,6 +68,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Blog - My notary</title>
+        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
+        <meta name="description" content="Stay informed about notarization, legal documents, apostilles, and industry news" />
+      </Helmet>
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto text-center">

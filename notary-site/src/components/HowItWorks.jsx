@@ -4,12 +4,16 @@ import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick } from '../utils/plausible';
+import { useCurrency } from '../contexts/CurrencyContext';
+import { getFormUrl } from '../utils/formUrl';
 import ctaBg from '../assets/cta-bg.webp';
 
 const HowItWorks = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [servicePrice, setServicePrice] = useState(null);
+  const [formattedPrice, setFormattedPrice] = useState('');
   const location = useLocation();
+  const { formatPrice, currency } = useCurrency();
 
   const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth < 768);
@@ -51,6 +55,14 @@ const HowItWorks = memo(() => {
 
     fetchServicePrice();
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (servicePrice) {
+      formatPrice(servicePrice).then(setFormattedPrice);
+    } else {
+      setFormattedPrice('');
+    }
+  }, [servicePrice, formatPrice]);
 
   const steps = useMemo(() => [
     {
@@ -182,12 +194,12 @@ const HowItWorks = memo(() => {
                 Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
               </p>
               <a
-                href="https://app.mynotary.io/form"
+                href={getFormUrl(currency)}
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
                 onClick={() => trackCTAClick('how_it_works')}
               >
                 <span className="btn-text inline-block">
-                  Notarize now{servicePrice ? ` - ${servicePrice}€` : ''}
+                  Notarize now{formattedPrice ? ` - ${formattedPrice}` : ''}
                 </span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
