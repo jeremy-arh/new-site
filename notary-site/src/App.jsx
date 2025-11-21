@@ -13,6 +13,7 @@ import { trackPageView } from './utils/plausible'
 const Home = lazy(() => import('./pages/Home'))
 const Blog = lazy(() => import('./pages/Blog'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
+const ServicesList = lazy(() => import('./pages/ServicesList'))
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'))
 const TermsConditions = lazy(() => import('./pages/TermsConditions'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
@@ -80,6 +81,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/services" element={<ServicesList />} />
                 <Route path="/services/:serviceId" element={<ServiceDetail />} />
                 <Route path="/terms-conditions" element={<TermsConditions />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
