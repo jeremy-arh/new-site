@@ -120,6 +120,7 @@ const ServiceDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
 
@@ -132,6 +133,14 @@ const ServiceDetail = () => {
       formatPrice(service.base_price).then(setCtaPrice);
     }
   }, [service?.base_price, formatPrice]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1150);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const fetchService = async () => {
     // Check cache first
@@ -198,9 +207,9 @@ const ServiceDetail = () => {
         <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
       </Helmet>
       {/* Hero Section - Similar to Home Hero */}
-      <section className="md:px-5 md:pt-[90px]">
+      <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
         <div
-          className="relative md:rounded-3xl overflow-hidden min-h-screen md:min-h-0 md:h-[calc(100vh-110px)] flex items-center"
+          className={`relative ${isMobile ? '' : 'rounded-3xl'} overflow-hidden ${isMobile ? 'min-h-screen' : 'min-h-0 h-[calc(100vh-110px)]'} flex items-center`}
           style={{
             backgroundImage: `url(${bgService})`,
             backgroundSize: 'cover',
@@ -213,35 +222,35 @@ const ServiceDetail = () => {
           {/* Content Container */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
             <div className="max-w-3xl">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+              <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight animate-fade-in`}>
                 {service.name}
               </h1>
 
-              <p className="text-base sm:text-lg text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
+              <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl animate-fade-in animation-delay-200`}>
                 {service.short_description || service.description}
               </p>
 
-              <a href={getFormUrl(currency, service?.service_id || serviceId)} className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+              <a href={getFormUrl(currency, service?.service_id || serviceId)} className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}>
                 <span className="btn-text inline-block">
                   {service.cta || 'Notarize now'}{ctaPrice ? ` - ${ctaPrice}` : ''}
                 </span>
               </a>
 
               {/* Features */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
+              <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
                 <div className="flex items-center gap-2">
-                  <Icon icon="lets-icons:world-2-light" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                  <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
+                  <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Legally valid worldwide</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Icon icon="fluent:flash-32-regular" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                  <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
+                  <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Fast &amp; fully online</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Icon icon="si:lock-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                  <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
+                  <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Secure &amp; privacy-focused</span>
                 </div>
               </div>
             </div>

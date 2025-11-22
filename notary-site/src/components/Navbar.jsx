@@ -11,7 +11,7 @@ import { getFormUrl } from '../utils/formUrl';
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [ctaText, setCtaText] = useState('Notarize now');
@@ -28,7 +28,7 @@ const Navbar = memo(() => {
     setIsScrolled(currentScrollY > 50);
 
     // Only apply hide/show logic on mobile
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 1150) {
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Scrolling down
         setIsHeaderVisible(false);
@@ -44,7 +44,7 @@ const Navbar = memo(() => {
   }, [lastScrollY]);
 
   const handleResize = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
+    setIsMobile(window.innerWidth < 1150);
   }, []);
 
   const toggleMenu = useCallback(() => {
@@ -156,11 +156,11 @@ const Navbar = memo(() => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 z-50 transition-all duration-300 px-[10px] md:px-0 pt-[10px] md:pt-0 ${
+      <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isMobile ? 'px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
         !isHeaderVisible && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div
-          className="transition-all duration-300 rounded-2xl md:rounded-none md:bg-[#FEFEFE]"
+          className={`transition-all duration-300 ${isMobile ? 'rounded-2xl' : 'rounded-none bg-[#FEFEFE]'}`}
           style={isMobile ? (isMenuOpen ? {
             background: 'transparent',
             borderRadius: '16px',
@@ -177,20 +177,20 @@ const Navbar = memo(() => {
             background: '#FEFEFE',
           }}
         >
-          <div className="max-w-[1300px] mx-auto px-[20px] md:px-[30px]">
-            <div className="flex justify-between items-center h-14 md:h-20">
+          <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
+            <div className={`flex justify-between items-center ${isMobile ? 'h-14' : 'h-20'}`}>
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
                 src={isMobile && !isMenuOpen ? logoBlanc : logoNoir}
                 alt="Logo"
-                className="h-6 md:h-8 w-auto"
+                className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
                 width="130"
               />
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className={`${isMobile ? 'hidden' : 'flex'} items-center space-x-8`}>
               <a 
                 href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'} 
                 className="nav-link text-base"
@@ -259,7 +259,7 @@ const Navbar = memo(() => {
               >
                 Connexion
               </a>
-              <div className="relative inline-block md:overflow-visible">
+              <div className={`relative inline-block ${isMobile ? '' : 'overflow-visible'}`}>
                 <a 
                   href={getFormUrl(currency, currentServiceId)} 
                   className="primary-cta text-sm relative z-10 cta-animated-border"
@@ -311,22 +311,22 @@ const Navbar = memo(() => {
             {/* Animated Hamburger Menu Button */}
             <button
               onClick={toggleMenu}
-              className="md:hidden relative z-[60] w-8 h-8 flex flex-col items-center justify-center focus:outline-none"
+              className={`${isMobile ? '' : 'hidden'} relative z-[60] w-8 h-8 flex flex-col items-center justify-center focus:outline-none`}
               aria-label="Toggle menu"
             >
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span
-                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center ${
                     isMenuOpen ? 'rotate-45 translate-y-1.5 bg-gray-900' : 'bg-white'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 ${
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 ${
                     isMenuOpen ? 'opacity-0 scale-0 bg-gray-900' : 'opacity-100 scale-100 bg-white'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 md:bg-gray-900 rounded-full transition-all duration-300 origin-center ${
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center ${
                     isMenuOpen ? '-rotate-45 -translate-y-1.5 bg-gray-900' : 'bg-white'
                   }`}
                 ></span>
@@ -339,7 +339,7 @@ const Navbar = memo(() => {
 
       {/* Fullscreen Mobile Menu Overlay */}
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-white transition-all duration-500 ease-in-out ${
+        className={`${isMobile ? '' : 'hidden'} fixed inset-0 z-40 bg-white transition-all duration-500 ease-in-out ${
           isMenuOpen
             ? 'opacity-100 visible'
             : 'opacity-0 invisible'

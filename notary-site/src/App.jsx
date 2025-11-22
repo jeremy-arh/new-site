@@ -5,6 +5,7 @@ import { CurrencyProvider } from './contexts/CurrencyContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import CTAPopup from './components/CTAPopup'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
 import { trackPageView } from './utils/plausible'
@@ -89,6 +90,7 @@ function App() {
               </Routes>
             </Suspense>
             <Footer />
+            <CTAPopup />
           </div>
         </Router>
       </CurrencyProvider>

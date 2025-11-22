@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'custom': '1150px',
+      },
       fontFamily: {
         'sans': ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'geist': ['Geist', 'sans-serif'],

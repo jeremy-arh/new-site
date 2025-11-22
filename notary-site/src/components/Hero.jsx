@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState, useEffect, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick } from '../utils/plausible';
@@ -8,12 +8,22 @@ import { getFormUrl } from '../utils/formUrl';
 const Hero = memo(() => {
   const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
   const { currency } = useCurrency();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
+
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 1150);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
 
   return (
-    <section className="md:px-5 md:pt-[90px]">
+    <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
       {/* Hero Block with Background Image - LCP Element */}
       <div
-        className="relative md:rounded-3xl overflow-hidden min-h-screen md:min-h-0 md:h-[calc(100vh-110px)] flex items-center"
+        className={`relative ${isMobile ? '' : 'rounded-3xl'} overflow-hidden ${isMobile ? 'min-h-screen' : 'min-h-0 h-[calc(100vh-110px)]'} flex items-center`}
         style={{
           backgroundImage: `url(${heroBg})`,
           backgroundSize: 'cover',
@@ -27,40 +37,40 @@ const Hero = memo(() => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 md:mb-6 leading-tight animate-fade-in">
+            <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight animate-fade-in`}>
               Notarize and Apostille <br />
               Your Documents <br />
               100% Online
             </h1>
 
-            <p className="text-base sm:text-lg text-white/90 mb-6 md:mb-8 leading-relaxed max-w-2xl animate-fade-in animation-delay-200">
+            <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl animate-fade-in animation-delay-200`}>
               Secure, legally valid, recognized internationally through the Hague Convention<br />
               from anywhere, in just a few minutes.
             </p>
 
             <a 
               href={getFormUrl(currency)} 
-              className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400"
+              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
               onClick={() => trackCTAClick('hero')}
             >
               <span className="btn-text inline-block">Notarize now</span>
             </a>
 
             {/* Features */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
+            <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
               <div className="flex items-center gap-2">
-                <Icon icon="lets-icons:world-2-light" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
+                <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Legally valid worldwide</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Icon icon="fluent:flash-32-regular" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
+                <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Fast &amp; fully online</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Icon icon="si:lock-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
+                <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Secure &amp; privacy-focused</span>
               </div>
             </div>
           </div>
