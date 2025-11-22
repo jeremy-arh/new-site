@@ -221,7 +221,7 @@ const ServiceDetail = () => {
                 {service.short_description || service.description}
               </p>
 
-              <a href={getFormUrl(currency, service.service_id)} className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
+              <a href={getFormUrl(currency, service?.service_id || serviceId)} className="primary-cta text-base md:text-lg inline-block mb-8 md:mb-12 bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400">
                 <span className="btn-text inline-block">
                   {service.cta || 'Notarize now'}{ctaPrice ? ` - ${ctaPrice}` : ''}
                 </span>
@@ -342,7 +342,7 @@ const ServiceDetail = () => {
       </section>
 
       {/* Mobile CTA with service-specific text */}
-      <MobileCTA ctaText={service.cta || 'Notarize now'} price={service.base_price} serviceId={service.service_id} />
+      <MobileCTA ctaText={service.cta || 'Notarize now'} price={service.base_price} serviceId={service?.service_id || serviceId} />
     </div>
   );
 };

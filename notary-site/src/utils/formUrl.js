@@ -8,7 +8,8 @@ export const getFormUrl = (currency = 'EUR', serviceId = null) => {
   const baseUrl = 'https://app.mynotary.io/form';
   const url = new URL(baseUrl);
   url.searchParams.set('currency', currency);
-  if (serviceId) {
+  // Ajouter le serviceId seulement s'il existe et n'est pas vide
+  if (serviceId && serviceId.trim() !== '') {
     url.searchParams.set('service', serviceId);
   }
   return url.toString();
