@@ -253,6 +253,51 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Chrome, Safari and Opera */
   }
+
+  /* Infinite horizontal scroll animation */
+  .infinite-scroll-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+
+  .animate-scroll-infinite {
+    display: flex;
+    flex-wrap: nowrap;
+    animation: scroll-infinite 30s linear infinite;
+    will-change: transform;
+    gap: 1.5rem;
+    width: fit-content;
+  }
+
+  /* Faster animation on mobile and tablet */
+  @media (max-width: 1024px) {
+    .animate-scroll-infinite {
+      animation-duration: 20s;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .animate-scroll-infinite {
+      animation-duration: 15s;
+    }
+  }
+
+  @keyframes scroll-infinite {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-50% - 0.75rem));
+    }
+  }
+
+  /* Pause animation on hover */
+  .infinite-scroll-container:hover .animate-scroll-infinite {
+    animation-play-state: paused;
+  }
   /* Fade In Animation */
   .animate-fade-in {
     animation: fadeIn 1s ease-out both;

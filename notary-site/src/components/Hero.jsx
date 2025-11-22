@@ -49,17 +49,17 @@ const Hero = memo(() => {
             {/* Features */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8 mt-6 md:mt-8 animate-fade-in animation-delay-600">
               <div className="flex items-center gap-2">
-                <Icon icon="hugeicons:legal-hammer" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                <Icon icon="lets-icons:world-2-light" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Legally valid worldwide</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Icon icon="mingcute:flash-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                <Icon icon="fluent:flash-32-regular" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Fast &amp; fully online</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Icon icon="meteor-icons:badge-check" className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                <Icon icon="si:lock-line" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white font-medium text-sm md:text-base">Secure &amp; privacy-focused</span>
               </div>
             </div>
