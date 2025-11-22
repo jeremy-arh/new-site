@@ -251,32 +251,32 @@ const ServiceDetail = () => {
 
       {/* Why Choose My Notary Section */}
       <section className="py-20 px-[30px] bg-white">
-        <div className="max-w-[1300px] mx-auto">
+        <div className="max-w-full mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
             Why choose my notary ?
           </h2>
-          <div className="flex flex-nowrap justify-center gap-6 max-w-6xl mx-auto overflow-x-auto">
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-full sm:w-auto" style={{ animationDelay: '0.1s' }}>
+          <div className="flex flex-nowrap gap-6 overflow-x-auto overflow-y-hidden scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-[350px]" style={{ animationDelay: '0.1s' }}>
               <Icon icon="hugeicons:legal-hammer" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-base font-semibold">Legally Valid Worldwide</h3>
               <p className="text-gray-600 text-xs">Documents legally recognized and accepted across all countries. International compliance guaranteed.</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-full sm:w-auto" style={{ animationDelay: '0.2s' }}>
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-[350px]" style={{ animationDelay: '0.2s' }}>
               <Icon icon="mingcute:flash-line" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-base font-semibold">Fast & Fully Online</h3>
               <p className="text-gray-600 text-xs">Complete process online from anywhere. Fast turnaround, no in-person visits required.</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-full sm:w-auto" style={{ animationDelay: '0.3s' }}>
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-[350px]" style={{ animationDelay: '0.3s' }}>
               <Icon icon="meteor-icons:badge-check" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-base font-semibold">Secure & Privacy-Focused</h3>
               <p className="text-gray-600 text-xs">Bank-level encryption protects your data. Strict confidentiality throughout the entire process.</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-full sm:w-auto" style={{ animationDelay: '0.4s' }}>
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-[350px]" style={{ animationDelay: '0.4s' }}>
               <Icon icon="mdi:certificate" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-base font-semibold">Certified by Licensed Notary</h3>
               <p className="text-gray-600 text-xs">All translations certified by US notaries. Official recognition for legal and government use.</p>
             </div>
-            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-full sm:w-auto" style={{ animationDelay: '0.5s' }}>
+            <div className="flex flex-col items-center text-center p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 animate-fade-in flex-shrink-0 w-[350px]" style={{ animationDelay: '0.5s' }}>
               <Icon icon="mdi:check-circle" className="w-12 h-12 text-black mb-4" />
               <h3 className="text-gray-900 mb-2 text-base font-semibold">Guaranteed Acceptance</h3>
               <p className="text-gray-600 text-xs">Accepted by USCIS, embassies, and courts. Rejection? We redo free or refund 100%.</p>
