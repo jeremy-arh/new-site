@@ -3,7 +3,7 @@ import { trackCTAClick } from '../utils/plausible';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 
-const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
+const MobileCTA = memo(({ ctaText = 'Notarize now', price, serviceId = null }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { formatPrice, currency } = useCurrency();
@@ -55,7 +55,7 @@ const MobileCTA = memo(({ ctaText = 'Notarize now', price }) => {
       <div className="bg-white border-t border-gray-200 shadow-2xl">
         <div className="px-4 py-3">
           <a
-            href={getFormUrl(currency)}
+            href={getFormUrl(currency, serviceId)}
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg relative cta-animated-border"
             onClick={() => trackCTAClick('mobile_cta')}
           >

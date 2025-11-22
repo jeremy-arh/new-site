@@ -24,7 +24,9 @@ const HowItWorks = memo(() => {
     return () => window.removeEventListener('resize', handleResize);
   }, [handleResize]);
 
-  // Fetch service price if on a service detail page
+  // Fetch service price and serviceId if on a service detail page
+  const [currentServiceId, setCurrentServiceId] = useState(null);
+  
   useEffect(() => {
     const fetchServicePrice = async () => {
       const path = location.pathname || '';
@@ -32,6 +34,7 @@ const HowItWorks = memo(() => {
       
       if (serviceMatch && serviceMatch[1]) {
         const serviceId = decodeURIComponent(serviceMatch[1]);
+        setCurrentServiceId(serviceId);
         try {
           const { data, error } = await supabase
             .from('services')
@@ -50,6 +53,7 @@ const HowItWorks = memo(() => {
         }
       } else {
         setServicePrice(null);
+        setCurrentServiceId(null);
       }
     };
 
@@ -194,7 +198,7 @@ const HowItWorks = memo(() => {
                 Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
               </p>
               <a
-                href={getFormUrl(currency)}
+                href={getFormUrl(currency, currentServiceId)}
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
                 onClick={() => trackCTAClick('how_it_works')}
               >

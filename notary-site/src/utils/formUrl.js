@@ -1,12 +1,16 @@
 /**
- * Génère l'URL du formulaire avec la currency en paramètre
+ * Génère l'URL du formulaire avec la currency et optionnellement le serviceId en paramètres
  * @param {string} currency - La devise sélectionnée (ex: 'EUR', 'USD', 'GBP')
- * @returns {string} L'URL complète du formulaire avec le paramètre currency
+ * @param {string} serviceId - L'ID du service (optionnel, ex: 'apostille-hague-convention')
+ * @returns {string} L'URL complète du formulaire avec les paramètres
  */
-export const getFormUrl = (currency = 'EUR') => {
+export const getFormUrl = (currency = 'EUR', serviceId = null) => {
   const baseUrl = 'https://app.mynotary.io/form';
   const url = new URL(baseUrl);
   url.searchParams.set('currency', currency);
+  if (serviceId) {
+    url.searchParams.set('service', serviceId);
+  }
   return url.toString();
 };
 
