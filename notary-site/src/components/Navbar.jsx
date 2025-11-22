@@ -17,6 +17,7 @@ const Navbar = memo(() => {
   const [ctaText, setCtaText] = useState('Notarize now');
   const [servicePrice, setServicePrice] = useState(null);
   const [formattedPrice, setFormattedPrice] = useState('');
+  const [currentServiceId, setCurrentServiceId] = useState(null);
   const location = useLocation();
   const { formatPrice, currency } = useCurrency();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
@@ -88,6 +89,7 @@ const Navbar = memo(() => {
       const blogMatch = path.match(/^\/blog\/([^/]+)/);
       if (blogMatch && blogMatch[1]) {
         const slug = decodeURIComponent(blogMatch[1]);
+        setCurrentServiceId(null); // Reset serviceId on blog pages
         try {
           const { data, error } = await supabase
             .from('blog_posts')
@@ -110,6 +112,7 @@ const Navbar = memo(() => {
         const serviceMatch = path.match(/^\/services\/([^/]+)/);
         if (serviceMatch && serviceMatch[1]) {
           const serviceId = decodeURIComponent(serviceMatch[1]);
+          setCurrentServiceId(serviceId); // Set serviceId for service pages
           try {
             const { data, error } = await supabase
               .from('services')
@@ -135,6 +138,7 @@ const Navbar = memo(() => {
           // Reset to default if not on blog/service detail page
           setCtaText('Notarize now');
           setServicePrice(null);
+          setCurrentServiceId(null); // Reset serviceId on other pages
         }
       }
     };
@@ -257,7 +261,7 @@ const Navbar = memo(() => {
               </a>
               <div className="relative inline-block md:overflow-visible">
                 <a 
-                  href={getFormUrl(currency)} 
+                  href={getFormUrl(currency, currentServiceId)} 
                   className="primary-cta text-sm relative z-10 cta-animated-border"
                   onClick={() => trackCTAClick('navbar_desktop')}
                 >
@@ -419,7 +423,7 @@ const Navbar = memo(() => {
               Connexion
             </a>
             <a
-              href={getFormUrl(currency)}
+              href={getFormUrl(currency, currentServiceId)}
               onClick={() => {
                 trackCTAClick('navbar_mobile');
                 closeMenu();
