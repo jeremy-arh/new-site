@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { getImageUrl } from '../utils/imageLoader';
-import { trackCTAClick } from '../utils/plausible';
+import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
+import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import ctaBg from '../assets/cta-bg.webp';
@@ -200,7 +201,10 @@ const HowItWorks = memo(() => {
               <a
                 href={getFormUrl(currency, currentServiceId)}
                 className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
-                onClick={() => trackCTAClick('how_it_works')}
+                onClick={() => {
+                  trackPlausibleCTAClick('how_it_works');
+                  trackCTAClick('how_it_works', currentServiceId, location.pathname);
+                }}
               >
                 <span className="btn-text inline-block">
                   Notarize now{formattedPrice ? ` - ${formattedPrice}` : ''}

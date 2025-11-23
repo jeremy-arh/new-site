@@ -8,7 +8,8 @@ import ScrollToTop from './components/ScrollToTop'
 import CTAPopup from './components/CTAPopup'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
-import { trackPageView } from './utils/plausible'
+import { trackPageView as trackPlausiblePageView } from './utils/plausible'
+import { trackPageView, trackScrollDepth } from './utils/analytics'
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('./pages/Home'))
@@ -27,14 +28,41 @@ const PageLoader = () => (
   </div>
 )
 
-// Component to track page views
+// Component to track page views and scroll depth
 function PageViewTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    // Track page view on route change
+    // Reset scroll milestones for new page
+    sessionStorage.removeItem('analytics_scroll_milestones');
+    
+    // Track page view on route change (both Plausible and Analytics)
     const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
-    trackPageView(pageName, location.pathname);
+    trackPlausiblePageView(pageName, location.pathname);
+    trackPageView(location.pathname);
+  }, [location]);
+
+  // Track scroll depth
+  useEffect(() => {
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const windowHeight = window.innerHeight;
+          const documentHeight = document.documentElement.scrollHeight;
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollPercentage = Math.round(((scrollTop + windowHeight) / documentHeight) * 100);
+          
+          trackScrollDepth(scrollPercentage);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [location]);
 
   return null;

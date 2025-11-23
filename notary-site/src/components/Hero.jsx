@@ -1,7 +1,8 @@
 import { memo, useMemo, useState, useEffect, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import { getImageUrl } from '../utils/imageLoader';
-import { trackCTAClick } from '../utils/plausible';
+import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
+import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 
@@ -51,7 +52,10 @@ const Hero = memo(() => {
             <a 
               href={getFormUrl(currency)} 
               className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
-              onClick={() => trackCTAClick('hero')}
+              onClick={() => {
+                trackPlausibleCTAClick('hero');
+                trackCTAClick('hero', null, window.location.pathname);
+              }}
             >
               <span className="btn-text inline-block">Notarize now</span>
             </a>

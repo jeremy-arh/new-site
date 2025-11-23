@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
-import { trackCTAClick } from '../utils/plausible';
+import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
+import { trackCTAClick } from '../utils/analytics';
 import { supabase } from '../lib/supabase';
 
 const CTAPopup = () => {
@@ -97,7 +98,8 @@ const CTAPopup = () => {
   };
 
   const handleCTAClick = () => {
-    trackCTAClick('popup_cta', location.pathname);
+    trackPlausibleCTAClick('popup_cta', location.pathname);
+    trackCTAClick('popup_cta', serviceId, location.pathname);
     const formUrl = getFormUrl(currency, serviceId);
     window.location.href = formUrl;
   };

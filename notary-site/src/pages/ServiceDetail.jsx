@@ -4,7 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
-import { trackServiceClick } from '../utils/plausible';
+import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
+import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
@@ -77,7 +78,10 @@ const OtherServicesSection = ({ currentServiceId }) => {
               key={serviceItem.id}
               to={`/services/${serviceItem.service_id}`}
               className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up"
-              onClick={() => trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services')}
+              onClick={() => {
+                trackPlausibleServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
+                trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
+              }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
@@ -166,7 +170,8 @@ const ServiceDetail = () => {
         cache.set('service', serviceId, data, 10 * 60 * 1000);
         setService(data);
         // Track service view
-        trackServiceClick(serviceId, data.name, 'service_detail_page');
+        trackPlausibleServiceClick(serviceId, data.name, 'service_detail_page');
+        trackServiceClick(serviceId, data.name, 'service_detail_page', location.pathname);
       } else {
         setError('Service not found');
       }
@@ -230,7 +235,13 @@ const ServiceDetail = () => {
                 {service.short_description || service.description}
               </p>
 
-              <a href={getFormUrl(currency, service?.service_id || serviceId)} className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}>
+              <a 
+                href={getFormUrl(currency, service?.service_id || serviceId)} 
+                className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
+                onClick={() => {
+                  trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
+                }}
+              >
                 <span className="btn-text inline-block">
                   {service.cta || 'Notarize now'}{ctaPrice ? ` - ${ctaPrice}` : ''}
                 </span>

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
-import { trackServiceClick } from '../utils/plausible';
+import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
+import { trackServiceClick } from '../utils/analytics';
 import PriceDisplay from './PriceDisplay';
 
 const Services = () => {
@@ -58,7 +59,10 @@ const Services = () => {
                 key={service.id}
                 to={`/services/${service.service_id}`}
                 className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up"
-                onClick={() => trackServiceClick(service.service_id, service.name, 'homepage_services')}
+                onClick={() => {
+                  trackPlausibleServiceClick(service.service_id, service.name, 'homepage_services');
+                  trackServiceClick(service.service_id, service.name, 'homepage_services', window.location.pathname);
+                }}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">

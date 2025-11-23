@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
-import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/plausible';
+import { trackCTAClick as trackPlausibleCTAClick, trackLoginClick as trackPlausibleLoginClick, trackNavigationClick as trackPlausibleNavigationClick } from '../utils/plausible';
+import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import CurrencySelector from './CurrencySelector';
 import { getFormUrl } from '../utils/formUrl';
@@ -195,16 +196,16 @@ const Navbar = memo(() => {
                 href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'} 
                 className="nav-link text-base"
                 onClick={(e) => {
+                  const destination = location.pathname.startsWith('/services/') ? '#other-services' : '/#services';
                   if (location.pathname.startsWith('/services/')) {
                     e.preventDefault();
                     const element = document.getElementById('other-services');
                     if (element) {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                    trackNavigationClick('Our services', '#other-services');
-                  } else {
-                    trackNavigationClick('Our services', '/#services');
                   }
+                  trackPlausibleNavigationClick('Our services', destination);
+                  trackNavigationClick('Our services', destination, location.pathname);
                 }}
               >
                 Our services
@@ -213,16 +214,16 @@ const Navbar = memo(() => {
                 href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'} 
                 className="nav-link text-base"
                 onClick={(e) => {
+                  const destination = location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works';
                   if (location.pathname.startsWith('/services/')) {
                     e.preventDefault();
                     const element = document.getElementById('how-it-works');
                     if (element) {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                    trackNavigationClick('How it work', '#how-it-works');
-                  } else {
-                    trackNavigationClick('How it work', '/#how-it-works');
                   }
+                  trackPlausibleNavigationClick('How it work', destination);
+                  trackNavigationClick('How it work', destination, location.pathname);
                 }}
               >
                 How it work
@@ -231,16 +232,16 @@ const Navbar = memo(() => {
                 href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'} 
                 className="nav-link text-base"
                 onClick={(e) => {
+                  const destination = location.pathname.startsWith('/services/') ? '#faq' : '/#faq';
                   if (location.pathname.startsWith('/services/')) {
                     e.preventDefault();
                     const element = document.getElementById('faq');
                     if (element) {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                    trackNavigationClick('FAQ', '#faq');
-                  } else {
-                    trackNavigationClick('FAQ', '/#faq');
                   }
+                  trackPlausibleNavigationClick('FAQ', destination);
+                  trackNavigationClick('FAQ', destination, location.pathname);
                 }}
               >
                 FAQ
@@ -255,7 +256,10 @@ const Navbar = memo(() => {
               <a 
                 href="https://app.mynotary.io/login" 
                 className="nav-link text-base font-semibold"
-                onClick={() => trackLoginClick('navbar_desktop')}
+                onClick={() => {
+                  trackPlausibleLoginClick('navbar_desktop');
+                  trackLoginClick('navbar_desktop', location.pathname);
+                }}
               >
                 Connexion
               </a>
@@ -263,7 +267,10 @@ const Navbar = memo(() => {
                 <a 
                   href={getFormUrl(currency, currentServiceId)} 
                   className="primary-cta text-sm relative z-10 cta-animated-border"
-                  onClick={() => trackCTAClick('navbar_desktop')}
+                  onClick={() => {
+                    trackPlausibleCTAClick('navbar_desktop');
+                    trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
+                  }}
                 >
                   <svg className="cta-border-svg" viewBox="0 0 200 50" preserveAspectRatio="none">
                     <defs>
@@ -350,16 +357,16 @@ const Navbar = memo(() => {
             <a
               href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'}
               onClick={(e) => {
+                const destination = location.pathname.startsWith('/services/') ? '#other-services' : '/#services';
                 if (location.pathname.startsWith('/services/')) {
                   e.preventDefault();
                   const element = document.getElementById('other-services');
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
-                  trackNavigationClick('Our services', '#other-services');
-                } else {
-                  trackNavigationClick('Our services', '/#services');
                 }
+                trackPlausibleNavigationClick('Our services', destination);
+                trackNavigationClick('Our services', destination, location.pathname);
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -369,16 +376,16 @@ const Navbar = memo(() => {
             <a
               href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'}
               onClick={(e) => {
+                const destination = location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works';
                 if (location.pathname.startsWith('/services/')) {
                   e.preventDefault();
                   const element = document.getElementById('how-it-works');
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
-                  trackNavigationClick('How it work', '#how-it-works');
-                } else {
-                  trackNavigationClick('How it work', '/#how-it-works');
                 }
+                trackPlausibleNavigationClick('How it work', destination);
+                trackNavigationClick('How it work', destination, location.pathname);
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -388,16 +395,16 @@ const Navbar = memo(() => {
             <a
               href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'}
               onClick={(e) => {
+                const destination = location.pathname.startsWith('/services/') ? '#faq' : '/#faq';
                 if (location.pathname.startsWith('/services/')) {
                   e.preventDefault();
                   const element = document.getElementById('faq');
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
-                  trackNavigationClick('FAQ', '#faq');
-                } else {
-                  trackNavigationClick('FAQ', '/#faq');
                 }
+                trackPlausibleNavigationClick('FAQ', destination);
+                trackNavigationClick('FAQ', destination, location.pathname);
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -415,7 +422,8 @@ const Navbar = memo(() => {
             <a
               href="https://app.mynotary.io/login"
               onClick={() => {
-                trackLoginClick('navbar_mobile');
+                trackPlausibleLoginClick('navbar_mobile');
+                trackLoginClick('navbar_mobile', location.pathname);
                 closeMenu();
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
@@ -425,7 +433,8 @@ const Navbar = memo(() => {
             <a
               href={getFormUrl(currency, currentServiceId)}
               onClick={() => {
-                trackCTAClick('navbar_mobile');
+                trackPlausibleCTAClick('navbar_mobile');
+                trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
                 closeMenu();
               }}
               className="block text-center primary-cta text-lg py-4 mt-8"

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { trackCTAClick } from '../utils/plausible';
+import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
+import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 
@@ -57,7 +58,10 @@ const MobileCTA = memo(({ ctaText = 'Notarize now', price, serviceId = null }) =
           <a
             href={getFormUrl(currency, serviceId)}
             className="block w-full text-center px-6 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all duration-300 shadow-lg relative cta-animated-border"
-            onClick={() => trackCTAClick('mobile_cta')}
+            onClick={() => {
+              trackPlausibleCTAClick('mobile_cta');
+              trackCTAClick('mobile_cta', serviceId, window.location.pathname);
+            }}
           >
             <svg className="cta-border-svg" viewBox="0 0 200 50" preserveAspectRatio="none">
               <defs>
