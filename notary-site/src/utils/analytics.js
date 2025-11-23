@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '../lib/supabase';
-import { getSharedVisitorId, syncVisitorId } from './sharedVisitorId';
+import { getSharedVisitorId, syncVisitorId, generateUUID } from './sharedVisitorId';
 
 // Sync visitor ID on module load
 if (typeof window !== 'undefined') {
