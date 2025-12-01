@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { trackBlogPostView } from '../utils/plausible';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from '../hooks/useTranslation';
+import { formatBlogPostForLanguage, formatBlogPostsForLanguage } from '../utils/blog';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
 import ctaBg from '../assets/cta-bg.webp';
@@ -21,17 +25,19 @@ const BlogPost = () => {
   const contentRef = useRef(null);
   const location = useLocation();
   const { currency } = useCurrency();
+  const { language, getLocalizedPath } = useLanguage();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchPost();
-  }, [slug]);
+  }, [slug, language]);
 
   useEffect(() => {
     if (post) {
       fetchRelatedPosts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [post, slug]);
+  }, [post, slug, language]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -67,53 +73,57 @@ const BlogPost = () => {
 
 
   const fetchPost = async () => {
-    // Check cache first
+    // Check cache first (mais toujours formater selon la langue actuelle)
     const cachedPost = cache.get('blog_post', slug);
-    if (cachedPost) {
-      setPost(cachedPost);
-      setLoading(false);
-      // Track blog post view
-      trackBlogPostView(slug, cachedPost.title);
-      // Still increment view count in background (fire and forget)
+    let postData = cachedPost;
+
+    // Si pas en cache, charger depuis la DB
+    if (!postData) {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('slug', slug)
+          .eq('status', 'published')
+          .single();
+
+        if (error) throw error;
+
+        if (!data) {
+          setError('Article not found');
+          setLoading(false);
+          return;
+        }
+
+        postData = data;
+        
+        // Mettre en cache les données originales (pas formatées)
+        cache.set('blog_post', slug, postData, 5 * 60 * 1000);
+      } catch (error) {
+        console.error('Error fetching blog post:', error);
+        setError('Failed to load article');
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Toujours formater l'article selon la langue actuelle (même s'il vient du cache)
+    const formattedPost = formatBlogPostForLanguage(postData, language);
+    setPost(formattedPost);
+
+    // Track blog post view seulement si c'est un nouveau chargement (pas depuis le cache)
+    if (!cachedPost) {
+      trackBlogPostView(slug, formattedPost.title);
+      // Increment view count
       supabase
         .from('blog_posts')
-        .update({ views_count: (cachedPost.views_count || 0) + 1 })
-        .eq('id', cachedPost.id)
+        .update({ views_count: (postData.views_count || 0) + 1 })
+        .eq('id', postData.id)
         .then(() => {})
         .catch((err) => console.error('Error updating view count:', err));
-      return;
     }
 
-    try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('slug', slug)
-        .eq('status', 'published')
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        // Cache the data
-        cache.set('blog_post', slug, data, 5 * 60 * 1000);
-        setPost(data);
-        // Track blog post view
-        trackBlogPostView(slug, data.title);
-        // Increment view count
-        await supabase
-          .from('blog_posts')
-          .update({ views_count: (data.views_count || 0) + 1 })
-          .eq('id', data.id);
-      } else {
-        setError('Article not found');
-      }
-    } catch (error) {
-      console.error('Error fetching blog post:', error);
-      setError('Failed to load article');
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   const fetchRelatedPosts = async () => {
@@ -134,7 +144,9 @@ const BlogPost = () => {
         return;
       }
       
-      setRelatedPosts(data || []);
+      // Formater les articles selon la langue
+      const formattedPosts = formatBlogPostsForLanguage(data || [], language);
+      setRelatedPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching related posts:', error);
       setRelatedPosts([]);
@@ -162,7 +174,7 @@ const BlogPost = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(language === 'en' ? 'en-US' : language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -182,7 +194,8 @@ const BlogPost = () => {
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">Article Not Found</h1>
         <p className="text-gray-600 mb-8">{error || 'The article you\'re looking for doesn\'t exist.'}</p>
-        <Link to="/" className="primary-cta text-lg px-8 py-4">
+        <Link to="/" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-2">
+          <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
           <span className="btn-text inline-block">Back to Home</span>
         </Link>
       </div>
@@ -205,11 +218,11 @@ const BlogPost = () => {
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-6 animate-fade-in overflow-hidden">
             <Link to="/" className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
-              Home
+              {t('common.home') || 'Home'}
             </Link>
             <span className="text-gray-400 flex-shrink-0">/</span>
-            <Link to="/blog" className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
-              Blog
+            <Link to={getLocalizedPath('/blog')} className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
+              {t('blog.title') || 'Blog'}
             </Link>
             <span className="text-gray-400 flex-shrink-0">/</span>
             <span className="text-gray-900 font-medium truncate min-w-0">{post.title}</span>
@@ -235,13 +248,13 @@ const BlogPost = () => {
             {computedReadTime && (
               <>
                 <span>•</span>
-                <span>{computedReadTime} min read</span>
+                <span>{computedReadTime} {t('blog.minRead') || 'min read'}</span>
               </>
             )}
             {post.views_count > 0 && (
               <>
                 <span>•</span>
-                <span>{post.views_count} views</span>
+                <span>{post.views_count} {t('common.views') || 'views'}</span>
               </>
             )}
           </div>
@@ -305,16 +318,17 @@ const BlogPost = () => {
             
             <div className="relative z-10">
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                Ready to Get Started?
+                {t('howItWorks.ctaTitle') || 'Ready to Get Started?'}
               </h3>
               <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
+                {t('howItWorks.ctaDescription') || 'Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.'}
               </p>
               <a
                 href={getFormUrl(currency)}
                 className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
               >
-                <span className="btn-text inline-block">{post.cta || 'Notarize now'}</span>
+                <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                <span className="btn-text inline-block">{post.cta || t('nav.notarizeNow')}</span>
                 <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -329,14 +343,14 @@ const BlogPost = () => {
       <section className="px-[30px] py-20 bg-gray-50">
         <div className="max-w-[1400px] mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 text-center">
-            Latest Articles
+            {t('blog.latestArticles') || 'Latest Articles'}
           </h2>
           {relatedPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedPosts.map((relatedPost) => (
                 <Link
                   key={relatedPost.id}
-                  to={`/blog/${relatedPost.slug}`}
+                  to={getLocalizedPath(`/blog/${relatedPost.slug}`)}
                   className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                 >
                   {/* Cover Image */}
@@ -393,7 +407,7 @@ const BlogPost = () => {
                         {formatDate(relatedPost.published_at)}
                       </span>
                       <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
-                        Read more
+                        {t('blog.readMore') || 'Read more'}
                         <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
@@ -405,7 +419,7 @@ const BlogPost = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">No other articles available at the moment.</p>
+              <p className="text-gray-600 text-lg">{t('blog.noArticles') || 'No other articles available at the moment.'}</p>
             </div>
           )}
         </div>
@@ -414,15 +428,15 @@ const BlogPost = () => {
       {/* Back to Blog */}
       <section className="px-[30px] pb-20">
         <div className="max-w-[1400px] mx-auto text-center">
-          <Link to="/blog" className="inline-flex items-center gap-3 text-gray-900 hover:text-black transition-colors font-medium">
+          <Link to={getLocalizedPath('/blog')} className="inline-flex items-center gap-3 text-gray-900 hover:text-black transition-colors font-medium">
             <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-            <span className="inline-block">Back to Blog</span>
+            <span className="inline-block">{t('blog.backToBlog') || 'Back to Blog'}</span>
           </Link>
         </div>
       </section>
-      <MobileCTA ctaText={post?.cta || 'Notarize now'} />
+      <MobileCTA ctaText={post?.cta || t('nav.notarizeNow')} />
     </div>
   );
 };

@@ -9,6 +9,9 @@ import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
 import HowItWorks from '../components/HowItWorks';
 import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
@@ -20,23 +23,29 @@ import bgService from '../assets/bg-service.svg';
 const OtherServicesSection = ({ currentServiceId }) => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
+  const { language, getLocalizedPath } = useLanguage();
+  const location = useLocation();
 
   useEffect(() => {
     fetchServices();
-  }, [currentServiceId]);
+  }, [currentServiceId, language]);
 
   const fetchServices = async () => {
     try {
       const { data, error } = await supabase
         .from('services')
-        .select('*')
+        .select(getServiceFields())
         .eq('is_active', true)
         .neq('service_id', currentServiceId)
         .order('created_at', { ascending: true })
         .limit(6);
 
       if (error) throw error;
-      setServices(data || []);
+      
+      // Formater les services selon la langue
+      const formattedServices = formatServicesForLanguage(data || [], language);
+      setServices(formattedServices);
     } catch (error) {
       console.error('Error fetching other services:', error);
     } finally {
@@ -65,10 +74,10 @@ const OtherServicesSection = ({ currentServiceId }) => {
       <div className="max-w-[1300px] mx-auto">
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
-            Other services
+            {t('services.otherServices')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
-            Explore Our <span className="gradient-text">Other Services</span>
+            {t('services.otherServicesHeading').split(' ').slice(0, -2).join(' ')} <span className="gradient-text">{t('services.otherServicesHeading').split(' ').slice(-2).join(' ')}</span>
           </h2>
         </div>
 
@@ -76,8 +85,8 @@ const OtherServicesSection = ({ currentServiceId }) => {
           {services.map((serviceItem) => (
             <Link
               key={serviceItem.id}
-              to={`/services/${serviceItem.service_id}`}
-              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up"
+              to={getLocalizedPath(`/services/${serviceItem.service_id}`)}
+              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up flex flex-col"
               onClick={() => {
                 trackPlausibleServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
                 trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
@@ -94,11 +103,11 @@ const OtherServicesSection = ({ currentServiceId }) => {
                 <h3 className="text-xl font-bold text-gray-900">{serviceItem.name}</h3>
               </div>
 
-              <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed">{serviceItem.short_description || serviceItem.description}</p>
+              <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed flex-1">{serviceItem.short_description || serviceItem.description}</p>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-end justify-between mt-auto">
                 <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-                  <span className="btn-text inline-block">Learn more</span>
+                  <span className="btn-text inline-block">{t('services.learnMore')}</span>
                   <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -118,7 +127,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
 };
 
 const ServiceDetail = () => {
-  const { serviceId } = useParams();
+  const { serviceId: rawServiceId } = useParams();
   const location = useLocation();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -127,10 +136,17 @@ const ServiceDetail = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
+  const { t } = useTranslation();
+  const { language, getLocalizedPath } = useLanguage();
+
+  // Décoder le serviceId depuis l'URL (au cas où il contiendrait des caractères encodés)
+  const serviceId = rawServiceId ? decodeURIComponent(rawServiceId) : null;
 
   useEffect(() => {
-    fetchService();
-  }, [serviceId]);
+    if (serviceId) {
+      fetchService();
+    }
+  }, [serviceId, language]);
 
   useEffect(() => {
     if (service?.base_price) {
@@ -147,37 +163,60 @@ const ServiceDetail = () => {
   }, []);
 
   const fetchService = async () => {
-    // Check cache first
-    const cachedService = cache.get('service', serviceId);
-    if (cachedService) {
-      setService(cachedService);
+    if (!serviceId) {
+      setError(t('common.error'));
       setLoading(false);
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     try {
+      // Toujours charger depuis la DB pour avoir les dernières traductions
+      // Le cache peut contenir des données obsolètes sans les traductions
+      // Utiliser getServiceFields() pour s'assurer que tous les champs multilingues sont chargés
       const { data, error } = await supabase
         .from('services')
-        .select('*')
+        .select(getServiceFields())
         .eq('service_id', serviceId)
         .eq('is_active', true)
         .single();
 
       if (error) throw error;
 
-      if (data) {
-        // Cache the data
-        cache.set('service', serviceId, data, 10 * 60 * 1000);
-        setService(data);
-        // Track service view
-        trackPlausibleServiceClick(serviceId, data.name, 'service_detail_page');
-        trackServiceClick(serviceId, data.name, 'service_detail_page', location.pathname);
-      } else {
-        setError('Service not found');
+      if (!data) {
+        setError(t('common.error'));
+        setLoading(false);
+        return;
       }
+
+      const serviceData = data;
+
+      // Toujours formater le service selon la langue actuelle (même s'il vient du cache)
+      const formattedService = formatServiceForLanguage(serviceData, language);
+      
+      // Debug: vérifier la langue et les données
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[ServiceDetail] Language:', language);
+        console.log('[ServiceDetail] Service data keys:', Object.keys(serviceData));
+        console.log('[ServiceDetail] Formatted service name:', formattedService.name);
+        console.log('[ServiceDetail] French name available:', serviceData.name_fr);
+        console.log('[ServiceDetail] All multilingual fields:', {
+          name_fr: serviceData.name_fr,
+          description_fr: serviceData.description_fr,
+          short_description_fr: serviceData.short_description_fr
+        });
+      }
+      
+      setService(formattedService);
+
+      // Track service view
+      trackPlausibleServiceClick(serviceId, formattedService.name, 'service_detail_page');
+      trackServiceClick(serviceId, formattedService.name, 'service_detail_page', location.pathname);
     } catch (error) {
       console.error('Error fetching service:', error);
-      setError('Failed to load service');
+      setError(t('serviceDetail.loadServiceError'));
     } finally {
       setLoading(false);
     }
@@ -194,10 +233,11 @@ const ServiceDetail = () => {
   if (error || !service) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">Service Not Found</h1>
-        <p className="text-gray-600 mb-8">{error || 'The service you\'re looking for doesn\'t exist.'}</p>
-        <Link to="/" className="primary-cta text-lg px-8 py-4">
-          <span className="btn-text inline-block">Back to Home</span>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">{t('common.notFound')}</h1>
+        <p className="text-gray-600 mb-8">{error || t('common.error')}</p>
+        <Link to={getLocalizedPath('/')} className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-2">
+          <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+          <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
         </Link>
       </div>
     );
@@ -206,7 +246,7 @@ const ServiceDetail = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>{service.meta_title || service.name || 'Service'}</title>
+        <title>{service.meta_title || service.name || t('serviceDetail.defaultTitle')}</title>
         <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
         <meta name="description" content={service.meta_description || service.short_description || service.description || ''} />
         <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
@@ -235,33 +275,42 @@ const ServiceDetail = () => {
                 {service.short_description || service.description}
               </p>
 
-              <a 
-                href={getFormUrl(currency, service?.service_id || serviceId)} 
-                className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
-                onClick={() => {
-                  trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
-                }}
-              >
-                <span className="btn-text inline-block">
-                  {service.cta || 'Notarize now'}{ctaPrice ? ` - ${ctaPrice}` : ''}
-                </span>
-              </a>
+              <div className={`flex flex-row flex-wrap ${isMobile ? 'items-center' : 'items-center'} gap-3 ${isMobile ? 'mb-8' : 'mb-12'} animate-fade-in animation-delay-400`}>
+                <a 
+                  href={getFormUrl(currency, service?.service_id || serviceId)} 
+                  className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 bg-white text-black hover:bg-gray-100 flex-shrink-0`}
+                  onClick={() => {
+                    trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
+                  }}
+                >
+                  <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                  <span className="btn-text inline-block">
+                    {service.cta || t('nav.notarizeNow')}
+                  </span>
+                </a>
+                {ctaPrice && (
+                  <div className="text-white flex items-center gap-1">
+                    <span className="text-base font-semibold">{ctaPrice}</span>
+                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                  </div>
+                )}
+              </div>
 
               {/* Features */}
               <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
                 <div className="flex items-center gap-2">
                   <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Legally valid worldwide</span>
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Fast &amp; fully online</span>
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Secure &amp; privacy-focused</span>
+                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
                 </div>
               </div>
             </div>
@@ -273,7 +322,7 @@ const ServiceDetail = () => {
       <section className="py-20 px-[30px] bg-white overflow-hidden">
         <div className="max-w-full mx-auto">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-            Why choose my notary ?
+            {t('serviceDetail.whyChooseTitle')}
           </h2>
           <div className="relative w-full">
             <div className="infinite-scroll-container">
@@ -281,54 +330,54 @@ const ServiceDetail = () => {
                 {/* First set of cards */}
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
                   <Icon icon="lets-icons:world-2-light" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Legally Valid Worldwide</h3>
-                  <p className="text-gray-600 text-xs">Documents legally recognized and accepted across all countries. International compliance guaranteed.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.legallyValid.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.legallyValid.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
                   <Icon icon="fluent:flash-32-regular" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Fast & Fully Online</h3>
-                  <p className="text-gray-600 text-xs">Complete process online from anywhere. Fast turnaround, no in-person visits required.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.fastOnline.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.fastOnline.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
                   <Icon icon="si:lock-line" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Secure & Privacy-Focused</h3>
-                  <p className="text-gray-600 text-xs">Bank-level encryption protects your data. Strict confidentiality throughout the entire process.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.securePrivacy.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.securePrivacy.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
                   <Icon icon="streamline-ultimate:certified-diploma" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Certified by Licensed Notary</h3>
-                  <p className="text-gray-600 text-xs">All translations certified by US notaries. Official recognition for legal and government use.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.certifiedNotary.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.certifiedNotary.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
                   <Icon icon="ci:wavy-check" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Guaranteed Acceptance</h3>
-                  <p className="text-gray-600 text-xs">Accepted by USCIS, embassies, and courts. Rejection? We redo free or refund 100%.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.guaranteedAcceptance.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.guaranteedAcceptance.description')}</p>
                 </div>
                 {/* Duplicate set for seamless loop */}
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
                   <Icon icon="lets-icons:world-2-light" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Legally Valid Worldwide</h3>
-                  <p className="text-gray-600 text-xs">Documents legally recognized and accepted across all countries. International compliance guaranteed.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.legallyValid.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.legallyValid.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
                   <Icon icon="fluent:flash-32-regular" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Fast & Fully Online</h3>
-                  <p className="text-gray-600 text-xs">Complete process online from anywhere. Fast turnaround, no in-person visits required.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.fastOnline.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.fastOnline.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
                   <Icon icon="si:lock-line" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Secure & Privacy-Focused</h3>
-                  <p className="text-gray-600 text-xs">Bank-level encryption protects your data. Strict confidentiality throughout the entire process.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.securePrivacy.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.securePrivacy.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
                   <Icon icon="streamline-ultimate:certified-diploma" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Certified by Licensed Notary</h3>
-                  <p className="text-gray-600 text-xs">All translations certified by US notaries. Official recognition for legal and government use.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.certifiedNotary.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.certifiedNotary.description')}</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
                   <Icon icon="ci:wavy-check" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">Guaranteed Acceptance</h3>
-                  <p className="text-gray-600 text-xs">Accepted by USCIS, embassies, and courts. Rejection? We redo free or refund 100%.</p>
+                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.guaranteedAcceptance.title')}</h3>
+                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.guaranteedAcceptance.description')}</p>
                 </div>
               </div>
             </div>
@@ -340,7 +389,7 @@ const ServiceDetail = () => {
       <section className="py-20 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-            What is <span className="gradient-text">{service.name}</span>?
+            {t('serviceDetail.whatIs')} <span className="gradient-text">{service.name}</span>?
           </h2>
           <div className="max-w-6xl mx-auto">
             <div className="relative animate-fade-in animation-delay-200">
@@ -359,14 +408,14 @@ const ServiceDetail = () => {
               >
                 {isDescriptionExpanded ? (
                   <>
-                    <span>Show less</span>
+                    <span>{t('serviceDetail.showLess')}</span>
                     <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </>
                 ) : (
                   <>
-                    <span>Read more</span>
+                    <span>{t('serviceDetail.readMore')}</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -393,17 +442,17 @@ const ServiceDetail = () => {
       {/* Back to Services */}
       <section className="px-[30px] py-12">
         <div className="max-w-[1100px] mx-auto text-center">
-          <Link to="/#services" className="inline-flex items-center gap-3 text-black font-semibold hover:underline">
+          <Link to={getLocalizedPath('/#services')} className="inline-flex items-center gap-3 text-black font-semibold hover:underline">
             <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-            <span>Back to all services</span>
+            <span>{t('serviceDetail.backToServices')}</span>
           </Link>
         </div>
       </section>
 
       {/* Mobile CTA with service-specific text */}
-      <MobileCTA ctaText={service.cta || 'Notarize now'} price={service.base_price} serviceId={service?.service_id || serviceId} />
+      <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
     </div>
   );
 };

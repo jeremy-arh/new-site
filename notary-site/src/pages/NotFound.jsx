@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import MobileCTA from '../components/MobileCTA';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const NotFound = () => {
+  const { t } = useTranslation();
+  const { getLocalizedPath } = useLanguage();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-[600px] mx-auto px-[30px] text-center py-20">
@@ -15,30 +20,28 @@ const NotFound = () => {
         {/* Error Message */}
         <div className="mb-8 animate-fade-in animation-delay-200">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Page Not Found
+            {t('notFound.title')}
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            Oops! The page you're looking for doesn't exist. It might have been moved or deleted.
+            {t('notFound.description')}
           </p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in animation-delay-400">
           <Link
-            to="/"
+            to={getLocalizedPath('/')}
             className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3"
           >
-            <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-            <span className="btn-text inline-block">Back to Home</span>
+            <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+            <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
           </Link>
 
           <Link
-            to="/#services"
+            to={getLocalizedPath('/#services')}
             className="inline-flex items-center gap-2 text-gray-900 font-semibold hover:underline text-lg"
           >
-            <span>View Our Services</span>
+            <span>{t('notFound.viewServices')}</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -47,19 +50,19 @@ const NotFound = () => {
 
         {/* Helpful Links */}
         <div className="mt-12 pt-8 border-t border-gray-200 animate-fade-in animation-delay-600">
-          <p className="text-sm text-gray-500 mb-4">You might be looking for:</p>
+          <p className="text-sm text-gray-500 mb-4">{t('notFound.lookingFor')}</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/#services" className="text-sm text-gray-600 hover:text-black transition-colors">
-              Our Services
+            <Link to={getLocalizedPath('/#services')} className="text-sm text-gray-600 hover:text-black transition-colors">
+              {t('notFound.ourServices')}
             </Link>
-            <Link to="/#how-it-works" className="text-sm text-gray-600 hover:text-black transition-colors">
-              How It Works
+            <Link to={getLocalizedPath('/#how-it-works')} className="text-sm text-gray-600 hover:text-black transition-colors">
+              {t('notFound.howItWorks')}
             </Link>
-            <Link to="/#faq" className="text-sm text-gray-600 hover:text-black transition-colors">
-              FAQ
+            <Link to={getLocalizedPath('/#faq')} className="text-sm text-gray-600 hover:text-black transition-colors">
+              {t('notFound.faq')}
             </Link>
-            <Link to="/blog" className="text-sm text-gray-600 hover:text-black transition-colors">
-              Blog
+            <Link to={getLocalizedPath('/blog')} className="text-sm text-gray-600 hover:text-black transition-colors">
+              {t('notFound.blog')}
             </Link>
           </div>
         </div>

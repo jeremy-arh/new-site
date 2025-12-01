@@ -3,6 +3,43 @@
  * This function fetches data from Supabase and generates a sitemap
  */
 
+// Supported languages (en is default, no prefix)
+const SUPPORTED_LANGUAGES = ['en', 'fr', 'es', 'de', 'it', 'pt'];
+const DEFAULT_LANGUAGE = 'en';
+
+/**
+ * Add language prefix to path (only if not default language)
+ */
+function addLanguageToPath(path, language) {
+  if (language === DEFAULT_LANGUAGE) {
+    return path;
+  }
+  // Handle root path
+  if (path === '/') {
+    return `/${language}`;
+  }
+  // Remove leading slash if present
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `/${language}/${cleanPath}`;
+}
+
+/**
+ * Generate multilingual URLs for a given path
+ */
+function generateMultilingualUrls(basePath, lastmod, changefreq, priority) {
+  const urls = [];
+  SUPPORTED_LANGUAGES.forEach((lang) => {
+    const localizedPath = addLanguageToPath(basePath, lang);
+    urls.push({
+      loc: localizedPath,
+      lastmod,
+      changefreq,
+      priority,
+    });
+  });
+  return urls;
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -67,11 +104,20 @@ async function fetchUrlsFromSupabase(supabaseUrl, supabaseKey, baseUrl) {
       if (servicesResponse.ok) {
         const services = await servicesResponse.json();
         services.forEach((service) => {
-          urls.push({
-            loc: `${baseUrl}/services/${service.service_id}`,
-            lastmod: service.updated_at || service.created_at,
-            changefreq: 'monthly',
-            priority: '0.7',
+          // Generate multilingual URLs for each service
+          const serviceUrls = generateMultilingualUrls(
+            `/services/${service.service_id}`,
+            service.updated_at || service.created_at,
+            'monthly',
+            '0.7'
+          );
+          serviceUrls.forEach((url) => {
+            urls.push({
+              loc: `${baseUrl}${url.loc}`,
+              lastmod: url.lastmod,
+              changefreq: url.changefreq,
+              priority: url.priority,
+            });
           });
         });
       }
@@ -95,21 +141,38 @@ async function fetchUrlsFromSupabase(supabaseUrl, supabaseKey, baseUrl) {
       if (blogResponse.ok) {
         const blogPosts = await blogResponse.json();
         blogPosts.forEach((post) => {
-          urls.push({
-            loc: `${baseUrl}/blog/${post.slug}`,
-            lastmod: post.updated_at || post.published_at,
-            changefreq: 'weekly',
-            priority: '0.8',
+          // Generate multilingual URLs for each blog post
+          const postUrls = generateMultilingualUrls(
+            `/blog/${post.slug}`,
+            post.updated_at || post.published_at,
+            'weekly',
+            '0.8'
+          );
+          postUrls.forEach((url) => {
+            urls.push({
+              loc: `${baseUrl}${url.loc}`,
+              lastmod: url.lastmod,
+              changefreq: url.changefreq,
+              priority: url.priority,
+            });
           });
         });
 
-        // Add blog listing page if posts exist
+        // Add blog listing page if posts exist (multilingual)
         if (blogPosts.length > 0) {
-          urls.push({
-            loc: `${baseUrl}/blog`,
-            lastmod: new Date().toISOString(),
-            changefreq: 'daily',
-            priority: '0.9',
+          const blogUrls = generateMultilingualUrls(
+            '/blog',
+            new Date().toISOString(),
+            'daily',
+            '0.9'
+          );
+          blogUrls.forEach((url) => {
+            urls.push({
+              loc: `${baseUrl}${url.loc}`,
+              lastmod: url.lastmod,
+              changefreq: url.changefreq,
+              priority: url.priority,
+            });
           });
         }
       }
@@ -129,25 +192,50 @@ async function fetchUrlsFromSupabase(supabaseUrl, supabaseKey, baseUrl) {
 function generateSitemapXML(baseUrl, dynamicUrls = []) {
   const currentDate = new Date().toISOString().split('T')[0];
 
-  // Static pages
-  const staticPages = [
-    {
-      loc: baseUrl,
-      lastmod: currentDate,
-      changefreq: 'daily',
-      priority: '1.0',
-    },
-  ];
-
-  // Add services page if services exist in dynamic URLs
-  if (dynamicUrls.some(url => url.loc.includes('/services/'))) {
+  // Static pages (multilingual)
+  const staticPages = [];
+  
+  // Home page (multilingual)
+  const homeUrls = generateMultilingualUrls('/', currentDate, 'daily', '1.0');
+  homeUrls.forEach((url) => {
     staticPages.push({
-      loc: `${baseUrl}/services`,
-      lastmod: currentDate,
-      changefreq: 'weekly',
-      priority: '0.9',
+      loc: `${baseUrl}${url.loc}`,
+      lastmod: url.lastmod,
+      changefreq: url.changefreq,
+      priority: url.priority,
+    });
+  });
+
+  // Add services page if services exist in dynamic URLs (multilingual)
+  if (dynamicUrls.some(url => url.loc.includes('/services/'))) {
+    const servicesUrls = generateMultilingualUrls('/services', currentDate, 'weekly', '0.9');
+    servicesUrls.forEach((url) => {
+      staticPages.push({
+        loc: `${baseUrl}${url.loc}`,
+        lastmod: url.lastmod,
+        changefreq: url.changefreq,
+        priority: url.priority,
+      });
     });
   }
+
+  // Add other static pages (multilingual)
+  const otherStaticPages = [
+    { path: '/terms-conditions', changefreq: 'monthly', priority: '0.5' },
+    { path: '/privacy-policy', changefreq: 'monthly', priority: '0.5' },
+  ];
+
+  otherStaticPages.forEach((page) => {
+    const pageUrls = generateMultilingualUrls(page.path, currentDate, page.changefreq, page.priority);
+    pageUrls.forEach((url) => {
+      staticPages.push({
+        loc: `${baseUrl}${url.loc}`,
+        lastmod: url.lastmod,
+        changefreq: url.changefreq,
+        priority: url.priority,
+      });
+    });
+  });
 
   // Combine static and dynamic URLs
   const allUrls = [...staticPages, ...dynamicUrls];
@@ -175,14 +263,20 @@ ${urlElements}
 function generateBasicSitemap(baseUrl) {
   const currentDate = new Date().toISOString().split('T')[0];
   
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${escapeXML(baseUrl)}</loc>
+  // Generate multilingual URLs for basic sitemap
+  const homeUrls = generateMultilingualUrls('/', currentDate, 'daily', '1.0');
+  const urlElements = homeUrls.map((url) => {
+    return `  <url>
+    <loc>${escapeXML(`${baseUrl}${url.loc}`)}</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
+  </url>`;
+  }).join('\n');
+  
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlElements}
 </urlset>`;
 }
 

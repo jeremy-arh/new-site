@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatBlogPostsForLanguage } from '../utils/blog';
 
 const BlogSection = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
+  const { language, getLocalizedPath } = useLanguage();
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [language]);
 
   const fetchPosts = async () => {
     try {
@@ -20,7 +25,10 @@ const BlogSection = () => {
         .limit(3);
 
       if (error) throw error;
-      setPosts(data || []);
+      
+      // Formater les posts selon la langue actuelle
+      const formattedPosts = formatBlogPostsForLanguage(data || [], language);
+      setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
     } finally {
@@ -31,7 +39,7 @@ const BlogSection = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(language === 'en' ? 'en-US' : language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -44,13 +52,13 @@ const BlogSection = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
-            Our Blog
+            {t('blog.badge')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
-            Latest Articles &amp; Insights
+            {t('blog.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto scroll-slide-up">
-            Stay informed about notarization, legal documents, and industry news
+            {t('blog.description')}
           </p>
         </div>
 
@@ -61,14 +69,14 @@ const BlogSection = () => {
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-600 text-lg">No articles available yet. Check back soon!</p>
+            <p className="text-gray-600 text-lg">{t('blog.noArticles')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, index) => (
               <Link
                 key={post.id}
-                to={`/blog/${post.slug}`}
+                to={getLocalizedPath(`/blog/${post.slug}`)}
                 className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 scroll-slide-up"
               >
                 {/* Cover Image */}
@@ -103,7 +111,7 @@ const BlogSection = () => {
                   {/* Meta Info */}
                   {post.read_time_minutes && (
                     <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
-                      <span>{post.read_time_minutes} min read</span>
+                      <span>{post.read_time_minutes} {t('blog.minRead')}</span>
                     </div>
                   )}
 
@@ -125,7 +133,7 @@ const BlogSection = () => {
                       {formatDate(post.published_at)}
                     </span>
                     <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
-                      Read more
+                      {t('blog.readMore')}
                       <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
@@ -140,8 +148,8 @@ const BlogSection = () => {
         {/* View All Button */}
         {posts.length > 0 && (
           <div className="text-center mt-12 scroll-fade-in">
-            <Link to="/blog" className="inline-flex items-center gap-3 text-gray-900 hover:text-black font-semibold text-lg">
-              <span className="inline-block">View All Articles</span>
+            <Link to={getLocalizedPath('/blog')} className="inline-flex items-center gap-3 text-gray-900 hover:text-black font-semibold text-lg">
+              <span className="inline-block">{t('blog.viewAll')}</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

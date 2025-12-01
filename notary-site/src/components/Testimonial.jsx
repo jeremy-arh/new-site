@@ -1,8 +1,10 @@
 import { memo } from 'react';
 import { getImageUrl } from '../utils/imageLoader';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Testimonial = memo(() => {
   const testimonialAvatar = getImageUrl('testimonial-avatar');
+  const { t } = useTranslation();
 
   return (
     <section className="py-20 px-[30px] bg-white overflow-hidden">
@@ -28,21 +30,19 @@ const Testimonial = memo(() => {
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
               </svg>
               <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 relative z-10">
-                "A smooth and fully digital experience"
+                {t('testimonial.quote')}
               </h3>
             </div>
 
             <p className="text-gray-700 text-lg leading-relaxed">
-              My Notary made what used to be a complex process incredibly simple. I was able to sign,
-              certify, and apostille my documents online, fully legally, in just a few minutes. Their
-              team is responsive, reliable, and the platform is extremely intuitive
+              {t('testimonial.text')}
             </p>
 
             <div className="flex items-center gap-4 pt-4">
               <div className="w-1 h-16 bg-black rounded-full"></div>
               <div>
-                <div className="text-xl font-bold text-gray-900 mb-1">Callum Davis</div>
-                <div className="text-sm gradient-text font-semibold">CEO of Akkar</div>
+                <div className="text-xl font-bold text-gray-900 mb-1">{t('testimonial.author')}</div>
+                <div className="text-sm gradient-text font-semibold">{t('testimonial.role')}</div>
               </div>
             </div>
           </div>

@@ -1,0 +1,1280 @@
+// Fichier centralisé des traductions pour toutes les langues
+
+export const translations = {
+  en: {
+    // Navigation
+    nav: {
+      services: 'Our services',
+      howItWorks: 'How it work',
+      faq: 'FAQ',
+      login: 'Connexion',
+      notarizeNow: 'Start your notarization',
+    },
+    // Hero Section
+    hero: {
+      title: 'Notarize and Apostille Your Documents 100% Online',
+      subtitle: 'Secure, legally valid, recognized internationally through the Hague Convention from anywhere, in just a few minutes.',
+      cta: 'Notarize now',
+      feature1: 'Legally valid worldwide',
+      feature2: 'Fast & fully online',
+      feature3: 'Secure & privacy-focused',
+    },
+    // Services
+    services: {
+      title: 'Our Services',
+      subtitle: 'Choose the service that best fits your needs',
+      heading: 'All the Notarial Services You Need.',
+      headingHighlight: 'In One Place',
+      viewDetails: 'View details',
+      learnMore: 'Learn more',
+      noServices: 'No services available yet.',
+      otherServices: 'Other services',
+      otherServicesHeading: 'Explore Our Other Services',
+      perDocument: 'per document',
+    },
+    // Service Detail Page
+    serviceDetail: {
+      defaultTitle: 'Service',
+      loadServiceError: 'Failed to load service',
+      whyChooseTitle: 'Why choose mynotary.io ?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Legally Valid Worldwide',
+          description: 'Documents legally recognized and accepted across all countries. International compliance guaranteed.',
+        },
+        fastOnline: {
+          title: 'Fast & Fully Online',
+          description: 'Complete process online from anywhere. Fast turnaround, no in-person visits required.',
+        },
+        securePrivacy: {
+          title: 'Secure & Privacy-Focused',
+          description: 'Bank-level encryption protects your data. Strict confidentiality throughout the entire process.',
+        },
+        certifiedNotary: {
+          title: 'Certified by Licensed Notary',
+          description: 'All translations certified by US notaries. Official recognition for legal and government use.',
+        },
+        guaranteedAcceptance: {
+          title: 'Guaranteed Acceptance',
+          description: 'Accepted by USCIS, embassies, and courts. Rejection? We redo free or refund 100%.',
+        },
+      },
+      whatIs: 'What is',
+      showLess: 'Show less',
+      readMore: 'Read more',
+      backToServices: 'Back to all services',
+    },
+    // How It Works
+    howItWorks: {
+      title: 'How It Works',
+      subtitle: 'Four simple steps to get your documents notarized online',
+      badge: 'How it work ?',
+      heading: 'Notarization Made Easy',
+      step1: {
+        title: 'Upload your document',
+        subtitle: '(secure upload)',
+        description: 'Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.',
+      },
+      step2: {
+        title: 'Book an appointment',
+        subtitle: '',
+        description: 'Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.',
+      },
+      step3: {
+        title: 'Verify & notarize online',
+        subtitle: 'with an EU notary',
+        description: 'During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is immediately uploaded to your secure dashboard.',
+      },
+      step4: {
+        title: 'Receive your document',
+        subtitle: 'certified, apostilled or notarized',
+        description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
+      },
+      stepLabel: 'Step',
+      of: 'of',
+      ctaTitle: 'Ready to Get Started?',
+      ctaDescription: 'Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.',
+      ctaButton: 'Notarize now',
+    },
+    // FAQ
+    faq: {
+      title: 'Frequently Asked Questions',
+      searchPlaceholder: 'Search questions...',
+      items: [
+        {
+          question: 'How does the online notarization process work?',
+          answer: 'Everything happens in just a few minutes, directly from your browser. You schedule a secure video session with a licensed notary, sign your document remotely, and the notarization is completed in real time. Your notarized document is immediately uploaded and available on the platform, accompanied by its digital certification.',
+        },
+        {
+          question: 'Are my documents officially recognized internationally?',
+          answer: 'Yes. All documents notarized through our platform can receive an apostille issued in accordance with The Hague Convention of 5 October 1961. This apostille certifies the authenticity of the notary\'s signature and seal, ensuring the international validity of your document across all member countries.',
+        },
+        {
+          question: 'What types of documents can I have certified?',
+          answer: 'You can notarize and certify a wide range of documents, including:\n- Contracts, declarations, affidavits, and simple powers of attorney\n- Certified true copies (IDs, diplomas, certificates)\n- Certified translations Business and administrative documents\nEach document is securely signed, sealed, and stored within your private space.',
+        },
+        {
+          question: 'How is my data protected?',
+          answer: 'All transfers are end-to-end encrypted (AES-256) and stored on secure servers that comply with international data protection standards. Video sessions are recorded and archived under strict control to ensure integrity, traceability, and full confidentiality for every notarization.',
+        },
+        {
+          question: 'When will I receive my final document?',
+          answer: 'Immediately after the video session, your notarized document is automatically uploaded to your secure dashboard. If an apostille is required, it is added once validated by the competent authority — and the final certified document becomes available for instant download.',
+        },
+        {
+          question: 'What is The Hague Convention?',
+          answer: 'The Hague Convention of 5 October 1961 is an international treaty that simplifies the authentication of public documents for use abroad. It establishes a standardized form of certification (apostille) that is recognized by all member countries, eliminating the need for multiple levels of authentication.',
+        },
+        {
+          question: 'What is the legal value of my documents?',
+          answer: 'Documents notarized through our platform have the same legal value as traditional notarizations. They are legally binding, recognized by courts, government agencies, and institutions worldwide, especially when accompanied by an apostille for international use.',
+        },
+        {
+          question: 'Can I track the status of my certification?',
+          answer: 'Yes, you can track the status of your certification in real-time through your secure dashboard. You will receive email notifications at each stage of the process, from document upload to final certification and apostille issuance.',
+        },
+        {
+          question: 'Do I need to schedule an appointment in advance?',
+          answer: 'Yes, you need to schedule a video appointment with a licensed notary. Appointments are typically available within 24-48 hours, and you can choose a time slot that works best for you. Same-day appointments may be available depending on availability.',
+        },
+        {
+          question: 'What happens if I miss my scheduled appointment?',
+          answer: 'If you miss your scheduled appointment, you can reschedule it free of charge through your dashboard. We recommend rescheduling at least 2 hours before your original appointment time. Multiple missed appointments may result in a rescheduling fee.',
+        },
+        {
+          question: 'What do I need for the video appointment?',
+          answer: 'For your video appointment, you will need:\n- A valid government-issued photo ID (passport, driver\'s license, or national ID)\n- A stable internet connection\n- A device with a camera and microphone (computer, tablet, or smartphone)\n- The original document you wish to notarize (if applicable)\n- A quiet, well-lit environment',
+        },
+        {
+          question: 'Can I use my phone for the video certification?',
+          answer: 'Yes, you can use your smartphone for the video certification appointment. Our platform is fully compatible with mobile devices. However, we recommend using a computer or tablet for the best experience, especially when viewing and signing documents.',
+        },
+        {
+          question: 'What if my documents are not in English?',
+          answer: 'We can notarize documents in various languages. However, if your document needs to be used in an English-speaking country, you may need a certified translation. We also provide certified translation services to ensure your documents meet all requirements.',
+        },
+        {
+          question: 'Will my certified documents be accepted for immigration purposes?',
+          answer: 'Yes, our notarized documents with apostilles are widely accepted for immigration purposes, including USCIS applications, visa applications, and other immigration-related procedures. However, we recommend checking with the specific authority or embassy to confirm their requirements.',
+        },
+        {
+          question: 'Do you provide apostille services as well?',
+          answer: 'Yes, we provide full apostille services. Once your document is notarized, we can obtain the apostille from the competent authority in accordance with The Hague Convention. The apostille is typically added within 1-3 business days after notarization.',
+        },
+        {
+          question: 'What\'s the difference between certification and apostille?',
+          answer: 'Certification (notarization) is the process of having a notary verify and authenticate your document. An apostille is an additional certification that validates the notary\'s signature and seal for international use. The apostille is required when your document needs to be used in a foreign country that is part of The Hague Convention.',
+        },
+        {
+          question: 'What if my document gets rejected by the receiving authority?',
+          answer: 'If your document is rejected by the receiving authority, we will review the reason for rejection and work with you to resolve the issue. In most cases, we can provide a corrected version or additional documentation at no extra cost. If we cannot resolve the issue, we offer a full refund guarantee.',
+        },
+      ],
+    },
+    // Common
+    common: {
+      loading: 'Loading...',
+      error: 'An error occurred',
+      notFound: 'Page not found',
+      goHome: 'Go to homepage',
+      noResults: 'No results found',
+      contactUs: 'Contact us',
+      home: 'Home',
+      views: 'views',
+    },
+    // Testimonial
+    testimonial: {
+      quote: '"A smooth and fully digital experience"',
+      text: 'My Notary made what used to be a complex process incredibly simple. I was able to sign, certify, and apostille my documents online, fully legally, in just a few minutes. Their team is responsive, reliable, and the platform is extremely intuitive',
+      author: 'Callum Davis',
+      role: 'CEO of Akkar',
+    },
+    // Blog
+    blog: {
+      badge: 'Our Blog',
+      title: 'Articles & Insights',
+      description: 'Stay informed about notarization, legal documents, apostilles, and industry news',
+      allArticles: 'All Articles',
+      readMore: 'Read more',
+      viewAll: 'View All Articles',
+      noArticles: 'No articles available yet. Check back soon!',
+      noArticlesCategory: 'No articles found in this category.',
+      minRead: 'min read',
+      latestArticles: 'Latest Articles',
+      backToBlog: 'Back to Blog',
+    },
+    // NotFound
+    notFound: {
+      title: 'Page Not Found',
+      description: 'Oops! The page you\'re looking for doesn\'t exist. It might have been moved or deleted.',
+      backHome: 'Back to Home',
+      viewServices: 'View Our Services',
+      lookingFor: 'You might be looking for:',
+      ourServices: 'Our Services',
+      howItWorks: 'How It Works',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    // CTA Popup
+    ctaPopup: {
+      title: 'Need help?',
+      description: 'Our team is here to answer all your questions about online notarization.',
+      contact: 'Contact us',
+      notarize: 'Notarize now',
+    },
+  },
+  fr: {
+    nav: {
+      services: 'Nos services',
+      howItWorks: 'Comment ça marche',
+      faq: 'FAQ',
+      login: 'Connexion',
+      notarizeNow: 'Commencer votre notarisation',
+    },
+    hero: {
+      title: 'Notarisation en Ligne : Vos Documents Certifiés en 5 Minutes',
+      subtitle: 'Notaire européen agréé. Documents valides dans 120+ pays. Apostille incluse. Tout se fait depuis chez vous, sans déplacement.',
+      cta: 'Notariser mon document',
+      feature1: 'Reconnu dans 120+ pays',
+      feature2: 'Rapide et 100% en ligne',
+      feature3: '100% sécurisé et confidentiel',
+    },
+    services: {
+      title: 'Nos Services',
+      subtitle: 'Des solutions notariales adaptées à chaque situation',
+      heading: 'Tous Vos Besoins Notariaux.',
+      headingHighlight: 'Une Seule Plateforme',
+      viewDetails: 'Découvrir',
+      learnMore: 'Découvrir le service',
+      noServices: 'Aucun service disponible pour le moment.',
+      otherServices: 'Autres services',
+      otherServicesHeading: 'Découvrez Nos Autres Solutions',
+      perDocument: 'par document',
+    },
+    howItWorks: {
+      title: 'Comment Ça Marche',
+      subtitle: '4 étapes simples pour obtenir vos documents certifiés',
+      badge: 'Processus simple',
+      heading: 'Notarisation Express en 4 Étapes',
+      step1: {
+        title: 'Uploadez votre document',
+        subtitle: '(transfert sécurisé)',
+        description: 'Envoyez votre document en quelques clics. Chiffrement bancaire garanti. Vos données restent privées et accessibles uniquement par vous et le notaire.',
+      },
+      step2: {
+        title: 'Choisissez votre créneau',
+        subtitle: '',
+        description: 'Sélectionnez l\'horaire qui vous arrange. Disponible 7j/7, même le soir. Vérification d\'identité et signature effectuées en visio.',
+      },
+      step3: {
+        title: 'Notarisation en direct',
+        subtitle: 'avec un notaire européen agréé',
+        description: 'En visioconférence sécurisée, le notaire valide votre identité et authentifie votre signature. Votre document certifié est disponible instantanément dans votre espace personnel.',
+      },
+      step4: {
+        title: 'Document prêt à l\'emploi',
+        subtitle: 'avec apostille internationale',
+        description: 'Votre document notarisé est immédiatement utilisable. L\'apostille de La Haye est ajoutée automatiquement si nécessaire, garantissant sa validité dans plus de 120 pays.',
+      },
+      stepLabel: 'Étape',
+      of: 'sur',
+      ctaTitle: 'Prêt à notariser votre document ?',
+      ctaDescription: 'Obtenez vos documents certifiés en ligne dès aujourd\'hui. Valide internationalement, sécurisé et reconnu légalement.',
+      ctaButton: 'Commencer maintenant',
+    },
+    faq: {
+      title: 'Questions Fréquentes',
+      searchPlaceholder: 'Tapez votre question...',
+      items: [
+        {
+          question: 'Comment ça fonctionne concrètement ?',
+          answer: 'C\'est très simple : vous uploadez votre document, vous choisissez un créneau de 15 minutes avec un notaire agréé, vous vous connectez en visio pour la vérification d\'identité et la signature, et c\'est terminé. Votre document certifié est disponible immédiatement dans votre espace personnel. Le tout prend moins de 5 minutes.',
+        },
+        {
+          question: 'Mes documents seront-ils valides à l\'étranger ?',
+          answer: 'Absolument. Tous nos documents peuvent recevoir une apostille de La Haye, reconnue dans plus de 120 pays. Cette apostille certifie l\'authenticité de la signature du notaire et garantit la validité légale internationale de votre document. Parfait pour les démarches administratives, professionnelles ou personnelles à l\'étranger.',
+        },
+        {
+          question: 'Quels documents puis-je faire notariser ?',
+          answer: 'Nous certifions une large gamme de documents :\n- Contrats, déclarations sur l\'honneur, procurations\n- Copies conformes (CNI, passeport, diplômes, certificats)\n- Traductions certifiées\n- Documents commerciaux et administratifs\nChaque document est traité avec la même rigueur et sécurité.',
+        },
+        {
+          question: 'Mes données sont-elles vraiment sécurisées ?',
+          answer: 'Oui, absolument. Nous utilisons un chiffrement de niveau bancaire (AES-256) pour tous les transferts. Vos fichiers sont stockés sur des serveurs sécurisés conformes aux normes européennes de protection des données (RGPD). Les sessions vidéo sont archivées de manière sécurisée pour garantir la traçabilité et la confidentialité totale.',
+        },
+        {
+          question: 'Quand vais-je recevoir mon document ?',
+          answer: 'Immédiatement après votre session avec le notaire. Votre document certifié est automatiquement disponible dans votre espace personnel dès la fin de la visioconférence. Si une apostille est nécessaire, elle est ajoutée dans les 24 heures et vous recevez une notification pour télécharger votre document final.',
+        },
+        {
+          question: 'Qu\'est-ce que la Convention de La Haye ?',
+          answer: 'La Convention de La Haye du 5 octobre 1961 est un traité international qui simplifie l\'authentification des documents publics pour une utilisation à l\'étranger. Elle établit une forme standardisée de certification (apostille) reconnue par tous les pays membres, éliminant le besoin de multiples niveaux d\'authentification.',
+        },
+        {
+          question: 'Quelle est la valeur légale de mes documents ?',
+          answer: 'Les documents notarisés via notre plateforme ont la même valeur légale que les notarisations traditionnelles. Ils sont juridiquement contraignants, reconnus par les tribunaux, les agences gouvernementales et les institutions du monde entier, surtout lorsqu\'ils sont accompagnés d\'une apostille pour usage international.',
+        },
+        {
+          question: 'Puis-je suivre le statut de ma certification ?',
+          answer: 'Oui, vous pouvez suivre le statut de votre certification en temps réel via votre espace personnel sécurisé. Vous recevrez des notifications par email à chaque étape du processus, de l\'upload du document à la certification finale et à l\'émission de l\'apostille.',
+        },
+        {
+          question: 'Dois-je prendre rendez-vous à l\'avance ?',
+          answer: 'Oui, vous devez planifier un rendez-vous vidéo avec un notaire agréé. Les rendez-vous sont généralement disponibles sous 24-48 heures, et vous pouvez choisir un créneau qui vous convient. Des rendez-vous le jour même peuvent être disponibles selon les disponibilités.',
+        },
+        {
+          question: 'Que se passe-t-il si je rate mon rendez-vous programmé ?',
+          answer: 'Si vous ratez votre rendez-vous programmé, vous pouvez le reprogrammer gratuitement via votre espace personnel. Nous recommandons de reprogrammer au moins 2 heures avant votre rendez-vous initial. Plusieurs rendez-vous manqués peuvent entraîner des frais de reprogrammation.',
+        },
+        {
+          question: 'De quoi ai-je besoin pour le rendez-vous vidéo ?',
+          answer: 'Pour votre rendez-vous vidéo, vous aurez besoin de :\n- Une pièce d\'identité officielle avec photo en cours de validité (passeport, permis de conduire ou carte d\'identité nationale)\n- Une connexion internet stable\n- Un appareil avec caméra et microphone (ordinateur, tablette ou smartphone)\n- Le document original que vous souhaitez notariser (si applicable)\n- Un environnement calme et bien éclairé',
+        },
+        {
+          question: 'Puis-je utiliser mon téléphone pour la certification vidéo ?',
+          answer: 'Oui, vous pouvez utiliser votre smartphone pour le rendez-vous de certification vidéo. Notre plateforme est entièrement compatible avec les appareils mobiles. Cependant, nous recommandons d\'utiliser un ordinateur ou une tablette pour la meilleure expérience, surtout lors de la visualisation et de la signature des documents.',
+        },
+        {
+          question: 'Et si mes documents ne sont pas en anglais ?',
+          answer: 'Nous pouvons notariser des documents dans diverses langues. Cependant, si votre document doit être utilisé dans un pays anglophone, vous pourriez avoir besoin d\'une traduction certifiée. Nous proposons également des services de traduction certifiée pour garantir que vos documents répondent à toutes les exigences.',
+        },
+        {
+          question: 'Mes documents certifiés seront-ils acceptés pour des fins d\'immigration ?',
+          answer: 'Oui, nos documents notarisés avec apostilles sont largement acceptés pour des fins d\'immigration, y compris les demandes USCIS, les demandes de visa et autres procédures liées à l\'immigration. Cependant, nous recommandons de vérifier auprès de l\'autorité ou de l\'ambassade spécifique pour confirmer leurs exigences.',
+        },
+        {
+          question: 'Proposez-vous également des services d\'apostille ?',
+          answer: 'Oui, nous proposons des services d\'apostille complets. Une fois votre document notarisé, nous pouvons obtenir l\'apostille auprès de l\'autorité compétente conformément à la Convention de La Haye. L\'apostille est généralement ajoutée dans les 1-3 jours ouvrables après la notarisation.',
+        },
+        {
+          question: 'Quelle est la différence entre certification et apostille ?',
+          answer: 'La certification (notarisation) est le processus par lequel un notaire vérifie et authentifie votre document. Une apostille est une certification supplémentaire qui valide la signature et le sceau du notaire pour usage international. L\'apostille est requise lorsque votre document doit être utilisé dans un pays étranger faisant partie de la Convention de La Haye.',
+        },
+        {
+          question: 'Que se passe-t-il si mon document est rejeté par l\'autorité destinataire ?',
+          answer: 'Si votre document est rejeté par l\'autorité destinataire, nous examinerons la raison du rejet et travaillerons avec vous pour résoudre le problème. Dans la plupart des cas, nous pouvons fournir une version corrigée ou une documentation supplémentaire sans frais supplémentaires. Si nous ne pouvons pas résoudre le problème, nous offrons une garantie de remboursement complet.',
+        },
+      ],
+    },
+    common: {
+      loading: 'Chargement...',
+      error: 'Une erreur s\'est produite',
+      notFound: 'Page non trouvée',
+      goHome: 'Aller à la page d\'accueil',
+      noResults: 'Aucun résultat trouvé',
+      contactUs: 'Nous contacter',
+      home: 'Accueil',
+      views: 'vues',
+    },
+    serviceDetail: {
+      defaultTitle: 'Service',
+      loadServiceError: 'Échec du chargement du service',
+      whyChooseTitle: 'Pourquoi choisir mynotary.io ?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Reconnu dans 120+ pays',
+          description: 'Documents légalement reconnus et acceptés dans tous les pays. Conformité internationale garantie.',
+        },
+        fastOnline: {
+          title: 'Rapide et 100% en ligne',
+          description: 'Processus complet en ligne depuis n\'importe où. Délais rapides, aucune visite en personne requise.',
+        },
+        securePrivacy: {
+          title: 'Sécurisé et confidentiel',
+          description: 'Chiffrement de niveau bancaire pour protéger vos données. Confidentialité stricte tout au long du processus.',
+        },
+        certifiedNotary: {
+          title: 'Certifié par un notaire agréé',
+          description: 'Toutes les traductions certifiées par des notaires américains. Reconnaissance officielle pour usage légal et gouvernemental.',
+        },
+        guaranteedAcceptance: {
+          title: 'Acceptation garantie',
+          description: 'Accepté par l\'USCIS, les ambassades et les tribunaux. Rejet ? Nous refaisons gratuitement ou remboursons à 100%.',
+        },
+      },
+      whatIs: 'Qu\'est-ce que',
+      showLess: 'Afficher moins',
+      readMore: 'Lire la suite',
+      backToServices: 'Retour à tous les services',
+    },
+    testimonial: {
+      quote: '"Enfin une solution simple et efficace"',
+      text: 'J\'avais besoin de faire certifier plusieurs documents pour mon entreprise. Avec My Notary, tout s\'est fait en ligne en quelques minutes, sans me déplacer. L\'équipe est réactive, le processus est clair et mes documents sont valides partout. Je recommande vivement !',
+      author: 'Callum Davis',
+      role: 'PDG d\'Akkar',
+    },
+    blog: {
+      badge: 'Notre Blog',
+      title: 'Articles et Actualités',
+      description: 'Restez informé sur la notarisation, les documents légaux, les apostilles et les actualités du secteur',
+      allArticles: 'Tous les Articles',
+      readMore: 'Lire la suite',
+      viewAll: 'Voir Tous les Articles',
+      noArticles: 'Aucun article disponible pour le moment. Revenez bientôt !',
+      noArticlesCategory: 'Aucun article trouvé dans cette catégorie.',
+      minRead: 'min de lecture',
+    },
+    notFound: {
+      title: 'Page introuvable',
+      description: 'Désolé, cette page n\'existe pas ou a été déplacée. Retournez à l\'accueil pour découvrir nos services de notarisation en ligne.',
+      backHome: 'Retour à l\'accueil',
+      viewServices: 'Découvrir nos services',
+      lookingFor: 'Vous cherchez peut-être :',
+      ourServices: 'Nos Services',
+      howItWorks: 'Comment Ça Marche',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    ctaPopup: {
+      title: 'Une question ?',
+      description: 'Notre équipe vous répond en moins de 2 heures. Disponible du lundi au vendredi, 9h-18h.',
+      contact: 'Parler à un conseiller',
+      notarize: 'Commencer maintenant',
+    },
+  },
+  es: {
+    nav: {
+      services: 'Nuestros servicios',
+      howItWorks: 'Cómo funciona',
+      faq: 'FAQ',
+      login: 'Conexión',
+      notarizeNow: 'Iniciar su notarización',
+    },
+    hero: {
+      title: 'Notarización Online: Sus Documentos Certificados en 5 Minutos',
+      subtitle: 'Notario europeo certificado. Documentos válidos en más de 120 países. Apostilla incluida. Todo desde su casa, sin desplazamientos.',
+      cta: 'Notarizar mi documento',
+      feature1: 'Válido en 120+ países',
+      feature2: 'Rápido y completamente en línea',
+      feature3: '100% seguro y confidencial',
+    },
+    services: {
+      title: 'Nuestros Servicios',
+      subtitle: 'Soluciones notariales adaptadas a cada necesidad',
+      heading: 'Todos Sus Trámites Notariales.',
+      headingHighlight: 'Una Sola Plataforma',
+      viewDetails: 'Descubrir',
+      learnMore: 'Ver servicio',
+      noServices: 'Aún no hay servicios disponibles.',
+      otherServices: 'Otros servicios',
+      otherServicesHeading: 'Descubra Nuestras Otras Soluciones',
+      perDocument: 'por documento',
+    },
+    howItWorks: {
+      title: 'Cómo Funciona',
+      subtitle: '4 pasos sencillos para certificar sus documentos',
+      badge: 'Proceso simple',
+      heading: 'Notarización Express en 4 Pasos',
+      step1: {
+        title: 'Suba su documento',
+        subtitle: '(transferencia segura)',
+        description: 'Envíe su documento con un solo clic. Cifrado bancario garantizado. Sus datos permanecen privados y solo accesibles para usted y el notario.',
+      },
+      step2: {
+        title: 'Elija su horario',
+        subtitle: '',
+        description: 'Seleccione el momento que mejor le convenga. Disponible 7 días a la semana, incluso por la noche. Verificación de identidad y firma por videollamada.',
+      },
+      step3: {
+        title: 'Notarización en directo',
+        subtitle: 'con un notario europeo certificado',
+        description: 'En videoconferencia segura, el notario valida su identidad y autentica su firma. Su documento certificado está disponible al instante en su espacio personal.',
+      },
+      step4: {
+        title: 'Documento listo para usar',
+        subtitle: 'con apostilla internacional',
+        description: 'Su documento notarizado es inmediatamente utilizable. La apostilla de La Haya se añade automáticamente si es necesario, garantizando su validez en más de 120 países.',
+      },
+      stepLabel: 'Paso',
+      of: 'de',
+      ctaTitle: '¿Listo para notarizar su documento?',
+      ctaDescription: 'Obtenga sus documentos certificados en línea hoy mismo. Válido internacionalmente, seguro y reconocido legalmente.',
+      ctaButton: 'Empezar ahora',
+    },
+    faq: {
+      title: 'Preguntas Frecuentes',
+      searchPlaceholder: 'Escriba su pregunta...',
+      items: [
+        {
+          question: '¿Cómo funciona exactamente?',
+          answer: 'Es muy sencillo: sube su documento, elige una cita de 15 minutos con un notario certificado, se conecta por videollamada para la verificación de identidad y firma, y listo. Su documento certificado está disponible inmediatamente en su espacio personal. Todo en menos de 5 minutos.',
+        },
+        {
+          question: '¿Mis documentos serán válidos en el extranjero?',
+          answer: 'Absolutamente. Todos nuestros documentos pueden recibir una apostilla de La Haya, reconocida en más de 120 países. Esta apostilla certifica la autenticidad de la firma del notario y garantiza la validez legal internacional de su documento. Perfecto para trámites administrativos, profesionales o personales en el extranjero.',
+        },
+        {
+          question: '¿Qué documentos puedo notarizar?',
+          answer: 'Certificamos una amplia gama de documentos:\n- Contratos, declaraciones juradas, poderes\n- Copias compulsadas (DNI, pasaporte, títulos, certificados)\n- Traducciones certificadas\n- Documentos comerciales y administrativos\nCada documento se trata con la misma rigurosidad y seguridad.',
+        },
+        {
+          question: '¿Mis datos están realmente seguros?',
+          answer: 'Sí, absolutamente. Utilizamos cifrado de nivel bancario (AES-256) para todas las transferencias. Sus archivos se almacenan en servidores seguros que cumplen con las normativas europeas de protección de datos (RGPD). Las sesiones de video se archivan de forma segura para garantizar la trazabilidad y confidencialidad total.',
+        },
+        {
+          question: '¿Cuándo recibiré mi documento?',
+          answer: 'Inmediatamente después de su sesión con el notario. Su documento certificado está automáticamente disponible en su espacio personal al finalizar la videoconferencia. Si se requiere una apostilla, se añade en 24 horas y recibirá una notificación para descargar su documento final.',
+        },
+        {
+          question: '¿Qué es la Convención de La Haya?',
+          answer: 'La Convención de La Haya del 5 de octubre de 1961 es un tratado internacional que simplifica la autenticación de documentos públicos para uso en el extranjero. Establece una forma estandarizada de certificación (apostilla) reconocida por todos los países miembros, eliminando la necesidad de múltiples niveles de autenticación.',
+        },
+        {
+          question: '¿Cuál es el valor legal de mis documentos?',
+          answer: 'Los documentos notarizados a través de nuestra plataforma tienen el mismo valor legal que las notarizaciones tradicionales. Son legalmente vinculantes, reconocidos por tribunales, agencias gubernamentales e instituciones de todo el mundo, especialmente cuando están acompañados de una apostilla para uso internacional.',
+        },
+        {
+          question: '¿Puedo rastrear el estado de mi certificación?',
+          answer: 'Sí, puede rastrear el estado de su certificación en tiempo real a través de su panel seguro. Recibirá notificaciones por correo electrónico en cada etapa del proceso, desde la carga del documento hasta la certificación final y la emisión de la apostilla.',
+        },
+        {
+          question: '¿Necesito programar una cita con anticipación?',
+          answer: 'Sí, necesita programar una cita de video con un notario autorizado. Las citas suelen estar disponibles en 24-48 horas, y puede elegir un horario que le convenga. Las citas del mismo día pueden estar disponibles según la disponibilidad.',
+        },
+        {
+          question: '¿Qué sucede si pierdo mi cita programada?',
+          answer: 'Si pierde su cita programada, puede reprogramarla sin costo adicional a través de su panel. Recomendamos reprogramar al menos 2 horas antes de su cita original. Varias citas perdidas pueden resultar en una tarifa de reprogramación.',
+        },
+        {
+          question: '¿Qué necesito para la cita de video?',
+          answer: 'Para su cita de video, necesitará:\n- Una identificación oficial con foto válida (pasaporte, licencia de conducir o identificación nacional)\n- Una conexión a internet estable\n- Un dispositivo con cámara y micrófono (computadora, tableta o smartphone)\n- El documento original que desea notarizar (si aplica)\n- Un ambiente tranquilo y bien iluminado',
+        },
+        {
+          question: '¿Puedo usar mi teléfono para la certificación de video?',
+          answer: 'Sí, puede usar su smartphone para la cita de certificación de video. Nuestra plataforma es totalmente compatible con dispositivos móviles. Sin embargo, recomendamos usar una computadora o tableta para la mejor experiencia, especialmente al ver y firmar documentos.',
+        },
+        {
+          question: '¿Qué pasa si mis documentos no están en inglés?',
+          answer: 'Podemos notarizar documentos en varios idiomas. Sin embargo, si su documento necesita ser usado en un país de habla inglesa, puede necesitar una traducción certificada. También proporcionamos servicios de traducción certificada para garantizar que sus documentos cumplan con todos los requisitos.',
+        },
+        {
+          question: '¿Serán aceptados mis documentos certificados para fines de inmigración?',
+          answer: 'Sí, nuestros documentos notarizados con apostillas son ampliamente aceptados para fines de inmigración, incluidas las solicitudes de USCIS, solicitudes de visa y otros procedimientos relacionados con la inmigración. Sin embargo, recomendamos verificar con la autoridad o embajada específica para confirmar sus requisitos.',
+        },
+        {
+          question: '¿También proporcionan servicios de apostilla?',
+          answer: 'Sí, proporcionamos servicios completos de apostilla. Una vez que su documento está notarizado, podemos obtener la apostilla de la autoridad competente de acuerdo con la Convención de La Haya. La apostilla generalmente se añade en 1-3 días hábiles después de la notarización.',
+        },
+        {
+          question: '¿Cuál es la diferencia entre certificación y apostilla?',
+          answer: 'La certificación (notarización) es el proceso por el cual un notario verifica y autentica su documento. Una apostilla es una certificación adicional que valida la firma y el sello del notario para uso internacional. La apostilla es requerida cuando su documento necesita ser usado en un país extranjero que es parte de la Convención de La Haya.',
+        },
+        {
+          question: '¿Qué pasa si mi documento es rechazado por la autoridad receptora?',
+          answer: 'Si su documento es rechazado por la autoridad receptora, revisaremos la razón del rechazo y trabajaremos con usted para resolver el problema. En la mayoría de los casos, podemos proporcionar una versión corregida o documentación adicional sin costo adicional. Si no podemos resolver el problema, ofrecemos una garantía de reembolso completo.',
+        },
+      ],
+    },
+    common: {
+      loading: 'Cargando...',
+      error: 'Ocurrió un error',
+      notFound: 'Página no encontrada',
+      goHome: 'Ir a la página de inicio',
+      noResults: 'No se encontraron resultados',
+      contactUs: 'Contáctenos',
+      home: 'Inicio',
+      views: 'vistas',
+    },
+    serviceDetail: {
+      defaultTitle: 'Servicio',
+      loadServiceError: 'Error al cargar el servicio',
+      whyChooseTitle: '¿Por qué elegir mynotary.io ?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Válido en 120+ países',
+          description: 'Documentos legalmente reconocidos y aceptados en todos los países. Cumplimiento internacional garantizado.',
+        },
+        fastOnline: {
+          title: 'Rápido y completamente en línea',
+          description: 'Proceso completo en línea desde cualquier lugar. Entrega rápida, no se requieren visitas en persona.',
+        },
+        securePrivacy: {
+          title: 'Seguro y enfocado en la privacidad',
+          description: 'Cifrado de nivel bancario protege sus datos. Confidencialidad estricta durante todo el proceso.',
+        },
+        certifiedNotary: {
+          title: 'Certificado por notario autorizado',
+          description: 'Todas las traducciones certificadas por notarios estadounidenses. Reconocimiento oficial para uso legal y gubernamental.',
+        },
+        guaranteedAcceptance: {
+          title: 'Aceptación garantizada',
+          description: 'Aceptado por USCIS, embajadas y tribunales. ¿Rechazo? Lo rehacemos gratis o reembolsamos al 100%.',
+        },
+      },
+      whatIs: '¿Qué es',
+      showLess: 'Mostrar menos',
+      readMore: 'Leer más',
+      backToServices: 'Volver a todos los servicios',
+    },
+    testimonial: {
+      quote: '"Por fin una solución simple y eficaz"',
+      text: 'Necesitaba certificar varios documentos para mi empresa. Con My Notary, todo se hizo en línea en pocos minutos, sin desplazarme. El equipo es receptivo, el proceso es claro y mis documentos son válidos en todas partes. ¡Lo recomiendo totalmente!',
+      author: 'Callum Davis',
+      role: 'CEO de Akkar',
+    },
+    blog: {
+      badge: 'Nuestro Blog',
+      title: 'Artículos y Perspectivas',
+      description: 'Manténgase informado sobre notarización, documentos legales, apostillas y noticias de la industria',
+      allArticles: 'Todos los Artículos',
+      readMore: 'Leer más',
+      viewAll: 'Ver Todos los Artículos',
+      noArticles: 'Aún no hay artículos disponibles. ¡Vuelva pronto!',
+      noArticlesCategory: 'No se encontraron artículos en esta categoría.',
+      minRead: 'min de lectura',
+      latestArticles: 'Últimos Artículos',
+      backToBlog: 'Volver al Blog',
+    },
+    notFound: {
+      title: 'Página no encontrada',
+      description: 'Lo sentimos, esta página no existe o ha sido movida. Vuelva al inicio para descubrir nuestros servicios de notarización en línea.',
+      backHome: 'Volver al inicio',
+      viewServices: 'Descubrir nuestros servicios',
+      lookingFor: 'Podría estar buscando:',
+      ourServices: 'Nuestros Servicios',
+      howItWorks: 'Cómo Funciona',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    ctaPopup: {
+      title: '¿Tiene alguna pregunta?',
+      description: 'Nuestro equipo le responde en menos de 2 horas. Disponible de lunes a viernes, 9h-18h.',
+      contact: 'Hablar con un asesor',
+      notarize: 'Empezar ahora',
+    },
+  },
+  de: {
+    nav: {
+      services: 'Unsere Dienstleistungen',
+      howItWorks: 'Wie es funktioniert',
+      faq: 'FAQ',
+      login: 'Anmeldung',
+      notarizeNow: 'Beginnen Sie Ihre Notarisierung',
+    },
+    hero: {
+      title: 'Online-Beglaubigung: Ihre Dokumente in 5 Minuten zertifiziert',
+      subtitle: 'Zertifizierter EU-Notar. Dokumente gültig in über 120 Ländern. Apostille inklusive. Alles von zu Hause aus, ohne Termin beim Notar.',
+      cta: 'Dokument beglaubigen lassen',
+      feature1: 'Gültig in 120+ Ländern',
+      feature2: 'Schnell & vollständig online',
+      feature3: '100% sicher und vertraulich',
+    },
+    services: {
+      title: 'Unsere Dienstleistungen',
+      subtitle: 'Notardienstleistungen für jeden Bedarf',
+      heading: 'Alle Notardienstleistungen.',
+      headingHighlight: 'Eine Plattform',
+      viewDetails: 'Details',
+      learnMore: 'Service entdecken',
+      noServices: 'Noch keine Dienstleistungen verfügbar.',
+      otherServices: 'Weitere Dienstleistungen',
+      otherServicesHeading: 'Entdecken Sie Unsere Weitere Lösungen',
+      perDocument: 'pro Dokument',
+    },
+    howItWorks: {
+      title: 'Wie Es Funktioniert',
+      subtitle: 'Vier einfache Schritte zur Online-Notarisierung Ihrer Dokumente',
+      badge: 'Wie funktioniert es?',
+      heading: 'Notarisierung Einfach Gemacht',
+      step1: {
+        title: 'Laden Sie Ihr Dokument hoch',
+        subtitle: '(sichere Übertragung)',
+        description: 'Laden Sie Ihr Dokument einfach über einen vollständig verschlüsselten Kanal auf unsere Plattform hoch. Alle Dateien sind mit Bank-Level-Verschlüsselung geschützt und sicher gespeichert. Nur Sie und der Notar haben Zugriff.',
+      },
+      step2: {
+        title: 'Buchen Sie einen Termin',
+        subtitle: '',
+        description: 'Planen Sie einen sicheren Video-Termin zu einem Zeitpunkt, der Ihnen passt. Identitätsprüfung und Unterschrift werden remote in Echtzeit durchgeführt.',
+      },
+      step3: {
+        title: 'Online verifizieren und notarisieren',
+        subtitle: 'mit einem EU-Notar',
+        description: 'Während der Live-Sitzung bestätigt der Notar Ihre Identität, bezeugt die Unterschrift bei Bedarf und finalisiert die Notarisierung digital. Ihr notarisiertes Dokument wird sofort auf Ihr sicheres Dashboard hochgeladen.',
+      },
+      step4: {
+        title: 'Erhalten Sie Ihr Dokument',
+        subtitle: 'zertifiziert, apostilliert oder notarisiert',
+        description: 'Wenn Ihr Dokument international verwendet werden muss, wird eine Apostille gemäß dem Haager Übereinkommen vom 5. Oktober 1961 hinzugefügt, die seine globale Rechtsgültigkeit bestätigt.',
+      },
+      stepLabel: 'Schritt',
+      of: 'von',
+      ctaTitle: 'Bereit loszulegen?',
+      ctaDescription: 'Notarisieren Sie Ihre Dokumente online in nur wenigen Minuten. Sicher, rechtlich gültig und international anerkannt.',
+      ctaButton: 'Jetzt notarisieren',
+    },
+    faq: {
+      title: 'Häufig Gestellte Fragen',
+      searchPlaceholder: 'Fragen suchen...',
+      items: [
+        {
+          question: 'Wie funktioniert der Online-Notarisierungsprozess?',
+          answer: 'Alles passiert in nur wenigen Minuten, direkt in Ihrem Browser. Sie planen eine sichere Videositzung mit einem lizenzierten Notar, signieren Ihr Dokument remote und die Notarisierung wird in Echtzeit abgeschlossen. Ihr notarisiertes Dokument wird sofort hochgeladen und ist auf der Plattform verfügbar, begleitet von seiner digitalen Zertifizierung.',
+        },
+        {
+          question: 'Werden meine Dokumente offiziell international anerkannt?',
+          answer: 'Ja. Alle über unsere Plattform notarisierten Dokumente können eine Apostille erhalten, die gemäß dem Haager Übereinkommen vom 5. Oktober 1961 ausgestellt wird. Diese Apostille bescheinigt die Authentizität der Unterschrift und des Siegels des Notars und gewährleistet die internationale Gültigkeit Ihres Dokuments in allen Mitgliedsländern.',
+        },
+        {
+          question: 'Welche Arten von Dokumenten kann ich zertifizieren lassen?',
+          answer: 'Sie können eine Vielzahl von Dokumenten notarisieren und zertifizieren lassen, einschließlich:\n- Verträge, Erklärungen, eidesstattliche Versicherungen und einfache Vollmachten\n- Beglaubigte Kopien (Ausweise, Diplome, Zertifikate)\n- Beglaubigte Übersetzungen\n- Geschäfts- und Verwaltungsdokumente\nJedes Dokument wird sicher signiert, versiegelt und in Ihrem privaten Bereich gespeichert.',
+        },
+        {
+          question: 'Wie werden meine Daten geschützt?',
+          answer: 'Alle Übertragungen sind Ende-zu-Ende verschlüsselt (AES-256) und werden auf sicheren Servern gespeichert, die den internationalen Datenschutzstandards entsprechen. Videositzungen werden unter strenger Kontrolle aufgezeichnet und archiviert, um Integrität, Nachverfolgbarkeit und vollständige Vertraulichkeit für jede Notarisierung zu gewährleisten.',
+        },
+        {
+          question: 'Wann erhalte ich mein endgültiges Dokument?',
+          answer: 'Unmittelbar nach der Videositzung wird Ihr notarisiertes Dokument automatisch auf Ihr sicheres Dashboard hochgeladen. Wenn eine Apostille erforderlich ist, wird sie nach Validierung durch die zuständige Behörde hinzugefügt — und das endgültige zertifizierte Dokument steht sofort zum Download zur Verfügung.',
+        },
+        {
+          question: 'Was ist das Haager Übereinkommen?',
+          answer: 'Das Haager Übereinkommen vom 5. Oktober 1961 ist ein internationales Abkommen, das die Authentifizierung öffentlicher Dokumente für die Verwendung im Ausland vereinfacht. Es etabliert eine standardisierte Form der Zertifizierung (Apostille), die von allen Mitgliedsländern anerkannt wird und die Notwendigkeit mehrerer Authentifizierungsebenen eliminiert.',
+        },
+        {
+          question: 'Was ist der rechtliche Wert meiner Dokumente?',
+          answer: 'Dokumente, die über unsere Plattform notarisiert wurden, haben den gleichen rechtlichen Wert wie traditionelle Notarisierungen. Sie sind rechtlich bindend, werden von Gerichten, Regierungsbehörden und Institutionen weltweit anerkannt, insbesondere wenn sie von einer Apostille für die internationale Verwendung begleitet werden.',
+        },
+        {
+          question: 'Kann ich den Status meiner Zertifizierung verfolgen?',
+          answer: 'Ja, Sie können den Status Ihrer Zertifizierung in Echtzeit über Ihr sicheres Dashboard verfolgen. Sie erhalten E-Mail-Benachrichtigungen in jeder Phase des Prozesses, vom Dokumenten-Upload bis zur endgültigen Zertifizierung und Apostillen-Ausstellung.',
+        },
+        {
+          question: 'Muss ich einen Termin im Voraus vereinbaren?',
+          answer: 'Ja, Sie müssen einen Video-Termin mit einem lizenzierten Notar vereinbaren. Termine sind normalerweise innerhalb von 24-48 Stunden verfügbar, und Sie können einen Zeitpunkt wählen, der für Sie am besten passt. Termine am selben Tag können je nach Verfügbarkeit verfügbar sein.',
+        },
+        {
+          question: 'Was passiert, wenn ich meinen vereinbarten Termin verpasse?',
+          answer: 'Wenn Sie Ihren vereinbarten Termin verpassen, können Sie ihn kostenlos über Ihr Dashboard neu vereinbaren. Wir empfehlen, mindestens 2 Stunden vor Ihrem ursprünglichen Termin umzuplanen. Mehrere verpasste Termine können zu einer Umplanungsgebühr führen.',
+        },
+        {
+          question: 'Was brauche ich für den Video-Termin?',
+          answer: 'Für Ihren Video-Termin benötigen Sie:\n- Einen gültigen amtlichen Lichtbildausweis (Reisepass, Führerschein oder Personalausweis)\n- Eine stabile Internetverbindung\n- Ein Gerät mit Kamera und Mikrofon (Computer, Tablet oder Smartphone)\n- Das Originaldokument, das Sie notarisieren lassen möchten (falls zutreffend)\n- Eine ruhige, gut beleuchtete Umgebung',
+        },
+        {
+          question: 'Kann ich mein Telefon für die Video-Zertifizierung verwenden?',
+          answer: 'Ja, Sie können Ihr Smartphone für den Video-Zertifizierungstermin verwenden. Unsere Plattform ist vollständig mit mobilen Geräten kompatibel. Wir empfehlen jedoch die Verwendung eines Computers oder Tablets für die beste Erfahrung, insbesondere beim Anzeigen und Unterzeichnen von Dokumenten.',
+        },
+        {
+          question: 'Was ist, wenn meine Dokumente nicht auf Englisch sind?',
+          answer: 'Wir können Dokumente in verschiedenen Sprachen notarisieren. Wenn Ihr Dokument jedoch in einem englischsprachigen Land verwendet werden muss, benötigen Sie möglicherweise eine beglaubigte Übersetzung. Wir bieten auch beglaubigte Übersetzungsdienste an, um sicherzustellen, dass Ihre Dokumente alle Anforderungen erfüllen.',
+        },
+        {
+          question: 'Werden meine zertifizierten Dokumente für Einwanderungszwecke akzeptiert?',
+          answer: 'Ja, unsere notarisierten Dokumente mit Apostillen werden weithin für Einwanderungszwecke akzeptiert, einschließlich USCIS-Anträgen, Visa-Anträgen und anderen einwanderungsbezogenen Verfahren. Wir empfehlen jedoch, bei der zuständigen Behörde oder Botschaft zu überprüfen, um deren Anforderungen zu bestätigen.',
+        },
+        {
+          question: 'Bieten Sie auch Apostillen-Dienste an?',
+          answer: 'Ja, wir bieten vollständige Apostillen-Dienste an. Sobald Ihr Dokument notarisiert ist, können wir die Apostille von der zuständigen Behörde gemäß dem Haager Übereinkommen erhalten. Die Apostille wird normalerweise innerhalb von 1-3 Werktagen nach der Notarisierung hinzugefügt.',
+        },
+        {
+          question: 'Was ist der Unterschied zwischen Zertifizierung und Apostille?',
+          answer: 'Die Zertifizierung (Notarisierung) ist der Prozess, bei dem ein Notar Ihr Dokument überprüft und authentifiziert. Eine Apostille ist eine zusätzliche Zertifizierung, die die Unterschrift und das Siegel des Notars für die internationale Verwendung validiert. Die Apostille ist erforderlich, wenn Ihr Dokument in einem ausländischen Land verwendet werden muss, das Teil des Haager Übereinkommens ist.',
+        },
+        {
+          question: 'Was ist, wenn mein Dokument von der empfangenden Behörde abgelehnt wird?',
+          answer: 'Wenn Ihr Dokument von der empfangenden Behörde abgelehnt wird, überprüfen wir den Ablehnungsgrund und arbeiten mit Ihnen zusammen, um das Problem zu lösen. In den meisten Fällen können wir eine korrigierte Version oder zusätzliche Dokumentation ohne zusätzliche Kosten bereitstellen. Wenn wir das Problem nicht lösen können, bieten wir eine vollständige Rückerstattungsgarantie.',
+        },
+      ],
+    },
+    common: {
+      loading: 'Laden...',
+      error: 'Ein Fehler ist aufgetreten',
+      notFound: 'Seite nicht gefunden',
+      goHome: 'Zur Startseite gehen',
+      noResults: 'Keine Ergebnisse gefunden',
+      contactUs: 'Kontaktieren Sie uns',
+      home: 'Startseite',
+      views: 'Aufrufe',
+    },
+    serviceDetail: {
+      defaultTitle: 'Dienstleistung',
+      loadServiceError: 'Fehler beim Laden des Dienstes',
+      whyChooseTitle: 'Warum mynotary.io wählen?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Weltweit rechtlich gültig',
+          description: 'Dokumente werden in allen Ländern rechtlich anerkannt und akzeptiert. Internationale Konformität garantiert.',
+        },
+        fastOnline: {
+          title: 'Schnell & vollständig online',
+          description: 'Vollständiger Prozess online von überall. Schnelle Bearbeitung, keine persönlichen Besuche erforderlich.',
+        },
+        securePrivacy: {
+          title: 'Sicher & datenschutzorientiert',
+          description: 'Bank-Level-Verschlüsselung schützt Ihre Daten. Strikte Vertraulichkeit während des gesamten Prozesses.',
+        },
+        certifiedNotary: {
+          title: 'Zertifiziert von lizenziertem Notar',
+          description: 'Alle Übersetzungen werden von US-Notaren zertifiziert. Offizielle Anerkennung für rechtliche und behördliche Verwendung.',
+        },
+        guaranteedAcceptance: {
+          title: 'Garantierte Akzeptanz',
+          description: 'Akzeptiert von USCIS, Botschaften und Gerichten. Ablehnung? Wir machen es kostenlos neu oder erstatten 100%.',
+        },
+      },
+      whatIs: 'Was ist',
+      showLess: 'Weniger anzeigen',
+      readMore: 'Mehr lesen',
+      backToServices: 'Zurück zu allen Dienstleistungen',
+    },
+    testimonial: {
+      quote: '"Ein reibungsloses und vollständig digitales Erlebnis"',
+      text: 'My Notary hat einen Prozess, der früher komplex war, unglaublich einfach gemacht. Ich konnte meine Dokumente online, vollständig legal, in nur wenigen Minuten signieren, zertifizieren und apostillieren. Ihr Team ist reaktionsschnell, zuverlässig und die Plattform ist extrem intuitiv',
+      author: 'Callum Davis',
+      role: 'CEO von Akkar',
+    },
+    blog: {
+      badge: 'Unser Blog',
+      title: 'Artikel & Einblicke',
+      description: 'Bleiben Sie informiert über Notarisierung, Rechtsdokumente, Apostillen und Branchennachrichten',
+      allArticles: 'Alle Artikel',
+      readMore: 'Weiterlesen',
+      viewAll: 'Alle Artikel Anzeigen',
+      noArticles: 'Noch keine Artikel verfügbar. Schauen Sie bald wieder vorbei!',
+      noArticlesCategory: 'Keine Artikel in dieser Kategorie gefunden.',
+      minRead: 'Min. Lesezeit',
+      latestArticles: 'Neueste Artikel',
+      backToBlog: 'Zurück zum Blog',
+    },
+    notFound: {
+      title: 'Seite Nicht Gefunden',
+      description: 'Ups! Die Seite, die Sie suchen, existiert nicht. Sie wurde möglicherweise verschoben oder gelöscht.',
+      backHome: 'Zur Startseite',
+      viewServices: 'Unsere Dienstleistungen Anzeigen',
+      lookingFor: 'Sie suchen vielleicht nach:',
+      ourServices: 'Unsere Dienstleistungen',
+      howItWorks: 'Wie Es Funktioniert',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    ctaPopup: {
+      title: 'Haben Sie Fragen?',
+      description: 'Unser Team antwortet Ihnen innerhalb von 2 Stunden. Erreichbar Montag bis Freitag, 9-18 Uhr.',
+      contact: 'Mit Berater sprechen',
+      notarize: 'Jetzt starten',
+    },
+  },
+  it: {
+    nav: {
+      services: 'I nostri servizi',
+      howItWorks: 'Come funziona',
+      faq: 'FAQ',
+      login: 'Accesso',
+      notarizeNow: 'Inizia la tua notarizzazione',
+    },
+    hero: {
+      title: 'Notarizzazione Online: I Tuoi Documenti Certificati in 5 Minuti',
+      subtitle: 'Notaio europeo certificato. Documenti validi in oltre 120 paesi. Apostille inclusa. Tutto da casa tua, senza spostamenti.',
+      cta: 'Notarizza il mio documento',
+      feature1: 'Valido in 120+ paesi',
+      feature2: 'Veloce e completamente online',
+      feature3: '100% sicuro e riservato',
+    },
+    services: {
+      title: 'I Nostri Servizi',
+      subtitle: 'Soluzioni notarili per ogni esigenza',
+      heading: 'Tutti i Tuoi Servizi Notarili.',
+      headingHighlight: 'Una Sola Piattaforma',
+      viewDetails: 'Scopri',
+      learnMore: 'Scopri il servizio',
+      noServices: 'Nessun servizio disponibile al momento.',
+      otherServices: 'Altri servizi',
+      otherServicesHeading: 'Scopri le Nostre Altre Soluzioni',
+      perDocument: 'per documento',
+    },
+    howItWorks: {
+      title: 'Come Funziona',
+      subtitle: 'Quattro semplici passaggi per notarizzare i tuoi documenti online',
+      badge: 'Come funziona?',
+      heading: 'Notarizzazione Semplificata',
+      step1: {
+        title: 'Carica il tuo documento',
+        subtitle: '(caricamento sicuro)',
+        description: 'Carica facilmente il tuo documento sulla nostra piattaforma tramite un canale completamente crittografato. Tutti i file sono protetti con crittografia di livello bancario e archiviati in modo sicuro. Solo tu e il notaio avete accesso.',
+      },
+      step2: {
+        title: 'Prenota un appuntamento',
+        subtitle: '',
+        description: 'Programma un appuntamento video sicuro in un momento che ti conviene. La verifica dell\'identità e la firma vengono eseguite in remoto in tempo reale.',
+      },
+      step3: {
+        title: 'Verifica e notarizza online',
+        subtitle: 'con un notaio dell\'UE',
+        description: 'Durante la sessione live, il notaio conferma la tua identità, assiste alla firma quando necessario e finalizza la notarizzazione digitalmente. Il tuo documento notarizzato viene caricato immediatamente sulla tua dashboard sicura.',
+      },
+      step4: {
+        title: 'Ricevi il tuo documento',
+        subtitle: 'certificato, apostillato o notarizzato',
+        description: 'Se il tuo documento deve essere utilizzato a livello internazionale, viene aggiunta un\'apostille in conformità con la Convenzione dell\'Aia del 5 ottobre 1961, confermando la sua validità legale globale.',
+      },
+      stepLabel: 'Passaggio',
+      of: 'di',
+      ctaTitle: 'Pronto per Iniziare?',
+      ctaDescription: 'Notarizza i tuoi documenti online in pochi minuti. Sicuro, legalmente valido e riconosciuto a livello internazionale.',
+      ctaButton: 'Notarizza ora',
+    },
+    faq: {
+      title: 'Domande Frequenti',
+      searchPlaceholder: 'Cerca domande...',
+      items: [
+        {
+          question: 'Come funziona il processo di notarizzazione online?',
+          answer: 'Tutto avviene in pochi minuti, direttamente dal tuo browser. Programmi una sessione video sicura con un notaio autorizzato, firmi il tuo documento da remoto e la notarizzazione viene completata in tempo reale. Il tuo documento notarizzato viene caricato immediatamente ed è disponibile sulla piattaforma, accompagnato dalla sua certificazione digitale.',
+        },
+        {
+          question: 'I miei documenti sono ufficialmente riconosciuti a livello internazionale?',
+          answer: 'Sì. Tutti i documenti notarizzati attraverso la nostra piattaforma possono ricevere un\'apostille rilasciata in conformità con la Convenzione dell\'Aia del 5 ottobre 1961. Questa apostille certifica l\'autenticità della firma e del sigillo del notaio, garantendo la validità internazionale del tuo documento in tutti i paesi membri.',
+        },
+        {
+          question: 'Quali tipi di documenti posso certificare?',
+          answer: 'Puoi notarizzare e certificare un\'ampia gamma di documenti, inclusi:\n- Contratti, dichiarazioni, dichiarazioni giurate e procure semplici\n- Copie certificate conformi (documenti d\'identità, diplomi, certificati)\n- Traduzioni certificate\n- Documenti commerciali e amministrativi\nOgni documento è firmato, sigillato e archiviato in modo sicuro nel tuo spazio privato.',
+        },
+        {
+          question: 'Come sono protetti i miei dati?',
+          answer: 'Tutti i trasferimenti sono crittografati end-to-end (AES-256) e archiviati su server sicuri che rispettano gli standard internazionali di protezione dei dati. Le sessioni video sono registrate e archiviate sotto controllo rigoroso per garantire integrità, tracciabilità e piena riservatezza per ogni notarizzazione.',
+        },
+        {
+          question: 'Quando riceverò il mio documento finale?',
+          answer: 'Immediatamente dopo la sessione video, il tuo documento notarizzato viene caricato automaticamente sulla tua dashboard sicura. Se è richiesta un\'apostille, viene aggiunta una volta convalidata dall\'autorità competente — e il documento certificato finale diventa disponibile per il download immediato.',
+        },
+        {
+          question: 'Cos\'è la Convenzione dell\'Aia?',
+          answer: 'La Convenzione dell\'Aia del 5 ottobre 1961 è un trattato internazionale che semplifica l\'autenticazione di documenti pubblici per l\'uso all\'estero. Stabilisce una forma standardizzata di certificazione (apostille) riconosciuta da tutti i paesi membri, eliminando la necessità di più livelli di autenticazione.',
+        },
+        {
+          question: 'Qual è il valore legale dei miei documenti?',
+          answer: 'I documenti notarizzati attraverso la nostra piattaforma hanno lo stesso valore legale delle notarizzazioni tradizionali. Sono legalmente vincolanti, riconosciuti da tribunali, agenzie governative e istituzioni di tutto il mondo, specialmente quando accompagnati da un\'apostille per uso internazionale.',
+        },
+        {
+          question: 'Posso tracciare lo stato della mia certificazione?',
+          answer: 'Sì, puoi tracciare lo stato della tua certificazione in tempo reale attraverso la tua dashboard sicura. Riceverai notifiche via email in ogni fase del processo, dal caricamento del documento alla certificazione finale e all\'emissione dell\'apostille.',
+        },
+        {
+          question: 'Devo prenotare un appuntamento in anticipo?',
+          answer: 'Sì, devi prenotare un appuntamento video con un notaio autorizzato. Gli appuntamenti sono generalmente disponibili entro 24-48 ore e puoi scegliere un orario che funzioni meglio per te. Gli appuntamenti dello stesso giorno possono essere disponibili a seconda della disponibilità.',
+        },
+        {
+          question: 'Cosa succede se perdo il mio appuntamento programmato?',
+          answer: 'Se perdi il tuo appuntamento programmato, puoi riprogrammarlo gratuitamente attraverso la tua dashboard. Raccomandiamo di riprogrammare almeno 2 ore prima del tuo appuntamento originale. Più appuntamenti persi possono comportare una tariffa di riprogrammazione.',
+        },
+        {
+          question: 'Di cosa ho bisogno per l\'appuntamento video?',
+          answer: 'Per il tuo appuntamento video, avrai bisogno di:\n- Un documento d\'identità ufficiale con foto valido (passaporto, patente di guida o carta d\'identità nazionale)\n- Una connessione internet stabile\n- Un dispositivo con fotocamera e microfono (computer, tablet o smartphone)\n- Il documento originale che desideri notarizzare (se applicabile)\n- Un ambiente tranquillo e ben illuminato',
+        },
+        {
+          question: 'Posso usare il mio telefono per la certificazione video?',
+          answer: 'Sì, puoi usare il tuo smartphone per l\'appuntamento di certificazione video. La nostra piattaforma è completamente compatibile con dispositivi mobili. Tuttavia, raccomandiamo di usare un computer o tablet per la migliore esperienza, specialmente quando visualizzi e firmi documenti.',
+        },
+        {
+          question: 'E se i miei documenti non sono in inglese?',
+          answer: 'Possiamo notarizzare documenti in varie lingue. Tuttavia, se il tuo documento deve essere utilizzato in un paese di lingua inglese, potresti aver bisogno di una traduzione certificata. Forniamo anche servizi di traduzione certificata per garantire che i tuoi documenti soddisfino tutti i requisiti.',
+        },
+        {
+          question: 'I miei documenti certificati saranno accettati per scopi di immigrazione?',
+          answer: 'Sì, i nostri documenti notarizzati con apostille sono ampiamente accettati per scopi di immigrazione, incluse le domande USCIS, le domande di visto e altre procedure relative all\'immigrazione. Tuttavia, raccomandiamo di verificare con l\'autorità o l\'ambasciata specifica per confermare i loro requisiti.',
+        },
+        {
+          question: 'Fornite anche servizi di apostille?',
+          answer: 'Sì, forniamo servizi completi di apostille. Una volta che il tuo documento è notarizzato, possiamo ottenere l\'apostille dall\'autorità competente in conformità con la Convenzione dell\'Aia. L\'apostille viene generalmente aggiunta entro 1-3 giorni lavorativi dopo la notarizzazione.',
+        },
+        {
+          question: 'Qual è la differenza tra certificazione e apostille?',
+          answer: 'La certificazione (notarizzazione) è il processo mediante il quale un notaio verifica e autentica il tuo documento. Un\'apostille è una certificazione aggiuntiva che convalida la firma e il sigillo del notaio per uso internazionale. L\'apostille è richiesta quando il tuo documento deve essere utilizzato in un paese straniero che fa parte della Convenzione dell\'Aia.',
+        },
+        {
+          question: 'E se il mio documento viene rifiutato dall\'autorità ricevente?',
+          answer: 'Se il tuo documento viene rifiutato dall\'autorità ricevente, esamineremo il motivo del rifiuto e lavoreremo con te per risolvere il problema. Nella maggior parte dei casi, possiamo fornire una versione corretta o documentazione aggiuntiva senza costi aggiuntivi. Se non possiamo risolvere il problema, offriamo una garanzia di rimborso completo.',
+        },
+      ],
+    },
+    common: {
+      loading: 'Caricamento...',
+      error: 'Si è verificato un errore',
+      notFound: 'Pagina non trovata',
+      goHome: 'Vai alla homepage',
+      noResults: 'Nessun risultato trovato',
+      contactUs: 'Contattaci',
+      home: 'Home',
+      views: 'visualizzazioni',
+    },
+    serviceDetail: {
+      defaultTitle: 'Servizio',
+      loadServiceError: 'Errore nel caricamento del servizio',
+      whyChooseTitle: 'Perché scegliere mynotary.io ?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Legalmente valido in tutto il mondo',
+          description: 'Documenti legalmente riconosciuti e accettati in tutti i paesi. Conformità internazionale garantita.',
+        },
+        fastOnline: {
+          title: 'Veloce e completamente online',
+          description: 'Processo completo online da qualsiasi luogo. Tempi rapidi, nessuna visita di persona richiesta.',
+        },
+        securePrivacy: {
+          title: 'Sicuro e orientato alla privacy',
+          description: 'Crittografia di livello bancario protegge i tuoi dati. Riservatezza rigorosa durante l\'intero processo.',
+        },
+        certifiedNotary: {
+          title: 'Certificato da notaio autorizzato',
+          description: 'Tutte le traduzioni certificate da notai statunitensi. Riconoscimento ufficiale per uso legale e governativo.',
+        },
+        guaranteedAcceptance: {
+          title: 'Accettazione garantita',
+          description: 'Accettato da USCIS, ambasciate e tribunali. Rifiuto? Rifacciamo gratuitamente o rimborsiamo al 100%.',
+        },
+      },
+      whatIs: 'Cos\'è',
+      showLess: 'Mostra meno',
+      readMore: 'Leggi di più',
+      backToServices: 'Torna a tutti i servizi',
+    },
+    testimonial: {
+      quote: '"Un\'esperienza fluida e completamente digitale"',
+      text: 'My Notary ha reso incredibilmente semplice quello che era un processo complesso. Ho potuto firmare, certificare e apostillare i miei documenti online, completamente legalmente, in pochi minuti. Il loro team è reattivo, affidabile e la piattaforma è estremamente intuitiva',
+      author: 'Callum Davis',
+      role: 'CEO di Akkar',
+    },
+    blog: {
+      badge: 'Il Nostro Blog',
+      title: 'Articoli e Approfondimenti',
+      description: 'Resta informato su notarizzazione, documenti legali, apostille e notizie del settore',
+      allArticles: 'Tutti gli Articoli',
+      readMore: 'Leggi di più',
+      viewAll: 'Visualizza Tutti gli Articoli',
+      noArticles: 'Nessun articolo disponibile al momento. Torna presto!',
+      noArticlesCategory: 'Nessun articolo trovato in questa categoria.',
+      minRead: 'min di lettura',
+      latestArticles: 'Ultimi Articoli',
+      backToBlog: 'Torna al Blog',
+    },
+    notFound: {
+      title: 'Pagina Non Trovata',
+      description: 'Ops! La pagina che stai cercando non esiste. Potrebbe essere stata spostata o eliminata.',
+      backHome: 'Torna alla Home',
+      viewServices: 'Visualizza i Nostri Servizi',
+      lookingFor: 'Potresti cercare:',
+      ourServices: 'I Nostri Servizi',
+      howItWorks: 'Come Funziona',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    ctaPopup: {
+      title: 'Hai domande?',
+      description: 'Il nostro team ti risponde in meno di 2 ore. Disponibile dal lunedì al venerdì, 9-18.',
+      contact: 'Parla con un consulente',
+      notarize: 'Inizia ora',
+    },
+  },
+  pt: {
+    nav: {
+      services: 'Nossos Serviços',
+      howItWorks: 'Como Funciona',
+      faq: 'FAQ',
+      login: 'Conexão',
+      notarizeNow: 'Inicie sua notarização',
+    },
+    hero: {
+      title: 'Notarização Online: Seus Documentos Certificados em 5 Minutos',
+      subtitle: 'Tabelião europeu certificado. Documentos válidos em mais de 120 países. Apostila incluída. Tudo da sua casa, sem sair.',
+      cta: 'Notarizar meu documento',
+      feature1: 'Válido em 120+ países',
+      feature2: 'Rápido e totalmente online',
+      feature3: '100% seguro e confidencial',
+    },
+    services: {
+      title: 'Nossos Serviços',
+      subtitle: 'Soluções notariais para cada necessidade',
+      heading: 'Todos os Seus Serviços Notariais.',
+      headingHighlight: 'Uma Única Plataforma',
+      viewDetails: 'Descobrir',
+      learnMore: 'Conhecer o serviço',
+      noServices: 'Ainda não há serviços disponíveis.',
+      otherServices: 'Outros serviços',
+      otherServicesHeading: 'Conheça Nossas Outras Soluções',
+      perDocument: 'por documento',
+    },
+    howItWorks: {
+      title: 'Como Funciona',
+      subtitle: 'Quatro passos simples para notarizar seus documentos online',
+      badge: 'Como funciona?',
+      heading: 'Notarização Simplificada',
+      step1: {
+        title: 'Envie seu documento',
+        subtitle: '(envio seguro)',
+        description: 'Envie facilmente seu documento para nossa plataforma através de um canal totalmente criptografado. Todos os arquivos são protegidos com criptografia de nível bancário e armazenados com segurança. Apenas você e o notário têm acesso.',
+      },
+      step2: {
+        title: 'Agende uma consulta',
+        subtitle: '',
+        description: 'Agende uma consulta de vídeo segura em um horário que funcione para você. A verificação de identidade e a assinatura são realizadas remotamente em tempo real.',
+      },
+      step3: {
+        title: 'Verifique e notarize online',
+        subtitle: 'com um notário da UE',
+        description: 'Durante a sessão ao vivo, o notário confirma sua identidade, testemunha a assinatura quando necessário e finaliza a notarização digitalmente. Seu documento notarizado é carregado imediatamente em seu painel seguro.',
+      },
+      step4: {
+        title: 'Receba seu documento',
+        subtitle: 'certificado, apostilado ou notarizado',
+        description: 'Se seu documento precisar ser usado internacionalmente, uma apostila é adicionada de acordo com a Convenção de Haia de 5 de outubro de 1961, confirmando sua validade legal global.',
+      },
+      stepLabel: 'Passo',
+      of: 'de',
+      ctaTitle: 'Pronto para Começar?',
+      ctaDescription: 'Notarize seus documentos online em apenas alguns minutos. Seguro, legalmente válido e reconhecido internacionalmente.',
+      ctaButton: 'Notarizar agora',
+    },
+    faq: {
+      title: 'Perguntas Frequentes',
+      searchPlaceholder: 'Pesquisar perguntas...',
+      items: [
+        {
+          question: 'Como funciona o processo de notarização online?',
+          answer: 'Tudo acontece em apenas alguns minutos, diretamente do seu navegador. Você agenda uma sessão de vídeo segura com um notário licenciado, assina seu documento remotamente e a notarização é concluída em tempo real. Seu documento notarizado é carregado imediatamente e disponível na plataforma, acompanhado de sua certificação digital.',
+        },
+        {
+          question: 'Meus documentos são oficialmente reconhecidos internacionalmente?',
+          answer: 'Sim. Todos os documentos notarizados através da nossa plataforma podem receber uma apostila emitida de acordo com a Convenção de Haia de 5 de outubro de 1961. Esta apostila certifica a autenticidade da assinatura e do selo do notário, garantindo a validade internacional do seu documento em todos os países membros.',
+        },
+        {
+          question: 'Que tipos de documentos posso certificar?',
+          answer: 'Você pode notarizar e certificar uma ampla gama de documentos, incluindo:\n- Contratos, declarações, declarações juramentadas e procurações simples\n- Cópias autenticadas (IDs, diplomas, certificados)\n- Traduções certificadas\n- Documentos comerciais e administrativos\nCada documento é assinado, selado e armazenado com segurança em seu espaço privado.',
+        },
+        {
+          question: 'Como meus dados são protegidos?',
+          answer: 'Todas as transferências são criptografadas de ponta a ponta (AES-256) e armazenadas em servidores seguros que cumprem os padrões internacionais de proteção de dados. As sessões de vídeo são gravadas e arquivadas sob controle rigoroso para garantir integridade, rastreabilidade e total confidencialidade para cada notarização.',
+        },
+        {
+          question: 'Quando receberei meu documento final?',
+          answer: 'Imediatamente após a sessão de vídeo, seu documento notarizado é carregado automaticamente em seu painel seguro. Se uma apostila for necessária, ela é adicionada uma vez validada pela autoridade competente — e o documento certificado final fica disponível para download instantâneo.',
+        },
+        {
+          question: 'O que é a Convenção de Haia?',
+          answer: 'A Convenção de Haia de 5 de outubro de 1961 é um tratado internacional que simplifica a autenticação de documentos públicos para uso no exterior. Estabelece uma forma padronizada de certificação (apostila) reconhecida por todos os países membros, eliminando a necessidade de múltiplos níveis de autenticação.',
+        },
+        {
+          question: 'Qual é o valor legal dos meus documentos?',
+          answer: 'Os documentos notarizados através da nossa plataforma têm o mesmo valor legal das notarizações tradicionais. São legalmente vinculativos, reconhecidos por tribunais, agências governamentais e instituições em todo o mundo, especialmente quando acompanhados de uma apostila para uso internacional.',
+        },
+        {
+          question: 'Posso rastrear o status da minha certificação?',
+          answer: 'Sim, você pode rastrear o status da sua certificação em tempo real através do seu painel seguro. Você receberá notificações por email em cada etapa do processo, desde o upload do documento até a certificação final e a emissão da apostila.',
+        },
+        {
+          question: 'Preciso agendar uma consulta com antecedência?',
+          answer: 'Sim, você precisa agendar uma consulta de vídeo com um tabelião licenciado. As consultas geralmente estão disponíveis em 24-48 horas, e você pode escolher um horário que funcione melhor para você. Consultas no mesmo dia podem estar disponíveis dependendo da disponibilidade.',
+        },
+        {
+          question: 'O que acontece se eu perder minha consulta agendada?',
+          answer: 'Se você perder sua consulta agendada, pode reagendá-la sem custo adicional através do seu painel. Recomendamos reagendar pelo menos 2 horas antes do horário original da sua consulta. Várias consultas perdidas podem resultar em uma taxa de reagendamento.',
+        },
+        {
+          question: 'O que preciso para a consulta de vídeo?',
+          answer: 'Para sua consulta de vídeo, você precisará de:\n- Uma identidade oficial com foto válida (passaporte, carteira de motorista ou identidade nacional)\n- Uma conexão de internet estável\n- Um dispositivo com câmera e microfone (computador, tablet ou smartphone)\n- O documento original que deseja notarizar (se aplicável)\n- Um ambiente tranquilo e bem iluminado',
+        },
+        {
+          question: 'Posso usar meu telefone para a certificação de vídeo?',
+          answer: 'Sim, você pode usar seu smartphone para a consulta de certificação de vídeo. Nossa plataforma é totalmente compatível com dispositivos móveis. No entanto, recomendamos usar um computador ou tablet para a melhor experiência, especialmente ao visualizar e assinar documentos.',
+        },
+        {
+          question: 'E se meus documentos não estiverem em inglês?',
+          answer: 'Podemos notarizar documentos em vários idiomas. No entanto, se seu documento precisar ser usado em um país de língua inglesa, você pode precisar de uma tradução certificada. Também fornecemos serviços de tradução certificada para garantir que seus documentos atendam a todos os requisitos.',
+        },
+        {
+          question: 'Meus documentos certificados serão aceitos para fins de imigração?',
+          answer: 'Sim, nossos documentos notarizados com apostilas são amplamente aceitos para fins de imigração, incluindo aplicações USCIS, aplicações de visto e outros procedimentos relacionados à imigração. No entanto, recomendamos verificar com a autoridade ou embaixada específica para confirmar seus requisitos.',
+        },
+        {
+          question: 'Vocês também fornecem serviços de apostila?',
+          answer: 'Sim, fornecemos serviços completos de apostila. Uma vez que seu documento esteja notarizado, podemos obter a apostila da autoridade competente de acordo com a Convenção de Haia. A apostila geralmente é adicionada em 1-3 dias úteis após a notarização.',
+        },
+        {
+          question: 'Qual é a diferença entre certificação e apostila?',
+          answer: 'A certificação (notarização) é o processo pelo qual um tabelião verifica e autentica seu documento. Uma apostila é uma certificação adicional que valida a assinatura e o selo do tabelião para uso internacional. A apostila é necessária quando seu documento precisa ser usado em um país estrangeiro que faz parte da Convenção de Haia.',
+        },
+        {
+          question: 'E se meu documento for rejeitado pela autoridade receptora?',
+          answer: 'Se seu documento for rejeitado pela autoridade receptora, revisaremos o motivo da rejeição e trabalharemos com você para resolver o problema. Na maioria dos casos, podemos fornecer uma versão corrigida ou documentação adicional sem custo adicional. Se não pudermos resolver o problema, oferecemos uma garantia de reembolso completo.',
+        },
+      ],
+    },
+    common: {
+      loading: 'Carregando...',
+      error: 'Ocorreu um erro',
+      notFound: 'Página não encontrada',
+      goHome: 'Ir para a página inicial',
+      noResults: 'Nenhum resultado encontrado',
+      contactUs: 'Entre em contato',
+      home: 'Início',
+      views: 'visualizações',
+    },
+    serviceDetail: {
+      defaultTitle: 'Serviço',
+      loadServiceError: 'Falha ao carregar o serviço',
+      whyChooseTitle: 'Por que escolher mynotary.io ?',
+      whyChoose: {
+        legallyValid: {
+          title: 'Legalmente válido em todo o mundo',
+          description: 'Documentos legalmente reconhecidos e aceitos em todos os países. Conformidade internacional garantida.',
+        },
+        fastOnline: {
+          title: 'Rápido e totalmente online',
+          description: 'Processo completo online de qualquer lugar. Entrega rápida, nenhuma visita presencial necessária.',
+        },
+        securePrivacy: {
+          title: 'Seguro e focado na privacidade',
+          description: 'Criptografia de nível bancário protege seus dados. Confidencialidade rigorosa durante todo o processo.',
+        },
+        certifiedNotary: {
+          title: 'Certificado por tabelião licenciado',
+          description: 'Todas as traduções certificadas por tabeliões dos EUA. Reconhecimento oficial para uso legal e governamental.',
+        },
+        guaranteedAcceptance: {
+          title: 'Aceitação garantida',
+          description: 'Aceito por USCIS, embaixadas e tribunais. Rejeição? Refazemos gratuitamente ou reembolsamos 100%.',
+        },
+      },
+      whatIs: 'O que é',
+      showLess: 'Mostrar menos',
+      readMore: 'Ler mais',
+      backToServices: 'Voltar para todos os serviços',
+    },
+    testimonial: {
+      quote: '"Uma experiência suave e totalmente digital"',
+      text: 'My Notary tornou incrivelmente simples o que costumava ser um processo complexo. Consegui assinar, certificar e apostilar meus documentos online, totalmente legalmente, em apenas alguns minutos. A equipe deles é responsiva, confiável e a plataforma é extremamente intuitiva',
+      author: 'Callum Davis',
+      role: 'CEO da Akkar',
+    },
+    blog: {
+      badge: 'Nosso Blog',
+      title: 'Artigos e Perspectivas',
+      description: 'Mantenha-se informado sobre notarização, documentos legais, apostilas e notícias do setor',
+      allArticles: 'Todos os Artigos',
+      readMore: 'Ler mais',
+      viewAll: 'Ver Todos os Artigos',
+      noArticles: 'Ainda não há artigos disponíveis. Volte em breve!',
+      noArticlesCategory: 'Nenhum artigo encontrado nesta categoria.',
+      minRead: 'min de leitura',
+      latestArticles: 'Últimos Artigos',
+      backToBlog: 'Voltar ao Blog',
+    },
+    notFound: {
+      title: 'Página Não Encontrada',
+      description: 'Ops! A página que você está procurando não existe. Ela pode ter sido movida ou excluída.',
+      backHome: 'Voltar para o Início',
+      viewServices: 'Ver Nossos Serviços',
+      lookingFor: 'Você pode estar procurando por:',
+      ourServices: 'Nossos Serviços',
+      howItWorks: 'Como Funciona',
+      faq: 'FAQ',
+      blog: 'Blog',
+    },
+    ctaPopup: {
+      title: 'Tem alguma dúvida?',
+      description: 'Nossa equipe responde em menos de 2 horas. Disponível de segunda a sexta, 9h-18h.',
+      contact: 'Falar com um consultor',
+      notarize: 'Começar agora',
+    },
+  },
+};
+

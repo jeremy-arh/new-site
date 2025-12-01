@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 
 const CTAPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,6 +16,8 @@ const CTAPopup = () => {
   const [ctaPrice, setCtaPrice] = useState('');
   const location = useLocation();
   const { currency, formatPrice } = useCurrency();
+  const { t } = useTranslation();
+  const { language } = useLanguage();
 
   // Detect serviceId from URL if on a service page
   const serviceMatch = location.pathname.match(/^\/services\/([^/]+)/);
@@ -25,13 +31,15 @@ const CTAPopup = () => {
         try {
           const { data, error } = await supabase
             .from('services')
-            .select('cta, base_price')
+            .select(getServiceFields())
             .eq('service_id', serviceId)
             .eq('is_active', true)
             .single();
 
           if (!error && data) {
-            setService(data);
+            // Formater le service selon la langue actuelle
+            const formattedService = formatServiceForLanguage(data, language);
+            setService(formattedService);
           }
         } catch (error) {
           console.error('Error fetching service for popup:', error);
@@ -40,7 +48,7 @@ const CTAPopup = () => {
 
       fetchService();
     }
-  }, [serviceId]);
+  }, [serviceId, language]);
 
   // Update price when service or currency changes
   useEffect(() => {
@@ -143,10 +151,10 @@ const CTAPopup = () => {
         {/* Popup content */}
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-            Need help?
+            {t('ctaPopup.title')}
           </h2>
           <p className="text-gray-600 mb-8 text-base">
-            Our team is here to answer all your questions about online notarization.
+            {t('ctaPopup.description')}
           </p>
 
           {/* CTA buttons - Side by side */}
@@ -156,19 +164,27 @@ const CTAPopup = () => {
               onClick={handleContactClick}
               className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all whitespace-nowrap"
             >
-              Contact us
+              {t('ctaPopup.contact')}
             </button>
             
             {/* Primary CTA button - Always black background */}
-            <button
-              onClick={handleCTAClick}
-              className="flex-1 px-6 py-3 bg-black text-white font-medium rounded-lg cursor-pointer hover:bg-gray-900 transition-all whitespace-nowrap"
-            >
-              <span className="inline-block">
-                {isServicePage && service?.cta ? service.cta : 'Notarize now'}
-                {isServicePage && ctaPrice ? ` - ${ctaPrice}` : ''}
-              </span>
-            </button>
+            <div className="flex-1 flex flex-row flex-wrap items-center gap-2 sm:flex-col sm:items-center sm:gap-1">
+              <button
+                onClick={handleCTAClick}
+                className="flex-1 min-w-0 px-6 py-3 bg-black text-white font-medium rounded-lg cursor-pointer hover:bg-gray-900 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 flex-shrink-0"
+              >
+                <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+                <span className="inline-block">
+                  {isServicePage && service?.cta ? service.cta : t('nav.notarizeNow')}
+                </span>
+              </button>
+              {isServicePage && ctaPrice && (
+                <div className="text-gray-900 flex items-center gap-1">
+                  <span className="text-base font-semibold">{ctaPrice}</span>
+                  <span className="text-xs font-normal text-gray-500">{t('services.perDocument')}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

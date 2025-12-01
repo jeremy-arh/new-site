@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useCurrency } from '../contexts/CurrencyContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 /**
  * Component to display price with automatic currency conversion
  */
 const PriceDisplay = ({ price, showFrom = false, className = '' }) => {
   const { formatPrice, isLoading } = useCurrency();
+  const { t } = useTranslation();
   const [formattedPrice, setFormattedPrice] = useState(`${price}€`);
 
   useEffect(() => {
@@ -18,13 +20,16 @@ const PriceDisplay = ({ price, showFrom = false, className = '' }) => {
 
   return (
     <span className={className}>
-      {showFrom && <span className="text-sm text-gray-500 mr-2">From</span>}
       {formattedPrice}
+      {showFrom && <span className="text-xs text-gray-500 ml-2 font-normal">{t('services.perDocument')}</span>}
     </span>
   );
 };
 
 export default PriceDisplay;
+
+
+
 
 
 

@@ -68,14 +68,13 @@ const CurrencySelector = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:border-gray-400 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-50"
         aria-label="Select currency"
         aria-expanded={isOpen}
       >
-        <span className="text-xl font-bold">{selectedCurrency.symbol}</span>
-        <span className="hidden md:inline font-semibold">{selectedCurrency.code}</span>
+        <span className="text-lg">{selectedCurrency.symbol}</span>
         <svg
-          className={`w-5 h-5 transition-transform duration-200 text-gray-600 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -85,26 +84,25 @@ const CurrencySelector = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border-2 border-gray-300 py-2 z-50 max-h-96 overflow-y-auto">
-          <div className="px-4 py-2 border-b border-gray-200">
-            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide">Select Currency</h3>
-          </div>
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
           {CURRENCIES.map((curr) => (
             <button
               key={curr.code}
               onClick={() => handleCurrencyChange(curr.code)}
-              className={`w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 flex items-center gap-3 ${
-                currency === curr.code ? 'bg-gray-50 font-semibold border-l-4 border-black' : ''
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center space-x-3 ${
+                currency === curr.code ? 'bg-gray-50 font-semibold' : ''
               }`}
             >
-              <span className="text-xl font-bold w-10">{curr.symbol}</span>
-              <div className="flex-1">
-                <div className="text-base font-semibold text-gray-900">{curr.code}</div>
-                <div className="text-xs text-gray-600">{curr.name}</div>
-              </div>
+              <span className="text-lg">{curr.code.toLowerCase()}</span>
+              <span>{curr.symbol}</span>
               {currency === curr.code && (
-                <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4 ml-auto text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               )}
             </button>

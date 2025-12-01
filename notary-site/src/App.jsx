@@ -1,25 +1,17 @@
-import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { Suspense, useEffect } from 'react'
+import { BrowserRouter as Router, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { CurrencyProvider } from './contexts/CurrencyContext'
+import { LanguageProvider } from './contexts/LanguageContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import CTAPopup from './components/CTAPopup'
+import LanguageRouter from './components/LanguageRouter'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
 import { trackPageView as trackPlausiblePageView } from './utils/plausible'
 import { trackPageView, trackScrollDepth } from './utils/analytics'
-
-// Lazy load pages for code splitting
-const Home = lazy(() => import('./pages/Home'))
-const Blog = lazy(() => import('./pages/Blog'))
-const BlogPost = lazy(() => import('./pages/BlogPost'))
-const ServicesList = lazy(() => import('./pages/ServicesList'))
-const ServiceDetail = lazy(() => import('./pages/ServiceDetail'))
-const TermsConditions = lazy(() => import('./pages/TermsConditions'))
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
-const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Loading component
 const PageLoader = () => (
@@ -101,25 +93,18 @@ function App() {
     <HelmetProvider>
       <CurrencyProvider>
         <Router>
-          <ScrollToTop />
-          <PageViewTracker />
-          <div className="min-h-screen">
-            <Navbar />
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/services" element={<ServicesList />} />
-                <Route path="/services/:serviceId" element={<ServiceDetail />} />
-                <Route path="/terms-conditions" element={<TermsConditions />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-            <Footer />
-            <CTAPopup />
-          </div>
+          <LanguageProvider>
+            <ScrollToTop />
+            <PageViewTracker />
+            <div className="min-h-screen">
+              <Navbar />
+              <Suspense fallback={<PageLoader />}>
+                <LanguageRouter />
+              </Suspense>
+              <Footer />
+              <CTAPopup />
+            </div>
+          </LanguageProvider>
         </Router>
       </CurrencyProvider>
     </HelmetProvider>

@@ -1,65 +1,40 @@
 /**
- * Plausible Analytics - Direct API Integration
- * Compatible with Cloudflare Pages/Workers
- * Documentation: https://plausible.io/docs/events-api
+ * Plausible Analytics - GTM Integration
+ * Sends Plausible events via Google Tag Manager dataLayer
+ * This allows Plausible to be managed through GTM and avoids ad blocker issues
  */
 
-const PLAUSIBLE_DOMAIN = 'mynotary.io';
-const PLAUSIBLE_API = 'https://plausible.io/api/event';
+import { pushGTMEvent } from './gtm';
 
 /**
- * Send event to Plausible API
- * @param {object} eventData - Event data
+ * Track a Plausible pageview via GTM
+ * @param {string} pageName - Page name (optional)
+ * @param {string} pagePath - Page path (optional, defaults to current path)
  */
-const sendToPlausible = async (eventData) => {
-  if (typeof window === 'undefined') return;
+export const trackPageView = (pageName = null, pagePath = null) => {
+  const path = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/');
   
-  try {
-    await fetch(PLAUSIBLE_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        domain: PLAUSIBLE_DOMAIN,
-        ...eventData
-      })
-    });
-  } catch (error) {
-    // Silently fail - don't break the app if analytics fails
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('Plausible tracking error:', error);
-    }
-  }
-};
-
-/**
- * Track page view
- * @param {string} pageName - Page name
- * @param {string} pagePath - Page path
- */
-export const trackPageView = (pageName, pagePath) => {
-  // The script in index.html handles automatic page views
-  // This is for custom page views with props
-  sendToPlausible({
-    name: 'pageview',
-    url: pagePath || window.location.href,
-    props: {
-      page_name: pageName
-    }
+  pushGTMEvent('plausible_pageview', {
+    plausible_event: 'pageview',
+    plausible_domain: 'mynotary.io',
+    page_name: pageName,
+    page_path: path,
+    page_url: typeof window !== 'undefined' ? window.location.href : path
   });
 };
 
 /**
- * Track custom event
+ * Track a custom Plausible event via GTM
  * @param {string} eventName - Event name
  * @param {object} props - Event properties (optional)
  */
 export const trackEvent = (eventName, props = {}) => {
-  sendToPlausible({
-    name: eventName,
-    url: window.location.href,
-    props: props
+  pushGTMEvent('plausible_event', {
+    plausible_event: eventName,
+    plausible_domain: 'mynotary.io',
+    plausible_props: props,
+    page_path: typeof window !== 'undefined' ? window.location.pathname : '/',
+    page_url: typeof window !== 'undefined' ? window.location.href : '/'
   });
 };
 
@@ -70,8 +45,7 @@ export const trackEvent = (eventName, props = {}) => {
 export const trackCTAClick = (location) => {
   trackEvent('cta_click', {
     cta_type: 'book_appointment',
-    cta_location: location,
-    destination: 'https://app.mynotary.io/form'
+    cta_location: location
   });
 };
 
@@ -95,8 +69,7 @@ export const trackServiceClick = (serviceId, serviceName, location) => {
  */
 export const trackLoginClick = (location) => {
   trackEvent('login_click', {
-    click_location: location,
-    destination: 'https://app.mynotary.io/login'
+    click_location: location
   });
 };
 
@@ -125,28 +98,19 @@ export const trackBlogPostView = (postSlug, postTitle) => {
 };
 
 /**
- * Track FAQ toggle
- * @param {number} faqIndex - FAQ item index
- * @param {string} faqQuestion - FAQ question
+ * Initialize Plausible tracking
+ * This will send the initial pageview
  */
-export const trackFAQToggle = (faqIndex, faqQuestion) => {
-  trackEvent('faq_toggle', {
-    faq_index: faqIndex,
-    faq_question: faqQuestion
-  });
+export const initPlausible = () => {
+  if (typeof window !== 'undefined') {
+    // Send initial pageview
+    trackPageView();
+  }
 };
 
-/**
- * Track external link click
- * @param {string} url - External URL
- * @param {string} linkText - Link text
- */
-export const trackExternalLinkClick = (url, linkText) => {
-  trackEvent('external_link_click', {
-    url: url,
-    link_text: linkText
-  });
-};
-
-// No default export needed
-
+// Auto-initialize on module load
+if (typeof window !== 'undefined') {
+  // Wait for GTM to be ready before sending pageview
+  // GTM will handle the initial pageview via its own triggers
+  // So we don't need to call initPlausible() here
+}

@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase';
 import { cache } from './cache';
+import { getServiceFields } from './services';
 
 /**
  * Prefetch a blog post by slug
@@ -42,7 +43,7 @@ export const prefetchService = async (serviceId) => {
   try {
     const { data, error } = await supabase
       .from('services')
-      .select('*')
+      .select(getServiceFields())
       .eq('service_id', serviceId)
       .eq('is_active', true)
       .single();
@@ -100,7 +101,7 @@ export const prefetchServices = async () => {
   try {
     const { data, error } = await supabase
       .from('services')
-      .select('*')
+      .select(getServiceFields())
       .eq('is_active', true)
       .order('name', { ascending: true });
 

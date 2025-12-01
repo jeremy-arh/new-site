@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatBlogPostsForLanguage, getLocalizedBlogValue } from '../utils/blog';
 import MobileCTA from '../components/MobileCTA';
 
 const Blog = () => {
@@ -11,11 +14,13 @@ const Blog = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categories, setCategories] = useState([]);
+  const { t } = useTranslation();
+  const { language, getLocalizedPath } = useLanguage();
 
   useEffect(() => {
     fetchPosts();
     fetchCategories();
-  }, [selectedCategory]);
+  }, [selectedCategory, language]);
 
   const fetchPosts = async () => {
     try {
@@ -25,14 +30,22 @@ const Blog = () => {
         .eq('status', 'published')
         .order('published_at', { ascending: false });
 
-      if (selectedCategory !== 'all') {
-        query = query.eq('category', selectedCategory);
-      }
+      // Note: Le filtrage par catégorie se fait après le formatage car les catégories peuvent être localisées
+      // On filtre d'abord par la catégorie anglaise (colonne de base), puis on formate
 
       const { data, error } = await query;
 
       if (error) throw error;
-      setPosts(data || []);
+      
+      // Formater les posts selon la langue actuelle
+      let formattedPosts = formatBlogPostsForLanguage(data || [], language);
+      
+      // Filtrer par catégorie localisée si nécessaire
+      if (selectedCategory !== 'all') {
+        formattedPosts = formattedPosts.filter(post => post.category === selectedCategory);
+      }
+      
+      setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
     } finally {
@@ -44,12 +57,14 @@ const Blog = () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('category')
+        .select('*')
         .eq('status', 'published');
 
       if (error) throw error;
 
-      const uniqueCategories = [...new Set(data.map(post => post.category).filter(Boolean))];
+      // Formater les posts pour obtenir les catégories localisées
+      const formattedPosts = formatBlogPostsForLanguage(data || [], language);
+      const uniqueCategories = [...new Set(formattedPosts.map(post => post.category).filter(Boolean))];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -59,7 +74,7 @@ const Blog = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(language === 'en' ? 'en-US' : language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -77,13 +92,13 @@ const Blog = () => {
       <section className="pt-32 pb-16 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto text-center">
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 animate-fade-in">
-            Our Blog
+            {t('blog.badge')}
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in animation-delay-100">
-            Articles &amp; Insights
+            {t('blog.title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-fade-in animation-delay-200">
-            Stay informed about notarization, legal documents, apostilles, and industry news
+            {t('blog.description')}
           </p>
         </div>
       </section>
@@ -101,7 +116,7 @@ const Blog = () => {
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                All Articles
+                {t('blog.allArticles')}
               </button>
               {categories.map((category) => (
                 <button
@@ -130,14 +145,14 @@ const Blog = () => {
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-600 text-lg">No articles found in this category.</p>
+              <p className="text-gray-600 text-lg">{t('blog.noArticlesCategory')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post) => (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  to={getLocalizedPath(`/blog/${post.slug}`)}
                   className="group block bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                 >
                   {/* Cover Image */}
@@ -172,7 +187,7 @@ const Blog = () => {
                     {/* Meta Info */}
                     {post.read_time_minutes && (
                       <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
-                        <span>{post.read_time_minutes} min read</span>
+                        <span>{post.read_time_minutes} {t('blog.minRead')}</span>
                       </div>
                     )}
 
@@ -194,7 +209,7 @@ const Blog = () => {
                         {formatDate(post.published_at)}
                       </span>
                       <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
-                        Read more
+                        {t('blog.readMore')}
                         <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>

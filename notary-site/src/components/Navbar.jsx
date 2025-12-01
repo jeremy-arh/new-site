@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import logoNoir from '../assets/logo-noir.svg';
 import logoBlanc from '../assets/logo-blanc.svg';
@@ -7,7 +8,11 @@ import { trackCTAClick as trackPlausibleCTAClick, trackLoginClick as trackPlausi
 import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import CurrencySelector from './CurrencySelector';
+import LanguageSelector from './LanguageSelector';
 import { getFormUrl } from '../utils/formUrl';
+import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,12 +20,14 @@ const Navbar = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [ctaText, setCtaText] = useState('Notarize now');
+  const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
   const [formattedPrice, setFormattedPrice] = useState('');
   const [currentServiceId, setCurrentServiceId] = useState(null);
   const location = useLocation();
   const { formatPrice, currency } = useCurrency();
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
 
   const handleScroll = useCallback(() => {
@@ -102,11 +109,11 @@ const Navbar = memo(() => {
           if (!error && data?.cta) {
             setCtaText(data.cta);
           } else {
-            setCtaText('Notarize now');
+            setCtaText('');
           }
         } catch (error) {
           console.error('Error fetching blog CTA:', error);
-          setCtaText('Notarize now');
+          setCtaText('');
         }
       } else {
         // Service detail
@@ -117,27 +124,29 @@ const Navbar = memo(() => {
           try {
             const { data, error } = await supabase
               .from('services')
-              .select('cta, base_price')
+              .select(getServiceFields())
               .eq('service_id', serviceId)
               .single();
 
             if (!error && data) {
-              setCtaText(data.cta || 'Notarize now');
+              // Formater le service selon la langue actuelle
+              const formattedService = formatServiceForLanguage(data, language);
+              setCtaText(formattedService.cta || '');
               // Set price only if it exists and is not empty/null
-              const price = data.base_price;
+              const price = formattedService.base_price;
               setServicePrice(price != null && price !== '' && price !== undefined ? price : null);
             } else {
-              setCtaText('Notarize now');
+              setCtaText('');
               setServicePrice(null);
             }
           } catch (error) {
             console.error('Error fetching service CTA:', error);
-            setCtaText('Notarize now');
+            setCtaText('');
             setServicePrice(null);
           }
         } else {
           // Reset to default if not on blog/service detail page
-          setCtaText('Notarize now');
+          setCtaText('');
           setServicePrice(null);
           setCurrentServiceId(null); // Reset serviceId on other pages
         }
@@ -145,7 +154,7 @@ const Navbar = memo(() => {
     };
 
     fetchBlogCTA();
-  }, [location.pathname]);
+  }, [location.pathname, language]);
 
   useEffect(() => {
     if (servicePrice) {
@@ -208,7 +217,7 @@ const Navbar = memo(() => {
                   trackNavigationClick('Our services', destination, location.pathname);
                 }}
               >
-                Our services
+                {t('nav.services')}
               </a>
               <a 
                 href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'} 
@@ -226,7 +235,7 @@ const Navbar = memo(() => {
                   trackNavigationClick('How it work', destination, location.pathname);
                 }}
               >
-                How it work
+                {t('nav.howItWorks')}
               </a>
               <a 
                 href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'} 
@@ -244,12 +253,13 @@ const Navbar = memo(() => {
                   trackNavigationClick('FAQ', destination, location.pathname);
                 }}
               >
-                FAQ
+                {t('nav.faq')}
               </a>
 
               <div className="w-px h-6 bg-gray-300"></div>
 
-              <div className="flex items-center">
+              <div className="flex items-center space-x-4">
+                <LanguageSelector />
                 <CurrencySelector />
               </div>
 
@@ -261,80 +271,51 @@ const Navbar = memo(() => {
                   trackLoginClick('navbar_desktop', location.pathname);
                 }}
               >
-                Connexion
+                {t('nav.login')}
               </a>
-              <div className={`relative inline-block ${isMobile ? '' : 'overflow-visible'}`}>
+              <div className={`relative inline-flex items-center gap-3 ${isMobile ? '' : 'overflow-visible'}`}>
                 <a 
                   href={getFormUrl(currency, currentServiceId)} 
-                  className="primary-cta text-sm relative z-10 cta-animated-border"
+                  className="glassy-cta primary-cta text-sm relative z-10"
                   onClick={() => {
                     trackPlausibleCTAClick('navbar_desktop');
                     trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
                   }}
                 >
-                  <svg className="cta-border-svg" viewBox="0 0 200 50" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="cta-gradient" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="objectBoundingBox">
-                        <stop offset="0%" stopColor="#491AE9" />
-                        <stop offset="25%" stopColor="#D414E5" />
-                        <stop offset="50%" stopColor="#FC03A1" />
-                        <stop offset="75%" stopColor="#FF7715" />
-                        <stop offset="100%" stopColor="#491AE9" />
-                        <animateTransform
-                          attributeName="gradientTransform"
-                          type="rotate"
-                          values="0 0.5 0.5;360 0.5 0.5"
-                          dur="5s"
-                          repeatCount="indefinite"
-                        />
-                      </linearGradient>
-                      <filter id="glow" x="-200%" y="-200%" width="500%" height="500%">
-                        <feGaussianBlur stdDeviation="6" result="haloBlur"/>
-                        <feOffset in="SourceGraphic" dx="0" dy="5" result="shadow"/>
-                        <feGaussianBlur in="shadow" stdDeviation="15" result="shadowBlur"/>
-                        <feMerge>
-                          <feMergeNode in="haloBlur" opacity="0.5"/>
-                          <feMergeNode in="shadowBlur" opacity="0.9"/>
-                          <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                      </filter>
-                    </defs>
-                    {/* Main border with halo */}
-                    <path
-                      d="M 8,0 Q 0,0 0,8 L 0,42 Q 0,50 8,50 L 192,50 Q 200,50 200,42 L 200,8 Q 200,0 192,0 Z"
-                      stroke="url(#cta-gradient)"
-                      strokeWidth="2.5"
-                      fill="none"
-                      filter="url(#glow)"
-                    />
-                  </svg>
-                  <span className="btn-text inline-block">
-                    {ctaText}{formattedPrice ? ` - ${formattedPrice}` : ''}
+                  <span className="btn-text inline-block inline-flex items-center gap-2">
+                    <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white" />
+                    {ctaText || t('nav.notarizeNow')}
                   </span>
                 </a>
+                {formattedPrice && (
+                  <div className="text-white flex items-center gap-1 whitespace-nowrap">
+                    <span className="text-base font-semibold">{formattedPrice}</span>
+                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Animated Hamburger Menu Button */}
             <button
               onClick={toggleMenu}
-              className={`${isMobile ? '' : 'hidden'} relative z-[60] w-8 h-8 flex flex-col items-center justify-center focus:outline-none`}
+              className={`${isMobile ? '' : 'hidden'} relative z-[60] w-10 h-10 flex flex-col items-center justify-center focus:outline-none overflow-visible`}
               aria-label="Toggle menu"
             >
-              <div className="w-5 h-4 flex flex-col justify-between">
+              <div className="w-6 h-6 flex flex-col justify-center items-center relative">
                 <span
-                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? 'rotate-45 translate-y-1.5 bg-gray-900' : 'bg-white'
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center absolute ${
+                    isMenuOpen ? 'rotate-45 bg-gray-900' : 'bg-white top-0'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 rounded-full transition-all duration-300 ${
-                    isMenuOpen ? 'opacity-0 scale-0 bg-gray-900' : 'opacity-100 scale-100 bg-white'
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 absolute ${
+                    isMenuOpen ? 'opacity-0 scale-0 bg-gray-900' : 'opacity-100 scale-100 bg-white top-1/2 -translate-y-1/2'
                   }`}
                 ></span>
                 <span
-                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center ${
-                    isMenuOpen ? '-rotate-45 -translate-y-1.5 bg-gray-900' : 'bg-white'
+                  className={`w-full h-0.5 rounded-full transition-all duration-300 origin-center absolute ${
+                    isMenuOpen ? '-rotate-45 bg-gray-900' : 'bg-white bottom-0'
                   }`}
                 ></span>
               </div>
@@ -371,7 +352,7 @@ const Navbar = memo(() => {
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              Our services
+              {t('nav.services')}
             </a>
             <a
               href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'}
@@ -390,7 +371,7 @@ const Navbar = memo(() => {
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              How it work
+              {t('nav.howItWorks')}
             </a>
             <a
               href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'}
@@ -409,14 +390,20 @@ const Navbar = memo(() => {
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              FAQ
+              {t('nav.faq')}
             </a>
 
             <div className="border-t border-gray-200 my-6"></div>
 
-            <div className="px-4 py-4">
-              <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Currency</div>
-              <CurrencySelector />
+            <div className="px-4 py-4 space-y-4">
+              <div>
+                <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Language</div>
+                <LanguageSelector />
+              </div>
+              <div>
+                <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Currency</div>
+                <CurrencySelector />
+              </div>
             </div>
 
             <a
@@ -428,21 +415,30 @@ const Navbar = memo(() => {
               }}
               className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
             >
-              Connexion
+              {t('nav.login')}
             </a>
-            <a
-              href={getFormUrl(currency, currentServiceId)}
-              onClick={() => {
-                trackPlausibleCTAClick('navbar_mobile');
-                trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
-                closeMenu();
-              }}
-              className="block text-center primary-cta text-lg py-4 mt-8"
-            >
-              <span className="btn-text inline-block">
-                {ctaText}{formattedPrice ? ` - ${formattedPrice}` : ''}
-              </span>
-            </a>
+            <div className="flex flex-row flex-wrap items-center gap-3 mt-8">
+              <a
+                href={getFormUrl(currency, currentServiceId)}
+                onClick={() => {
+                  trackPlausibleCTAClick('navbar_mobile');
+                  trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
+                  closeMenu();
+                }}
+                className="flex-1 min-w-0 text-center glassy-cta primary-cta text-lg py-4 flex-shrink-0"
+              >
+                <span className="btn-text inline-block inline-flex items-center justify-center gap-2">
+                  <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+                  {ctaText || t('nav.notarizeNow')}
+                </span>
+              </a>
+              {formattedPrice && (
+                <div className="text-white flex items-center gap-1">
+                  <span className="text-base font-semibold">{formattedPrice}</span>
+                  <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

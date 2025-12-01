@@ -5,10 +5,12 @@ import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Hero = memo(() => {
   const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
   const { currency } = useCurrency();
+  const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
 
   const handleResize = useCallback(() => {
@@ -39,42 +41,40 @@ const Hero = memo(() => {
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
             <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight animate-fade-in`}>
-              Notarize and Apostille <br />
-              Your Documents <br />
-              100% Online
+              {t('hero.title')}
             </h1>
 
             <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl animate-fade-in animation-delay-200`}>
-              Secure, legally valid, recognized internationally through the Hague Convention<br />
-              from anywhere, in just a few minutes.
+              {t('hero.subtitle')}
             </p>
 
             <a 
               href={getFormUrl(currency)} 
-              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-block ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
+              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
               onClick={() => {
                 trackPlausibleCTAClick('hero');
                 trackCTAClick('hero', null, window.location.pathname);
               }}
             >
-              <span className="btn-text inline-block">Notarize now</span>
+              <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+              <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
             </a>
 
             {/* Features */}
             <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
               <div className="flex items-center gap-2">
                 <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Legally valid worldwide</span>
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Fast &amp; fully online</span>
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Secure &amp; privacy-focused</span>
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
               </div>
             </div>
           </div>

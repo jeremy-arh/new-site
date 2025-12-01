@@ -7,6 +7,7 @@ import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
+import { useTranslation } from '../hooks/useTranslation';
 import ctaBg from '../assets/cta-bg.webp';
 
 const HowItWorks = memo(() => {
@@ -15,6 +16,7 @@ const HowItWorks = memo(() => {
   const [formattedPrice, setFormattedPrice] = useState('');
   const location = useLocation();
   const { formatPrice, currency } = useCurrency();
+  const { t } = useTranslation();
 
   const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth < 768);
@@ -72,33 +74,33 @@ const HowItWorks = memo(() => {
   const steps = useMemo(() => [
     {
       icon: 'f7:doc',
-      title: 'Upload your document',
-      subtitle: '(secure upload)',
-      description: 'Easily upload your document to our platform through a fully encrypted channel. All files are protected with bank-level encryption and stored securely. Only you and the notary have access.',
+      title: t('howItWorks.step1.title'),
+      subtitle: t('howItWorks.step1.subtitle'),
+      description: t('howItWorks.step1.description'),
       image: getImageUrl('step-1')
     },
     {
       icon: 'solar:calendar-broken',
-      title: 'Book an appointment',
-      subtitle: '',
-      description: 'Schedule a secure video appointment at a time that suits you. Identity verification and signature are performed remotely in real time.',
+      title: t('howItWorks.step2.title'),
+      subtitle: t('howItWorks.step2.subtitle'),
+      description: t('howItWorks.step2.description'),
       image: getImageUrl('step-2')
     },
     {
       icon: 'icon-park-outline:camera-two',
-      title: 'Verify & notarize online',
-      subtitle: 'with an EU notary',
-      description: 'During the live session, the notary confirms your identity, witnesses the signature when required, and finalizes the notarization digitally. Your notarized document is immediately uploaded to your secure dashboard.',
+      title: t('howItWorks.step3.title'),
+      subtitle: t('howItWorks.step3.subtitle'),
+      description: t('howItWorks.step3.description'),
       image: getImageUrl('step-3')
     },
     {
       icon: 'f7:doc-checkmark',
-      title: 'Receive your document',
-      subtitle: 'certified, apostilled or notarized',
-      description: 'If your document needs to be used internationally, an apostille is added in accordance with the Hague Convention of 5 October 1961, confirming its global legal validity.',
+      title: t('howItWorks.step4.title'),
+      subtitle: t('howItWorks.step4.subtitle'),
+      description: t('howItWorks.step4.description'),
       image: getImageUrl('step-4')
     }
-  ], []);
+  ], [t]);
 
   return (
     <section id="how-it-works" className="py-16 md:py-32 px-0 md:px-[30px] bg-gray-50 relative">
@@ -106,13 +108,13 @@ const HowItWorks = memo(() => {
         {/* Header */}
         <div className="text-center mb-12 md:mb-20 px-[30px] md:px-0">
           <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
-            How it work ?
+            {t('howItWorks.badge')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 scroll-slide-up">
-            Notarization <span className="gradient-text">Made Easy</span>
+            {t('howItWorks.heading').split(' ').slice(0, -1).join(' ')} <span className="gradient-text">{t('howItWorks.heading').split(' ').slice(-1)[0]}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto scroll-slide-up">
-            Four simple steps to get your documents notarized online
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
@@ -152,7 +154,7 @@ const HowItWorks = memo(() => {
                     <div className="flex items-center gap-3 pt-2 md:pt-4">
                       <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
                       <span className="text-gray-500 text-sm font-medium">
-                        Step {index + 1} of {steps.length}
+                        {t('howItWorks.stepLabel')} {index + 1} {t('howItWorks.of')} {steps.length}
                       </span>
                     </div>
                   </div>
@@ -193,26 +195,35 @@ const HowItWorks = memo(() => {
 
             <div className="relative z-10">
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                Ready to Get Started?
+                {t('howItWorks.ctaTitle')}
               </h3>
               <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Notarize your documents online in just a few minutes. Secure, legally valid, and recognized internationally.
+                {t('howItWorks.ctaDescription')}
               </p>
-              <a
-                href={getFormUrl(currency, currentServiceId)}
-                className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap"
-                onClick={() => {
-                  trackPlausibleCTAClick('how_it_works');
-                  trackCTAClick('how_it_works', currentServiceId, location.pathname);
-                }}
-              >
-                <span className="btn-text inline-block">
-                  Notarize now{formattedPrice ? ` - ${formattedPrice}` : ''}
-                </span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </a>
+              <div className="flex flex-row flex-wrap items-center gap-3 md:flex-col md:items-center md:gap-2">
+                <a
+                  href={getFormUrl(currency, currentServiceId)}
+                  className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
+                  onClick={() => {
+                    trackPlausibleCTAClick('how_it_works');
+                    trackCTAClick('how_it_works', currentServiceId, location.pathname);
+                  }}
+                >
+                  <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                  <span className="btn-text inline-block">
+                    {t('nav.notarizeNow')}
+                  </span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </a>
+                {formattedPrice && (
+                  <div className="text-white flex items-center gap-1">
+                    <span className="text-base font-semibold">{formattedPrice}</span>
+                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
