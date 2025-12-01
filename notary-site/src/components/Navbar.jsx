@@ -333,8 +333,8 @@ const Navbar = memo(() => {
             : 'opacity-0 invisible'
         }`}
       >
-        <div className="h-full flex flex-col justify-center items-center px-8 pt-24 pb-12">
-          <div className="w-full max-w-md space-y-6">
+        <div className="h-full flex flex-col justify-center items-start px-8 pt-24 pb-12">
+          <div className="w-full max-w-md space-y-4">
             <a
               href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'}
               onClick={(e) => {
@@ -350,7 +350,7 @@ const Navbar = memo(() => {
                 trackNavigationClick('Our services', destination, location.pathname);
                 closeMenu();
               }}
-              className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.services')}
             </a>
@@ -369,7 +369,7 @@ const Navbar = memo(() => {
                 trackNavigationClick('How it work', destination, location.pathname);
                 closeMenu();
               }}
-              className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.howItWorks')}
             </a>
@@ -388,22 +388,17 @@ const Navbar = memo(() => {
                 trackNavigationClick('FAQ', destination, location.pathname);
                 closeMenu();
               }}
-              className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.faq')}
             </a>
 
-            <div className="border-t border-gray-200 my-6"></div>
+            <div className="border-t border-gray-200 my-4"></div>
 
-            <div className="px-4 py-4 space-y-4">
-              <div>
-                <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Language</div>
-                <LanguageSelector />
-              </div>
-              <div>
-                <div className="mb-2 text-sm font-semibold text-gray-600 uppercase tracking-wide">Currency</div>
-                <CurrencySelector />
-              </div>
+            <div className="flex items-center gap-3 py-2">
+              <LanguageSelector />
+              <div className="w-px h-6 bg-gray-300"></div>
+              <CurrencySelector />
             </div>
 
             <a
@@ -413,7 +408,7 @@ const Navbar = memo(() => {
                 trackLoginClick('navbar_mobile', location.pathname);
                 closeMenu();
               }}
-              className="block text-3xl font-bold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-3"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.login')}
             </a>

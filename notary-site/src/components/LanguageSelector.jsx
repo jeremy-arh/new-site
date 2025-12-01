@@ -86,7 +86,7 @@ const LanguageSelector = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
+        <div className="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[60] border border-gray-200">
           {supportedLanguages.map((lang) => (
             <button
               key={lang}

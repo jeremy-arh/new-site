@@ -114,3 +114,4 @@ COMMENT ON COLUMN blog_posts.category_it IS 'Blog post category in Italian';
 COMMENT ON COLUMN blog_posts.category_pt IS 'Blog post category in Portuguese';
 
 
+

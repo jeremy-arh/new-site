@@ -200,10 +200,10 @@ const HowItWorks = memo(() => {
               <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
                 {t('howItWorks.ctaDescription')}
               </p>
-              <div className="flex flex-row flex-wrap items-center gap-3 md:flex-col md:items-center md:gap-2">
+              <div className="flex flex-row flex-wrap items-center justify-center gap-3 md:flex-col md:items-center md:gap-2">
                 <a
                   href={getFormUrl(currency, currentServiceId)}
-                  className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
+                  className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap flex-shrink-0 justify-center"
                   onClick={() => {
                     trackPlausibleCTAClick('how_it_works');
                     trackCTAClick('how_it_works', currentServiceId, location.pathname);
@@ -218,7 +218,7 @@ const HowItWorks = memo(() => {
                   </svg>
                 </a>
                 {formattedPrice && (
-                  <div className="text-white flex items-center gap-1">
+                  <div className="text-white flex items-center gap-1 justify-center">
                     <span className="text-base font-semibold">{formattedPrice}</span>
                     <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
                   </div>

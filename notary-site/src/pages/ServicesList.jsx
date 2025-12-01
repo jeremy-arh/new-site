@@ -68,7 +68,7 @@ const ServicesList = () => {
       </section>
 
       {/* Services Grid */}
-      <section className="py-20 px-[30px] bg-white">
+      <section className="py-20 px-4 sm:px-[30px] bg-white">
         <div className="max-w-[1300px] mx-auto">
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -79,7 +79,7 @@ const ServicesList = () => {
               <p className="text-gray-600 text-lg">{t('services.noServices')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service) => (
                 <Link
                   key={service.id}
@@ -100,15 +100,15 @@ const ServicesList = () => {
 
                   <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed flex-1">{service.short_description || service.description}</p>
 
-                  <div className="flex items-end justify-between mt-auto">
-                    <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mt-auto items-center sm:items-end">
+                    <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center sm:justify-start">
                       <span className="btn-text inline-block">{t('services.learnMore')}</span>
                       <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </div>
                     {service.base_price && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 justify-center sm:justify-start">
                         <PriceDisplay price={service.base_price} showFrom className="text-lg font-bold text-gray-900" />
                       </div>
                     )}
