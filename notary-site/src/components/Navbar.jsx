@@ -412,7 +412,7 @@ const Navbar = memo(() => {
             >
               {t('nav.login')}
             </a>
-            <div className="flex flex-row flex-wrap items-center gap-3 mt-8">
+            <div className="w-full mt-8">
               <a
                 href={getFormUrl(currency, currentServiceId)}
                 onClick={() => {
@@ -420,19 +420,13 @@ const Navbar = memo(() => {
                   trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
                   closeMenu();
                 }}
-                className="flex-1 min-w-0 text-center glassy-cta primary-cta text-lg py-4 flex-shrink-0"
+                className="block w-full text-center glassy-cta primary-cta text-lg py-4"
               >
-                <span className="btn-text inline-block inline-flex items-center justify-center gap-2">
+                <span className="btn-text inline-flex items-center justify-center gap-2 whitespace-nowrap">
                   <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
                   {ctaText || t('nav.notarizeNow')}
                 </span>
               </a>
-              {formattedPrice && (
-                <div className="text-white flex items-center gap-1">
-                  <span className="text-base font-semibold">{formattedPrice}</span>
-                  <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
-                </div>
-              )}
             </div>
           </div>
         </div>

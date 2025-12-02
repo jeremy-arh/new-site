@@ -1,18 +1,23 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import { getCanonicalUrl } from '../utils/canonicalUrl';
+import SEOHead from '../components/SEOHead';
+import { useTranslation } from '../hooks/useTranslation';
 import MobileCTA from '../components/MobileCTA';
 
 const TermsConditions = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>Terms & Conditions - My notary</title>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
-        <meta name="description" content="Terms and Conditions for My notary services" />
-      </Helmet>
+      <SEOHead
+        title={`Terms & Conditions - ${t('seo.siteName')}`}
+        description={`Terms and Conditions for ${t('seo.siteName')} services`}
+        ogTitle={`Terms & Conditions - ${t('seo.siteName')}`}
+        ogDescription={`Terms and Conditions for ${t('seo.siteName')} services`}
+        twitterTitle={`Terms & Conditions - ${t('seo.siteName')}`}
+        twitterDescription={`Terms and Conditions for ${t('seo.siteName')} services`}
+        canonicalPath={location.pathname}
+      />
       {/* Hero Section */}
       <section className="bg-gray-900 text-white pt-32 pb-16 px-[30px]">
         <div className="max-w-[1100px] mx-auto">

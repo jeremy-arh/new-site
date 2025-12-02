@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '../components/SEOHead';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
@@ -8,7 +8,6 @@ import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausi
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
-import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
@@ -245,12 +244,15 @@ const ServiceDetail = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>{service.meta_title || service.name || t('serviceDetail.defaultTitle')}</title>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
-        <meta name="description" content={service.meta_description || service.short_description || service.description || ''} />
-        <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
-      </Helmet>
+      <SEOHead
+        title={service.meta_title || service.name || t('serviceDetail.defaultTitle')}
+        description={service.meta_description || service.short_description || service.description || ''}
+        ogTitle={service.meta_title || service.name || t('serviceDetail.defaultTitle')}
+        ogDescription={service.meta_description || service.short_description || service.description || ''}
+        twitterTitle={service.meta_title || service.name || t('serviceDetail.defaultTitle')}
+        twitterDescription={service.meta_description || service.short_description || service.description || ''}
+        canonicalPath={location.pathname}
+      />
       {/* Hero Section - Similar to Home Hero */}
       <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
         <div

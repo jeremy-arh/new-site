@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '../components/SEOHead';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
 import { trackServiceClick } from '../utils/plausible';
-import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServicesForLanguage, getServiceFields } from '../utils/services';
@@ -44,12 +43,15 @@ const ServicesList = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>Our Services - My notary</title>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
-        <meta name="description" content="Discover all our notarial services: apostille, power of attorney, certified translations, and more. Secure, legally valid, and recognized internationally." />
-        <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
-      </Helmet>
+      <SEOHead
+        title={t('seo.servicesTitle')}
+        description={t('seo.servicesDescription')}
+        ogTitle={t('seo.servicesTitle')}
+        ogDescription={t('seo.servicesDescription')}
+        twitterTitle={t('seo.servicesTitle')}
+        twitterDescription={t('seo.servicesDescription')}
+        canonicalPath={location.pathname}
+      />
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-[30px] bg-gray-50">

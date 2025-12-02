@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '../components/SEOHead';
 import { supabase } from '../lib/supabase';
-import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatBlogPostsForLanguage, getLocalizedBlogValue } from '../utils/blog';
@@ -83,11 +82,15 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>Blog - My notary</title>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
-        <meta name="description" content="Stay informed about notarization, legal documents, apostilles, and industry news" />
-      </Helmet>
+      <SEOHead
+        title={t('seo.blogTitle')}
+        description={t('seo.blogDescription')}
+        ogTitle={t('seo.blogTitle')}
+        ogDescription={t('seo.blogDescription')}
+        twitterTitle={t('seo.blogTitle')}
+        twitterDescription={t('seo.blogDescription')}
+        canonicalPath={location.pathname}
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto text-center">

@@ -1,5 +1,5 @@
-import { Helmet } from 'react-helmet-async';
-import { getCanonicalUrl } from '../utils/canonicalUrl';
+import SEOHead from '../components/SEOHead';
+import { useTranslation } from '../hooks/useTranslation';
 import Hero from '../components/Hero'
 import Services from '../components/Services'
 import HowItWorks from '../components/HowItWorks'
@@ -9,14 +9,19 @@ import BlogSection from '../components/BlogSection'
 import MobileCTA from '../components/MobileCTA'
 
 function Home() {
+  const { t } = useTranslation();
+  
   return (
     <>
-      <Helmet>
-        <title>My notary - Notarize and Apostille Your Documents 100% Online</title>
-        <link rel="canonical" href={getCanonicalUrl('/')} />
-        <meta property="og:title" content="My notary - Notarize and Apostille Your Documents 100% Online" />
-        <meta name="twitter:title" content="My notary - Notarize and Apostille Your Documents 100% Online" />
-      </Helmet>
+      <SEOHead
+        title={t('seo.defaultTitle')}
+        description={t('seo.defaultDescription')}
+        ogTitle={t('seo.defaultOgTitle')}
+        ogDescription={t('seo.defaultOgDescription')}
+        twitterTitle={t('seo.defaultOgTitle')}
+        twitterDescription={t('seo.defaultOgDescription')}
+        canonicalPath="/"
+      />
       <Hero />
       <Services />
       <HowItWorks />

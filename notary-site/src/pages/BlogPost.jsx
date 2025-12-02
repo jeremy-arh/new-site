@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '../components/SEOHead';
 import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
@@ -204,12 +204,15 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>{post.meta_title || post.title || 'Blog Post'}</title>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
-        <meta name="description" content={post.meta_description || post.excerpt || ''} />
-        <meta property="og:url" content={getCanonicalUrl(location.pathname)} />
-      </Helmet>
+      <SEOHead
+        title={post.meta_title || post.title || 'Blog Post'}
+        description={post.meta_description || post.excerpt || ''}
+        ogTitle={post.meta_title || post.title || 'Blog Post'}
+        ogDescription={post.meta_description || post.excerpt || ''}
+        twitterTitle={post.meta_title || post.title || 'Blog Post'}
+        twitterDescription={post.meta_description || post.excerpt || ''}
+        canonicalPath={location.pathname}
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-[30px] bg-gray-50">
         <div className="max-w-[1400px] mx-auto">
