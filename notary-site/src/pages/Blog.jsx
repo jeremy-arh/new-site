@@ -164,6 +164,8 @@ const Blog = () => {
                       <img
                         src={post.cover_image_url}
                         alt={post.cover_image_alt || post.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                       />
                       {post.category && (

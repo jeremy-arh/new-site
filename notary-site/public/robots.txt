@@ -2,5 +2,11 @@
 User-agent: *
 Allow: /
 
+# Disallow admin and private areas (if any)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
 # Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://mynotary.io/sitemap.xml

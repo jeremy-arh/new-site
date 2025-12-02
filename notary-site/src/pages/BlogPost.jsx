@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
+import StructuredData from '../components/StructuredData';
 import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
@@ -202,6 +203,13 @@ const BlogPost = () => {
     );
   }
 
+  // Breadcrumbs pour données structurées
+  const breadcrumbItems = [
+    { name: t('common.home') || 'Home', url: '/' },
+    { name: t('blog.title') || 'Blog', url: '/blog' },
+    { name: post.title, url: location.pathname },
+  ];
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -212,6 +220,24 @@ const BlogPost = () => {
         twitterTitle={post.meta_title || post.title || 'Blog Post'}
         twitterDescription={post.meta_description || post.excerpt || ''}
         canonicalPath={location.pathname}
+      />
+      <StructuredData
+        type="Article"
+        data={{
+          headline: post.title,
+          description: post.meta_description || post.excerpt || '',
+          image: post.cover_image_url || '',
+          datePublished: post.published_at || new Date().toISOString(),
+          dateModified: post.updated_at || post.published_at || new Date().toISOString(),
+        }}
+        additionalData={[
+          {
+            type: 'BreadcrumbList',
+            data: {
+              items: breadcrumbItems,
+            },
+          },
+        ]}
       />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-[30px] bg-gray-50">
@@ -362,6 +388,8 @@ const BlogPost = () => {
                       <img
                         src={relatedPost.cover_image_url}
                         alt={relatedPost.cover_image_alt || relatedPost.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                       />
                       {relatedPost.category && (

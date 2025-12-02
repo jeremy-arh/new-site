@@ -1,0 +1,24 @@
+{
+  "name": "My notary - Online Notarization & Apostille Services",
+  "short_name": "My notary",
+  "description": "Notarize and apostille your documents 100% online. Secure, legally valid, and recognized internationally through the Hague Convention.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/src/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "legal", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
+

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
+import StructuredData from '../components/StructuredData';
 import { supabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
@@ -242,6 +243,13 @@ const ServiceDetail = () => {
     );
   }
 
+  // Breadcrumbs pour données structurées
+  const breadcrumbItems = [
+    { name: t('common.home') || 'Home', url: '/' },
+    { name: t('services.title') || 'Services', url: '/services' },
+    { name: service.name, url: location.pathname },
+  ];
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -252,6 +260,22 @@ const ServiceDetail = () => {
         twitterTitle={service.meta_title || service.name || t('serviceDetail.defaultTitle')}
         twitterDescription={service.meta_description || service.short_description || service.description || ''}
         canonicalPath={location.pathname}
+      />
+      <StructuredData
+        type="Service"
+        data={{
+          serviceName: service.name,
+          serviceDescription: service.meta_description || service.short_description || service.description || '',
+          '@id': getCanonicalUrl(location.pathname),
+        }}
+        additionalData={[
+          {
+            type: 'BreadcrumbList',
+            data: {
+              items: breadcrumbItems,
+            },
+          },
+        ]}
       />
       {/* Hero Section - Similar to Home Hero */}
       <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
