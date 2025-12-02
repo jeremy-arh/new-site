@@ -196,7 +196,7 @@ const Navbar = memo(() => {
           }}
         >
           <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
-            <div className={`flex justify-between items-center ${isMobile ? 'h-14' : 'h-20'}`}>
+            <div className={`flex justify-between items-center ${isMobile ? 'h-14' : 'h-20'} overflow-visible`}>
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
@@ -208,10 +208,10 @@ const Navbar = memo(() => {
             </a>
 
             {/* Desktop Navigation */}
-            <div className={`${isMobile ? 'hidden' : 'flex'} items-center space-x-8`}>
+            <div className={`${isMobile ? 'hidden' : 'flex'} items-center space-x-8 overflow-visible flex-shrink-0`}>
               <a 
                 href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')} 
-                className="nav-link text-base"
+                className="nav-link text-base whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -257,7 +257,7 @@ const Navbar = memo(() => {
               </a>
               <a 
                 href={isServicePage() ? '#how-it-works' : getLocalizedPath('/#how-it-works')} 
-                className="nav-link text-base"
+                className="nav-link text-base whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -302,7 +302,7 @@ const Navbar = memo(() => {
               </a>
               <a 
                 href={isServicePage() ? '#faq' : getLocalizedPath('/#faq')} 
-                className="nav-link text-base"
+                className="nav-link text-base whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -345,16 +345,16 @@ const Navbar = memo(() => {
                 {t('nav.faq')}
               </a>
 
-              <div className="w-px h-6 bg-gray-300"></div>
+              <div className="w-px h-6 bg-gray-300 flex-shrink-0"></div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 flex-shrink-0 whitespace-nowrap">
                 <LanguageSelector />
                 <CurrencySelector />
               </div>
 
               <a 
                 href="https://app.mynotary.io/login" 
-                className="nav-link text-base font-semibold"
+                className="nav-link text-base font-semibold whitespace-nowrap"
                 onClick={() => {
                   trackPlausibleLoginClick('navbar_desktop');
                   trackLoginClick('navbar_desktop', location.pathname);
@@ -362,24 +362,24 @@ const Navbar = memo(() => {
               >
                 {t('nav.login')}
               </a>
-              <div className={`relative inline-flex items-center gap-3 ${isMobile ? '' : 'overflow-visible'}`}>
+              <div className={`relative inline-flex items-center gap-3 ${isMobile ? '' : 'overflow-visible'} flex-shrink-0`}>
                 <a 
                   href={getFormUrl(currency, currentServiceId)} 
-                  className="glassy-cta primary-cta text-sm relative z-10"
+                  className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
                   onClick={() => {
                     trackPlausibleCTAClick('navbar_desktop');
                     trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
                   }}
                 >
-                  <span className="btn-text inline-block inline-flex items-center gap-2">
-                    <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white" />
-                    {ctaText || t('nav.notarizeNow')}
+                  <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
+                    <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white flex-shrink-0" />
+                    <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                   </span>
                 </a>
                 {formattedPrice && (
-                  <div className="text-white flex items-center gap-1 whitespace-nowrap">
-                    <span className="text-base font-semibold">{formattedPrice}</span>
-                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                  <div className="text-white flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+                    <span className="text-base font-semibold whitespace-nowrap">{formattedPrice}</span>
+                    <span className="text-xs font-normal text-white/70 whitespace-nowrap">{t('services.perDocument')}</span>
                   </div>
                 )}
               </div>
@@ -468,7 +468,7 @@ const Navbar = memo(() => {
                   trackNavigationClick('Our services', localizedPath, location.pathname);
                 }
               }}
-              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
               {t('nav.services')}
             </a>
@@ -516,7 +516,7 @@ const Navbar = memo(() => {
                   trackNavigationClick('How it work', localizedPath, location.pathname);
                 }
               }}
-              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
               {t('nav.howItWorks')}
             </a>
@@ -564,30 +564,57 @@ const Navbar = memo(() => {
                   trackNavigationClick('FAQ', localizedPath, location.pathname);
                 }
               }}
-              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
+              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
               {t('nav.faq')}
             </a>
 
             <div className="border-t border-gray-200 my-4"></div>
 
-            <div className="flex items-center gap-3 py-2">
+            <div className="flex items-center gap-3 py-2 whitespace-nowrap">
               <LanguageSelector />
               <div className="w-px h-6 bg-gray-300"></div>
               <CurrencySelector />
             </div>
 
-            <a
-              href="https://app.mynotary.io/login"
-              onClick={() => {
-                trackPlausibleLoginClick('navbar_mobile');
-                trackLoginClick('navbar_mobile', location.pathname);
-                closeMenu();
-              }}
-              className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
-            >
-              {t('nav.login')}
-            </a>
+            <div className="flex items-center gap-3 py-2 whitespace-nowrap">
+              <a
+                href={getLocalizedPath('/#contact')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeMenu();
+                  const localizedPath = getLocalizedPath('/#contact');
+                  window.history.pushState(null, '', localizedPath);
+                  setTimeout(() => {
+                    const element = document.getElementById('contact');
+                    if (element) {
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                }}
+                className="nav-link text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 whitespace-nowrap"
+              >
+                {t('common.contactUs')}
+              </a>
+              <div className="w-px h-6 bg-gray-300"></div>
+              <a
+                href="https://app.mynotary.io/login"
+                onClick={() => {
+                  trackPlausibleLoginClick('navbar_mobile');
+                  trackLoginClick('navbar_mobile', location.pathname);
+                  closeMenu();
+                }}
+                className="nav-link text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 whitespace-nowrap"
+              >
+                {t('nav.login')}
+              </a>
+            </div>
             <div className="w-full mt-8">
               <a
                 href={getFormUrl(currency, currentServiceId)}
@@ -599,8 +626,8 @@ const Navbar = memo(() => {
                 className="block w-full text-center glassy-cta primary-cta text-lg py-4"
               >
                 <span className="btn-text inline-flex items-center justify-center gap-2 whitespace-nowrap">
-                  <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
-                  {ctaText || t('nav.notarizeNow')}
+                  <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white flex-shrink-0" />
+                  <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                 </span>
               </a>
             </div>
