@@ -1,10 +1,12 @@
 /**
  * Analytics Tracking for Supabase
  * Tracks user interactions, page views, scroll depth, and CTA clicks
+ * Also sends events to GTM for Google Ads tracking
  */
 
 import { supabase } from '../lib/supabase';
 import { getSharedVisitorId, syncVisitorId, generateUUID } from './sharedVisitorId';
+import { pushGTMEvent } from './gtm';
 
 // Sync visitor ID on module load
 if (typeof window !== 'undefined') {
@@ -271,7 +273,25 @@ export const trackEvent = async (eventType, pagePath = null, metadata = {}) => {
 
 // Track pageview
 export const trackPageView = (pagePath = null) => {
-  return trackEvent('pageview', pagePath || window.location.pathname, {
+  const path = pagePath || window.location.pathname;
+  const pageName = path === '/' ? 'Home' : path.split('/').pop();
+  
+  // Send to GTM for Google Ads
+  const pageLocation = typeof window !== 'undefined' ? window.location.href : path;
+  const pageReferrer = typeof document !== 'undefined' ? document.referrer || '' : '';
+  const screenResolution = typeof window !== 'undefined' && window.screen ? window.screen.width : null;
+  
+  pushGTMEvent('page_view', {
+    page_name: pageName,
+    page_path: path,
+    page_title: typeof document !== 'undefined' ? document.title : '',
+    page_location: pageLocation,
+    page_referrer: pageReferrer,
+    screen_resolution: screenResolution
+  });
+  
+  // Send to Supabase
+  return trackEvent('pageview', path, {
     timestamp: new Date().toISOString()
   });
 };
@@ -297,7 +317,19 @@ export const trackScrollDepth = (scrollPercentage) => {
 
 // Track CTA click
 export const trackCTAClick = (ctaLocation, serviceId = null, pagePath = null) => {
-  return trackEvent('cta_click', pagePath || window.location.pathname, {
+  const path = pagePath || window.location.pathname;
+  
+  // Send to GTM for Google Ads
+  pushGTMEvent('cta_click', {
+    cta_type: 'book_appointment',
+    cta_location: ctaLocation,
+    service_id: serviceId,
+    destination: 'https://app.mynotary.io/form',
+    page_path: path
+  });
+  
+  // Send to Supabase
+  return trackEvent('cta_click', path, {
     cta_location: ctaLocation,
     service_id: serviceId,
     destination: 'form',
@@ -307,7 +339,17 @@ export const trackCTAClick = (ctaLocation, serviceId = null, pagePath = null) =>
 
 // Track navigation click
 export const trackNavigationClick = (linkText, destination, pagePath = null) => {
-  return trackEvent('navigation_click', pagePath || window.location.pathname, {
+  const path = pagePath || window.location.pathname;
+  
+  // Send to GTM for Google Ads
+  pushGTMEvent('navigation_click', {
+    link_text: linkText,
+    destination: destination,
+    page_path: path
+  });
+  
+  // Send to Supabase
+  return trackEvent('navigation_click', path, {
     link_text: linkText,
     destination: destination,
     timestamp: new Date().toISOString()
@@ -316,7 +358,18 @@ export const trackNavigationClick = (linkText, destination, pagePath = null) => 
 
 // Track service click
 export const trackServiceClick = (serviceId, serviceName, location, pagePath = null) => {
-  return trackEvent('service_click', pagePath || window.location.pathname, {
+  const path = pagePath || window.location.pathname;
+  
+  // Send to GTM for Google Ads
+  pushGTMEvent('service_click', {
+    service_id: serviceId,
+    service_name: serviceName,
+    click_location: location,
+    page_path: path
+  });
+  
+  // Send to Supabase
+  return trackEvent('service_click', path, {
     service_id: serviceId,
     service_name: serviceName,
     click_location: location,
@@ -326,7 +379,17 @@ export const trackServiceClick = (serviceId, serviceName, location, pagePath = n
 
 // Track login click
 export const trackLoginClick = (location, pagePath = null) => {
-  return trackEvent('login_click', pagePath || window.location.pathname, {
+  const path = pagePath || window.location.pathname;
+  
+  // Send to GTM for Google Ads
+  pushGTMEvent('login_click', {
+    click_location: location,
+    destination: 'https://app.mynotary.io/login',
+    page_path: path
+  });
+  
+  // Send to Supabase
+  return trackEvent('login_click', path, {
     click_location: location,
     destination: 'login',
     timestamp: new Date().toISOString()

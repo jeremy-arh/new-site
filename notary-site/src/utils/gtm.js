@@ -18,16 +18,34 @@ export const initGTM = () => {
  * @param {object} eventData - Additional event data
  */
 export const pushGTMEvent = (eventName, eventData = {}) => {
-  if (typeof window === 'undefined' || !window.dataLayer) {
-    console.warn('GTM dataLayer not initialized');
+  if (typeof window === 'undefined') {
+    console.warn('GTM: window is undefined');
     return;
   }
 
-  window.dataLayer.push({
+  // Ensure dataLayer exists
+  if (!window.dataLayer) {
+    initGTM();
+  }
+
+  // Double check after initialization
+  if (!window.dataLayer) {
+    console.error('GTM: Failed to initialize dataLayer');
+    return;
+  }
+
+  const eventPayload = {
     event: eventName,
     event_name: eventName, // Pour GTM server-side
     ...eventData
-  });
+  };
+
+  window.dataLayer.push(eventPayload);
+  
+  // Debug log in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('GTM Event pushed:', eventName, eventPayload);
+  }
 };
 
 /**

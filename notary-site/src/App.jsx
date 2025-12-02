@@ -30,7 +30,11 @@ function PageViewTracker() {
     
     // Track page view on route change (both Plausible and Analytics)
     const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
-    trackPlausiblePageView(pageName, location.pathname);
+    trackPlausiblePageView(pageName, location.pathname).catch(err => {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Plausible trackPageView error:', err);
+      }
+    });
     trackPageView(location.pathname);
   }, [location]);
 

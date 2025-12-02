@@ -1,51 +1,117 @@
 /**
- * Plausible Analytics - GTM Integration
- * Sends Plausible events via Google Tag Manager dataLayer
- * This allows Plausible to be managed through GTM and avoids ad blocker issues
+ * Plausible Analytics - Direct Integration
+ * Sends Plausible events directly using the Plausible API
  */
-
-import { pushGTMEvent } from './gtm';
 
 /**
- * Track a Plausible pageview via GTM
- * @param {string} pageName - Page name (optional)
- * @param {string} pagePath - Page path (optional, defaults to current path)
+ * Check if Plausible is loaded
+ * @returns {boolean}
  */
-export const trackPageView = (pageName = null, pagePath = null) => {
-  const path = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/');
-  
-  pushGTMEvent('plausible_pageview', {
-    plausible_event: 'pageview',
-    plausible_domain: 'mynotary.io',
-    page_name: pageName,
-    page_path: path,
-    page_url: typeof window !== 'undefined' ? window.location.href : path
+const isPlausibleLoaded = () => {
+  return typeof window !== 'undefined' && typeof window.plausible === 'function';
+};
+
+/**
+ * Wait for Plausible to be ready
+ * @returns {Promise} Promise that resolves when Plausible is ready
+ */
+const waitForPlausible = () => {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined') {
+      resolve();
+      return;
+    }
+
+    // If Plausible is already loaded, resolve immediately
+    if (isPlausibleLoaded()) {
+      resolve();
+      return;
+    }
+
+    // Wait for Plausible to load (max 5 seconds)
+    let attempts = 0;
+    const maxAttempts = 50;
+    const checkInterval = setInterval(() => {
+      attempts++;
+      if (isPlausibleLoaded() || attempts >= maxAttempts) {
+        clearInterval(checkInterval);
+        resolve();
+      }
+    }, 100);
   });
 };
 
 /**
- * Track a custom Plausible event via GTM
+ * Track a Plausible pageview
+ * @param {string} pageName - Page name (optional)
+ * @param {string} pagePath - Page path (optional, defaults to current path)
+ */
+export const trackPageView = async (pageName = null, pagePath = null) => {
+  await waitForPlausible();
+  
+  if (!isPlausibleLoaded()) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Plausible not loaded, skipping pageview');
+    }
+    return;
+  }
+
+  // For SPA with React Router, we need to pass the URL explicitly
+  // because React Router changes the URL without a page reload
+  const path = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/');
+  const fullUrl = typeof window !== 'undefined' 
+    ? `${window.location.origin}${path}${window.location.search}${window.location.hash}`
+    : path;
+  
+  // Trigger pageview with explicit URL for SPA
+  window.plausible('pageview', {
+    u: fullUrl
+  });
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Plausible pageview tracked:', fullUrl);
+  }
+};
+
+/**
+ * Track a custom Plausible event
  * @param {string} eventName - Event name
  * @param {object} props - Event properties (optional)
  */
-export const trackEvent = (eventName, props = {}) => {
-  pushGTMEvent('plausible_event', {
-    plausible_event: eventName,
-    plausible_domain: 'mynotary.io',
-    plausible_props: props,
-    page_path: typeof window !== 'undefined' ? window.location.pathname : '/',
-    page_url: typeof window !== 'undefined' ? window.location.href : '/'
+export const trackEvent = async (eventName, props = {}) => {
+  await waitForPlausible();
+  
+  if (!isPlausibleLoaded()) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Plausible not loaded, skipping event:', eventName);
+    }
+    return;
+  }
+
+  window.plausible(eventName, {
+    props: {
+      ...props,
+      page: typeof window !== 'undefined' ? window.location.pathname : '/'
+    }
   });
 };
 
 /**
  * Track CTA click (Book an appointment)
  * @param {string} location - Where the CTA was clicked (hero, navbar, mobile, etc.)
+ * @param {string} serviceId - Service ID (optional)
+ * @param {string} pagePath - Page path (optional)
  */
-export const trackCTAClick = (location) => {
+export const trackCTAClick = (location, serviceId = null, pagePath = null) => {
   trackEvent('cta_click', {
     cta_type: 'book_appointment',
-    cta_location: location
+    cta_location: location,
+    service_id: serviceId || undefined,
+    page_path: pagePath || undefined
+  }).catch(err => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Plausible trackCTAClick error:', err);
+    }
   });
 };
 
@@ -60,6 +126,10 @@ export const trackServiceClick = (serviceId, serviceName, location) => {
     service_id: serviceId,
     service_name: serviceName,
     click_location: location
+  }).catch(err => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Plausible trackServiceClick error:', err);
+    }
   });
 };
 
@@ -70,6 +140,10 @@ export const trackServiceClick = (serviceId, serviceName, location) => {
 export const trackLoginClick = (location) => {
   trackEvent('login_click', {
     click_location: location
+  }).catch(err => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Plausible trackLoginClick error:', err);
+    }
   });
 };
 
@@ -82,6 +156,10 @@ export const trackNavigationClick = (linkText, destination) => {
   trackEvent('navigation_click', {
     link_text: linkText,
     destination: destination
+  }).catch(err => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Plausible trackNavigationClick error:', err);
+    }
   });
 };
 
@@ -94,6 +172,10 @@ export const trackBlogPostView = (postSlug, postTitle) => {
   trackEvent('blog_post_view', {
     post_slug: postSlug,
     post_title: postTitle
+  }).catch(err => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Plausible trackBlogPostView error:', err);
+    }
   });
 };
 
@@ -104,13 +186,10 @@ export const trackBlogPostView = (postSlug, postTitle) => {
 export const initPlausible = () => {
   if (typeof window !== 'undefined') {
     // Send initial pageview
-    trackPageView();
+    trackPageView().catch(err => {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Plausible initPlausible error:', err);
+      }
+    });
   }
 };
-
-// Auto-initialize on module load
-if (typeof window !== 'undefined') {
-  // Wait for GTM to be ready before sending pageview
-  // GTM will handle the initial pageview via its own triggers
-  // So we don't need to call initPlausible() here
-}
