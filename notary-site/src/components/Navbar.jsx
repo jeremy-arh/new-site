@@ -13,6 +13,7 @@ import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, getServiceFields } from '../utils/services';
+import { removeLanguageFromPath, SUPPORTED_LANGUAGES } from '../utils/language';
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,8 +28,14 @@ const Navbar = memo(() => {
   const location = useLocation();
   const { formatPrice, currency } = useCurrency();
   const { t } = useTranslation();
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
+  
+  // Helper function to check if we're on a service detail page (with or without language prefix)
+  const isServicePage = useCallback(() => {
+    const pathWithoutLang = removeLanguageFromPath(location.pathname);
+    return pathWithoutLang.startsWith('/services/') && pathWithoutLang !== '/services';
+  }, [location.pathname]);
 
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
@@ -116,8 +123,9 @@ const Navbar = memo(() => {
           setCtaText('');
         }
       } else {
-        // Service detail
-        const serviceMatch = path.match(/^\/services\/([^/]+)/);
+        // Service detail (with or without language prefix)
+        const pathWithoutLang = removeLanguageFromPath(path);
+        const serviceMatch = pathWithoutLang.match(/^\/services\/([^/]+)/);
         if (serviceMatch && serviceMatch[1]) {
           const serviceId = decodeURIComponent(serviceMatch[1]);
           setCurrentServiceId(serviceId); // Set serviceId for service pages
@@ -202,55 +210,136 @@ const Navbar = memo(() => {
             {/* Desktop Navigation */}
             <div className={`${isMobile ? 'hidden' : 'flex'} items-center space-x-8`}>
               <a 
-                href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'} 
+                href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')} 
                 className="nav-link text-base"
                 onClick={(e) => {
-                  const destination = location.pathname.startsWith('/services/') ? '#other-services' : '/#services';
-                  if (location.pathname.startsWith('/services/')) {
-                    e.preventDefault();
-                    const element = document.getElementById('other-services');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                  e.preventDefault();
+                  if (isServicePage()) {
+                    const destination = '#other-services';
+                    // Attendre un peu pour s'assurer que le DOM est prêt
+                    setTimeout(() => {
+                      const element = document.getElementById('other-services');
+                      if (element) {
+                        const offset = 100; // Offset pour la navbar fixe
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('Our services', destination);
+                    trackNavigationClick('Our services', destination, location.pathname);
+                  } else {
+                    // Mettre à jour l'URL sans recharger la page
+                    const localizedPath = getLocalizedPath('/#services');
+                    window.history.pushState(null, '', localizedPath);
+                    // Scroller vers la section
+                    setTimeout(() => {
+                      const element = document.getElementById('services');
+                      if (element) {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('Our services', localizedPath);
+                    trackNavigationClick('Our services', localizedPath, location.pathname);
                   }
-                  trackPlausibleNavigationClick('Our services', destination);
-                  trackNavigationClick('Our services', destination, location.pathname);
                 }}
               >
                 {t('nav.services')}
               </a>
               <a 
-                href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'} 
+                href={isServicePage() ? '#how-it-works' : getLocalizedPath('/#how-it-works')} 
                 className="nav-link text-base"
                 onClick={(e) => {
-                  const destination = location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works';
-                  if (location.pathname.startsWith('/services/')) {
-                    e.preventDefault();
-                    const element = document.getElementById('how-it-works');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                  e.preventDefault();
+                  if (isServicePage()) {
+                    // Attendre un peu pour s'assurer que le DOM est prêt
+                    setTimeout(() => {
+                      const element = document.getElementById('how-it-works');
+                      if (element) {
+                        const offset = 100; // Offset pour la navbar fixe
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('How it work', '#how-it-works');
+                    trackNavigationClick('How it work', '#how-it-works', location.pathname);
+                  } else {
+                    // Mettre à jour l'URL sans recharger la page
+                    const localizedPath = getLocalizedPath('/#how-it-works');
+                    window.history.pushState(null, '', localizedPath);
+                    // Scroller vers la section
+                    setTimeout(() => {
+                      const element = document.getElementById('how-it-works');
+                      if (element) {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('How it work', localizedPath);
+                    trackNavigationClick('How it work', localizedPath, location.pathname);
                   }
-                  trackPlausibleNavigationClick('How it work', destination);
-                  trackNavigationClick('How it work', destination, location.pathname);
                 }}
               >
                 {t('nav.howItWorks')}
               </a>
               <a 
-                href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'} 
+                href={isServicePage() ? '#faq' : getLocalizedPath('/#faq')} 
                 className="nav-link text-base"
                 onClick={(e) => {
-                  const destination = location.pathname.startsWith('/services/') ? '#faq' : '/#faq';
-                  if (location.pathname.startsWith('/services/')) {
-                    e.preventDefault();
-                    const element = document.getElementById('faq');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                  e.preventDefault();
+                  if (isServicePage()) {
+                    setTimeout(() => {
+                      const element = document.getElementById('faq');
+                      if (element) {
+                        const offset = 100; // Offset pour la navbar fixe
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('FAQ', '#faq');
+                    trackNavigationClick('FAQ', '#faq', location.pathname);
+                  } else {
+                    // Mettre à jour l'URL sans recharger la page
+                    const localizedPath = getLocalizedPath('/#faq');
+                    window.history.pushState(null, '', localizedPath);
+                    // Scroller vers la section
+                    setTimeout(() => {
+                      const element = document.getElementById('faq');
+                      if (element) {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 100);
+                    trackPlausibleNavigationClick('FAQ', localizedPath);
+                    trackNavigationClick('FAQ', localizedPath, location.pathname);
                   }
-                  trackPlausibleNavigationClick('FAQ', destination);
-                  trackNavigationClick('FAQ', destination, location.pathname);
                 }}
               >
                 {t('nav.faq')}
@@ -336,57 +425,144 @@ const Navbar = memo(() => {
         <div className="h-full flex flex-col justify-center items-start px-8 pt-24 pb-12">
           <div className="w-full max-w-md space-y-4">
             <a
-              href={location.pathname.startsWith('/services/') ? '#other-services' : '/#services'}
+              href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')}
               onClick={(e) => {
-                const destination = location.pathname.startsWith('/services/') ? '#other-services' : '/#services';
-                if (location.pathname.startsWith('/services/')) {
+                if (isServicePage()) {
                   e.preventDefault();
-                  const element = document.getElementById('other-services');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
+                  closeMenu();
+                  // Attendre que le menu se ferme avant de scroller
+                  setTimeout(() => {
+                    const element = document.getElementById('other-services');
+                    if (element) {
+                      const offset = 100; // Offset pour la navbar fixe
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('Our services', '#other-services');
+                  trackNavigationClick('Our services', '#other-services', location.pathname);
+                } else {
+                  e.preventDefault();
+                  closeMenu();
+                  // Mettre à jour l'URL sans recharger la page
+                  const localizedPath = getLocalizedPath('/#services');
+                  window.history.pushState(null, '', localizedPath);
+                  // Scroller vers la section
+                  setTimeout(() => {
+                    const element = document.getElementById('services');
+                    if (element) {
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('Our services', localizedPath);
+                  trackNavigationClick('Our services', localizedPath, location.pathname);
                 }
-                trackPlausibleNavigationClick('Our services', destination);
-                trackNavigationClick('Our services', destination, location.pathname);
-                closeMenu();
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.services')}
             </a>
             <a
-              href={location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works'}
+              href={isServicePage() ? '#how-it-works' : getLocalizedPath('/#how-it-works')}
               onClick={(e) => {
-                const destination = location.pathname.startsWith('/services/') ? '#how-it-works' : '/#how-it-works';
-                if (location.pathname.startsWith('/services/')) {
+                if (isServicePage()) {
                   e.preventDefault();
-                  const element = document.getElementById('how-it-works');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
+                  closeMenu();
+                  // Attendre que le menu se ferme avant de scroller
+                  setTimeout(() => {
+                    const element = document.getElementById('how-it-works');
+                    if (element) {
+                      const offset = 100; // Offset pour la navbar fixe
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('How it work', '#how-it-works');
+                  trackNavigationClick('How it work', '#how-it-works', location.pathname);
+                } else {
+                  e.preventDefault();
+                  closeMenu();
+                  // Mettre à jour l'URL sans recharger la page
+                  const localizedPath = getLocalizedPath('/#how-it-works');
+                  window.history.pushState(null, '', localizedPath);
+                  // Scroller vers la section
+                  setTimeout(() => {
+                    const element = document.getElementById('how-it-works');
+                    if (element) {
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('How it work', localizedPath);
+                  trackNavigationClick('How it work', localizedPath, location.pathname);
                 }
-                trackPlausibleNavigationClick('How it work', destination);
-                trackNavigationClick('How it work', destination, location.pathname);
-                closeMenu();
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >
               {t('nav.howItWorks')}
             </a>
             <a
-              href={location.pathname.startsWith('/services/') ? '#faq' : '/#faq'}
+              href={isServicePage() ? '#faq' : getLocalizedPath('/#faq')}
               onClick={(e) => {
-                const destination = location.pathname.startsWith('/services/') ? '#faq' : '/#faq';
-                if (location.pathname.startsWith('/services/')) {
+                if (isServicePage()) {
                   e.preventDefault();
-                  const element = document.getElementById('faq');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
+                  closeMenu();
+                  // Attendre que le menu se ferme avant de scroller
+                  setTimeout(() => {
+                    const element = document.getElementById('faq');
+                    if (element) {
+                      const offset = 100; // Offset pour la navbar fixe
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('FAQ', '#faq');
+                  trackNavigationClick('FAQ', '#faq', location.pathname);
+                } else {
+                  e.preventDefault();
+                  closeMenu();
+                  // Mettre à jour l'URL sans recharger la page
+                  const localizedPath = getLocalizedPath('/#faq');
+                  window.history.pushState(null, '', localizedPath);
+                  // Scroller vers la section
+                  setTimeout(() => {
+                    const element = document.getElementById('faq');
+                    if (element) {
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 300);
+                  trackPlausibleNavigationClick('FAQ', localizedPath);
+                  trackNavigationClick('FAQ', localizedPath, location.pathname);
                 }
-                trackPlausibleNavigationClick('FAQ', destination);
-                trackNavigationClick('FAQ', destination, location.pathname);
-                closeMenu();
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2"
             >

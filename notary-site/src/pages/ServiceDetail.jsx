@@ -9,6 +9,7 @@ import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausi
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
+import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
