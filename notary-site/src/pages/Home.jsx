@@ -60,8 +60,8 @@ function Home() {
       />
       <Hero />
       <Services />
-      <HowItWorks />
       <Testimonial />
+      <HowItWorks />
       <FAQ />
       <BlogSection />
       <MobileCTA />

@@ -50,7 +50,7 @@ const Services = () => {
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
             {t('services.heading')}<br />
-            <span className="gradient-text">{t('services.headingHighlight')}</span>
+            <span>{t('services.headingHighlight')}</span>
           </h2>
         </div>
 

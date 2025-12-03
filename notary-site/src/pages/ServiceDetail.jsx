@@ -78,7 +78,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
             {t('services.otherServices')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
-            {t('services.otherServicesHeading').split(' ').slice(0, -2).join(' ')} <span className="gradient-text">{t('services.otherServicesHeading').split(' ').slice(-2).join(' ')}</span>
+            {t('services.otherServicesHeading').split(' ').slice(0, -2).join(' ')} <span>{t('services.otherServicesHeading').split(' ').slice(-2).join(' ')}</span>
           </h2>
         </div>
 
@@ -133,7 +133,6 @@ const ServiceDetail = () => {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
@@ -415,53 +414,49 @@ const ServiceDetail = () => {
       {/* What is Section */}
       <section className="py-20 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-            {t('serviceDetail.whatIs')} <span className="gradient-text">{service.name}</span>?
-          </h2>
-          <div className="max-w-6xl mx-auto">
-            <div className="relative animate-fade-in animation-delay-200">
-              <div
-                className={`blog-content ${!isDescriptionExpanded ? 'max-h-[400px] overflow-hidden' : ''}`}
-                dangerouslySetInnerHTML={{ __html: service.detailed_description || service.description }}
-              />
-              {!isDescriptionExpanded && (
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
-              )}
-            </div>
-            <div className="text-center mt-6">
-              <button
-                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                className="text-black font-semibold hover:text-gray-600 transition-colors duration-200 inline-flex items-center gap-2"
-              >
-                {isDescriptionExpanded ? (
-                  <>
-                    <span>{t('serviceDetail.showLess')}</span>
-                    <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </>
+          {(() => {
+            const descriptionHtml = service.detailed_description || service.description || '';
+            // Extraire le premier h2 du HTML
+            const h2Match = descriptionHtml.match(/<h2[^>]*>(.*?)<\/h2>/is);
+            const firstH2Content = h2Match ? h2Match[1] : null;
+            const contentWithoutFirstH2 = h2Match 
+              ? descriptionHtml.replace(h2Match[0], '').trim()
+              : descriptionHtml;
+            
+            return (
+              <>
+                {firstH2Content ? (
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in"
+                    dangerouslySetInnerHTML={{ __html: firstH2Content }}
+                  />
                 ) : (
-                  <>
-                    <span>{t('serviceDetail.readMore')}</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
+                    {t('serviceDetail.whatIs')} <span>{service.name}</span>?
+                  </h2>
                 )}
-              </button>
-            </div>
-          </div>
+                <div className="max-w-6xl mx-auto">
+                  <div className="relative animate-fade-in animation-delay-200">
+                    <div
+                      className="blog-content"
+                      dangerouslySetInnerHTML={{ __html: contentWithoutFirstH2 }}
+                    />
+                  </div>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
+
+      {/* Testimonial Section */}
+      <Testimonial />
 
       {/* How It Works Section */}
       <HowItWorks />
 
       {/* Other Services Section */}
       <OtherServicesSection currentServiceId={service.service_id} />
-
-      {/* Testimonial Section */}
-      <Testimonial />
 
       {/* FAQ Section */}
       <FAQ />

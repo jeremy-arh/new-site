@@ -1,49 +1,103 @@
-import { memo } from 'react';
-import { getImageUrl } from '../utils/imageLoader';
+import { memo, useState, useEffect } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 
 const Testimonial = memo(() => {
-  const testimonialAvatar = getImageUrl('testimonial-avatar');
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 4 testimonials avec traductions
+  const testimonials = [
+    {
+      quote: language === 'en' ? '"A smooth and fully digital experience"' : language === 'fr' ? '"Enfin une solution simple et efficace"' : language === 'es' ? '"Por fin una solución simple y eficaz"' : language === 'de' ? '"Ein reibungsloses und vollständig digitales Erlebnis"' : language === 'it' ? '"Un\'esperienza fluida e completamente digitale"' : '"Uma experiência suave e totalmente digital"',
+      text: language === 'en' ? 'My Notary made what used to be a complex process incredibly simple. I was able to sign, certify, and apostille my documents online, fully legally, in just a few minutes. Their team is responsive, reliable, and the platform is extremely intuitive' : language === 'fr' ? 'J\'avais besoin de faire certifier plusieurs documents pour mon entreprise. Avec My Notary, tout s\'est fait en ligne en quelques minutes, sans me déplacer. L\'équipe est réactive, le processus est clair et mes documents sont valides partout. Je recommande vivement !' : language === 'es' ? 'Necesitaba certificar varios documentos para mi empresa. Con My Notary, todo se hizo en línea en pocos minutos, sin desplazarme. El equipo es receptivo, el proceso es claro y mis documentos son válidos en todas partes. ¡Lo recomiendo totalmente!' : language === 'de' ? 'My Notary hat einen Prozess, der früher komplex war, unglaublich einfach gemacht. Ich konnte meine Dokumente online, vollständig legal, in nur wenigen Minuten signieren, zertifizieren und apostillieren. Ihr Team ist reaktionsschnell, zuverlässig und die Plattform ist extrem intuitiv' : language === 'it' ? 'My Notary ha reso incredibilmente semplice quello che era un processo complesso. Ho potuto firmare, certificare e apostillare i miei documenti online, completamente legalmente, in pochi minuti. Il loro team è reattivo, affidabile e la piattaforma è estremamente intuitiva' : 'My Notary tornou incrivelmente simples o que costumava ser um processo complexo. Consegui assinar, certificar e apostilar meus documentos online, totalmente legalmente, em apenas alguns minutos. A equipe deles é responsiva, confiável e a plataforma é extremamente intuitiva',
+      author: 'Callum Davis',
+      role: language === 'en' ? 'CEO of Akkar' : language === 'fr' ? 'PDG d\'Akkar' : language === 'es' ? 'CEO de Akkar' : language === 'de' ? 'CEO von Akkar' : language === 'it' ? 'CEO di Akkar' : 'CEO da Akkar',
+    },
+    {
+      quote: language === 'en' ? '"Fast, secure, and incredibly efficient"' : language === 'fr' ? '"Rapide, sécurisé et incroyablement efficace"' : language === 'es' ? '"Rápido, seguro e increíblemente eficiente"' : language === 'de' ? '"Schnell, sicher und unglaublich effizient"' : language === 'it' ? '"Veloce, sicuro e incredibilmente efficiente"' : '"Rápido, seguro e incrivelmente eficiente"',
+      text: language === 'en' ? 'I needed to notarize documents for an international business deal. The entire process took less than 20 minutes, and I received my apostilled documents the same day. The platform is user-friendly and the support team was extremely helpful throughout the process.' : language === 'fr' ? 'J\'avais besoin de faire notariser des documents pour une transaction commerciale internationale. Tout le processus a pris moins de 20 minutes, et j\'ai reçu mes documents apostillés le jour même. La plateforme est conviviale et l\'équipe de support a été extrêmement utile tout au long du processus.' : language === 'es' ? 'Necesitaba notarizar documentos para un acuerdo comercial internacional. Todo el proceso tomó menos de 20 minutos y recibí mis documentos apostillados el mismo día. La plataforma es fácil de usar y el equipo de soporte fue extremadamente útil durante todo el proceso.' : language === 'de' ? 'Ich musste Dokumente für ein internationales Geschäftsabkommen notariell beglaubigen lassen. Der gesamte Prozess dauerte weniger als 20 Minuten und ich erhielt meine apostillierten Dokumente noch am selben Tag. Die Plattform ist benutzerfreundlich und das Support-Team war während des gesamten Prozesses äußerst hilfreich.' : language === 'it' ? 'Avevo bisogno di notarizzare documenti per un accordo commerciale internazionale. L\'intero processo ha richiesto meno di 20 minuti e ho ricevuto i miei documenti apostillati lo stesso giorno. La piattaforma è user-friendly e il team di supporto è stato estremamente utile durante tutto il processo.' : 'Precisava notarizar documentos para um acordo comercial internacional. Todo o processo levou menos de 20 minutos e recebi meus documentos apostilados no mesmo dia. A plataforma é fácil de usar e a equipe de suporte foi extremamente útil durante todo o processo.',
+      author: 'Sarah Martinez',
+      role: language === 'en' ? 'Legal Director' : language === 'fr' ? 'Directrice Juridique' : language === 'es' ? 'Directora Legal' : language === 'de' ? 'Rechtsdirektorin' : language === 'it' ? 'Direttore Legale' : 'Diretora Jurídica',
+    },
+    {
+      quote: language === 'en' ? '"The best online notarization service I\'ve used"' : language === 'fr' ? '"Le meilleur service de notarisation en ligne que j\'ai utilisé"' : language === 'es' ? '"El mejor servicio de notarización en línea que he usado"' : language === 'de' ? '"Der beste Online-Notarisierungsservice, den ich verwendet habe"' : language === 'it' ? '"Il miglior servizio di notarizzazione online che ho usato"' : '"O melhor serviço de notarização online que usei"',
+      text: language === 'en' ? 'As someone who travels frequently, having access to online notarization has been a game-changer. I can get my documents certified from anywhere in the world, and the quality is always excellent. Highly recommend My Notary for anyone needing reliable notarization services.' : language === 'fr' ? 'En tant que personne qui voyage fréquemment, avoir accès à la notarisation en ligne a été un changement majeur. Je peux faire certifier mes documents depuis n\'importe où dans le monde, et la qualité est toujours excellente. Je recommande vivement My Notary à tous ceux qui ont besoin de services de notarisation fiables.' : language === 'es' ? 'Como alguien que viaja con frecuencia, tener acceso a la notarización en línea ha sido un cambio total. Puedo certificar mis documentos desde cualquier parte del mundo, y la calidad siempre es excelente. Recomiendo encarecidamente My Notary a cualquiera que necesite servicios de notarización confiables.' : language === 'de' ? 'Als jemand, der häufig reist, war der Zugang zur Online-Notarisierung ein Wendepunkt. Ich kann meine Dokumente von überall auf der Welt beglaubigen lassen, und die Qualität ist immer ausgezeichnet. Ich empfehle My Notary wärmstens für alle, die zuverlässige Notarisierungsdienste benötigen.' : language === 'it' ? 'Come qualcuno che viaggia frequentemente, avere accesso alla notarizzazione online è stato un punto di svolta. Posso far certificare i miei documenti da qualsiasi parte del mondo e la qualità è sempre eccellente. Consiglio vivamente My Notary a chiunque abbia bisogno di servizi di notarizzazione affidabili.' : 'Como alguém que viaja frequentemente, ter acesso à notarização online foi um divisor de águas. Posso certificar meus documentos de qualquer lugar do mundo, e a qualidade é sempre excelente. Recomendo muito o My Notary para qualquer pessoa que precise de serviços de notarização confiáveis.',
+      author: 'Michael Chen',
+      role: language === 'en' ? 'International Business Consultant' : language === 'fr' ? 'Consultant en Affaires Internationales' : language === 'es' ? 'Consultor de Negocios Internacionales' : language === 'de' ? 'Internationaler Unternehmensberater' : language === 'it' ? 'Consulente Aziendale Internazionale' : 'Consultor de Negócios Internacionais',
+    },
+    {
+      quote: language === 'en' ? '"Outstanding service and professionalism"' : language === 'fr' ? '"Service exceptionnel et professionnalisme"' : language === 'es' ? '"Servicio excepcional y profesionalismo"' : language === 'de' ? '"Hervorragender Service und Professionalität"' : language === 'it' ? '"Servizio eccezionale e professionalità"' : '"Serviço excepcional e profissionalismo"',
+      text: language === 'en' ? 'I\'ve used My Notary multiple times for various document certifications. Each time, the process has been smooth, fast, and completely hassle-free. The notaries are professional, and the platform makes everything so easy. This is the future of notarization services.' : language === 'fr' ? 'J\'ai utilisé My Notary plusieurs fois pour diverses certifications de documents. À chaque fois, le processus a été fluide, rapide et sans tracas. Les notaires sont professionnels et la plateforme rend tout si facile. C\'est l\'avenir des services de notarisation.' : language === 'es' ? 'He usado My Notary varias veces para diversas certificaciones de documentos. Cada vez, el proceso ha sido fluido, rápido y completamente sin complicaciones. Los notarios son profesionales y la plataforma hace todo tan fácil. Este es el futuro de los servicios de notarización.' : language === 'de' ? 'Ich habe My Notary mehrfach für verschiedene Dokumentenzertifizierungen verwendet. Jedes Mal war der Prozess reibungslos, schnell und völlig unkompliziert. Die Notare sind professionell und die Plattform macht alles so einfach. Dies ist die Zukunft der Notarisierungsdienste.' : language === 'it' ? 'Ho usato My Notary più volte per varie certificazioni di documenti. Ogni volta, il processo è stato fluido, veloce e completamente senza problemi. I notai sono professionali e la piattaforma rende tutto così facile. Questo è il futuro dei servizi di notarizzazione.' : 'Usei o My Notary várias vezes para várias certificações de documentos. Cada vez, o processo foi suave, rápido e completamente sem complicações. Os notários são profissionais e a plataforma torna tudo tão fácil. Este é o futuro dos serviços de notarização.',
+      author: 'Emma Thompson',
+      role: language === 'en' ? 'Corporate Lawyer' : language === 'fr' ? 'Avocate d\'Entreprise' : language === 'es' ? 'Abogada Corporativa' : language === 'de' ? 'Unternehmensanwältin' : language === 'it' ? 'Avvocato Aziendale' : 'Advogada Corporativa',
+    },
+  ];
+
+  // Auto-rotation toutes les 5 secondes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
+
+  const currentTestimonial = testimonials[currentIndex];
 
   return (
     <section className="py-20 px-[30px] bg-white overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-50 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-500 scroll-fade-in">
-          {/* Image */}
-          <div className="h-64 lg:h-auto relative overflow-hidden group scroll-slide-left">
-            <img
-              src={testimonialAvatar}
-              alt="Callum Davis"
-              loading="lazy"
-              width="600"
-              height="400"
-              className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          </div>
-
+        <div className="bg-gray-50 rounded-3xl overflow-hidden shadow-2xl transition-shadow duration-500 scroll-fade-in">
           {/* Content */}
-          <div className="p-8 lg:p-12 flex flex-col justify-center space-y-6 scroll-slide-right">
-            <div className="relative">
-              <svg className="w-12 h-12 text-gray-300 opacity-50 absolute -top-4 -left-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-              </svg>
-              <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 relative z-10">
-                {t('testimonial.quote')}
-              </h3>
+          <div className="p-8 lg:p-12 flex flex-col justify-center space-y-6 relative min-h-[400px]">
+            {/* Carousel transition */}
+            <div className="relative overflow-hidden">
+              <div 
+                className="flex transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div 
+                    key={index}
+                    className="w-full flex-shrink-0 px-4"
+                  >
+                    <div className="relative">
+                      <svg className="w-12 h-12 text-gray-300 opacity-50 absolute -top-4 -left-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                      </svg>
+                      <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 relative z-10">
+                        {testimonial.quote}
+                      </h3>
+                    </div>
+
+                    <p className="text-gray-700 text-lg leading-relaxed">
+                      {testimonial.text}
+                    </p>
+
+                    <div className="flex items-center gap-4 pt-4">
+                      <div className="w-1 h-16 bg-black rounded-full"></div>
+                      <div>
+                        <div className="text-xl font-bold text-gray-900 mb-1">{testimonial.author}</div>
+                        <div className="text-sm text-gray-600 font-semibold">{testimonial.role}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <p className="text-gray-700 text-lg leading-relaxed">
-              {t('testimonial.text')}
-            </p>
-
-            <div className="flex items-center gap-4 pt-4">
-              <div className="w-1 h-16 bg-black rounded-full"></div>
-              <div>
-                <div className="text-xl font-bold text-gray-900 mb-1">{t('testimonial.author')}</div>
-                <div className="text-sm gradient-text font-semibold">{t('testimonial.role')}</div>
-              </div>
+            {/* Indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentIndex ? 'bg-black w-8' : 'bg-gray-300 w-2'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
             </div>
           </div>
         </div>

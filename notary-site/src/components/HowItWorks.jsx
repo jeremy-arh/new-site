@@ -111,7 +111,7 @@ const HowItWorks = memo(() => {
             {t('howItWorks.badge')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 scroll-slide-up">
-            {t('howItWorks.heading').split(' ').slice(0, -1).join(' ')} <span className="gradient-text">{t('howItWorks.heading').split(' ').slice(-1)[0]}</span>
+            {t('howItWorks.heading').split(' ').slice(0, -1).join(' ')} <span>{t('howItWorks.heading').split(' ').slice(-1)[0]}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto scroll-slide-up">
             {t('howItWorks.subtitle')}
@@ -167,7 +167,7 @@ const HowItWorks = memo(() => {
                       loading="lazy"
                       width="450"
                       height="450"
-                      className="w-full max-w-[300px] md:max-w-[450px] h-auto transform hover:scale-105 transition-transform duration-500"
+                      className="w-full max-w-[300px] md:max-w-[450px] h-auto"
                     />
                   </div>
                 </div>
