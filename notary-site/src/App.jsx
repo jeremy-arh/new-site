@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from 'react'
 import { BrowserRouter as Router, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
-import { CurrencyProvider } from './contexts/CurrencyContext'
+import { CurrencyProvider, useCurrency } from './contexts/CurrencyContext'
 import { LanguageProvider } from './contexts/LanguageContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -9,7 +9,7 @@ import ScrollToTop from './components/ScrollToTop'
 import CTAPopup from './components/CTAPopup'
 import LanguageRouter from './components/LanguageRouter'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
-import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices } from './utils/prefetch'
+import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices, prefetchForm } from './utils/prefetch'
 import { trackPageView as trackPlausiblePageView } from './utils/plausible'
 import { trackPageView, trackScrollDepth } from './utils/analytics'
 
@@ -64,6 +64,28 @@ function PageViewTracker() {
   return null;
 }
 
+// Component to prefetch form on app load
+function FormPrefetcher() {
+  const { currency } = useCurrency();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Detect serviceId from URL if on a service page
+    const serviceMatch = location.pathname.match(/\/services\/([^/]+)/);
+    const serviceId = serviceMatch ? serviceMatch[1] : null;
+
+    // Prefetch the form page after a short delay to not block initial page load
+    // Prefetch with the current currency and serviceId (if on service page)
+    const prefetchTimer = setTimeout(() => {
+      prefetchForm(currency, serviceId);
+    }, 1000);
+
+    return () => clearTimeout(prefetchTimer);
+  }, [currency, location.pathname]);
+
+  return null;
+}
+
 function App() {
   useScrollAnimation();
 
@@ -74,7 +96,7 @@ function App() {
 
     // Wait for DOM to be ready
     const initPrefetch = () => {
-      // Prefetch visible links
+      // Prefetch visible links (including form links)
       prefetchVisibleLinks();
 
       // Prefetch initial data (blog posts and services) in background
@@ -100,6 +122,7 @@ function App() {
           <LanguageProvider>
             <ScrollToTop />
             <PageViewTracker />
+            <FormPrefetcher />
             <div className="min-h-screen">
               <Navbar />
               <Suspense fallback={<PageLoader />}>

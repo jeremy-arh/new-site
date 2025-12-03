@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { cache } from './cache';
 import { getServiceFields } from './services';
+import { getFormUrl } from './formUrl';
 
 /**
  * Prefetch a blog post by slug
@@ -118,6 +119,37 @@ export const prefetchServices = async () => {
 };
 
 /**
+ * Prefetch the form page (external URL)
+ * Uses link prefetch for better browser support
+ */
+export const prefetchForm = (currency = 'EUR', serviceId = null) => {
+  if (typeof window === 'undefined') return;
+
+  const formUrl = getFormUrl(currency, serviceId);
+
+  // Check if already prefetched
+  if (document.querySelector(`link[rel="prefetch"][href="${formUrl}"]`)) {
+    return;
+  }
+
+  try {
+    // Use link prefetch for external URLs (best practice for cross-origin prefetching)
+    // The browser will handle the prefetch in the background
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = formUrl;
+    link.as = 'document';
+    // Note: crossOrigin is not needed for prefetch, browser handles it automatically
+    document.head.appendChild(link);
+  } catch (error) {
+    // Silently fail - prefetch is best effort
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Form prefetch error:', error);
+    }
+  }
+};
+
+/**
  * Setup prefetch on link hover
  */
 export const setupLinkPrefetch = () => {
@@ -131,8 +163,19 @@ export const setupLinkPrefetch = () => {
     const href = link.getAttribute('href') || link.href;
     if (!href) return;
 
+    // Form URL (external)
+    if (href.includes('app.mynotary.io/form')) {
+      const url = new URL(href);
+      const currency = url.searchParams.get('currency') || 'EUR';
+      const serviceId = url.searchParams.get('service') || null;
+      const cacheKey = `form:${currency}:${serviceId || 'none'}`;
+      if (!prefetched.has(cacheKey)) {
+        prefetched.add(cacheKey);
+        prefetchForm(currency, serviceId);
+      }
+    }
     // Blog post
-    if (href.includes('/blog/')) {
+    else if (href.includes('/blog/')) {
       const match = href.match(/\/blog\/([^/#?]+)/);
       if (match && match[1]) {
         const slug = decodeURIComponent(match[1]);
@@ -162,7 +205,7 @@ export const setupLinkPrefetch = () => {
     // Check if closest is available (for older browsers or edge cases)
     if (!e.target || typeof e.target.closest !== 'function') return;
     
-    const link = e.target.closest('a[href*="/blog/"], a[href*="/services/"]');
+    const link = e.target.closest('a[href*="/blog/"], a[href*="/services/"], a[href*="app.mynotary.io/form"]');
     if (!link) return;
 
     // Clear existing timeout
@@ -193,13 +236,27 @@ export const prefetchVisibleLinks = () => {
         const link = entry.target;
         const href = link.getAttribute('href') || link.href;
         
-        if (href && href.includes('/blog/')) {
+        // Form URL (external)
+        if (href && href.includes('app.mynotary.io/form')) {
+          try {
+            const url = new URL(href);
+            const currency = url.searchParams.get('currency') || 'EUR';
+            const serviceId = url.searchParams.get('service') || null;
+            prefetchForm(currency, serviceId);
+          } catch (e) {
+            // Invalid URL, skip
+          }
+        }
+        // Blog post
+        else if (href && href.includes('/blog/')) {
           const match = href.match(/\/blog\/([^/#?]+)/);
           if (match && match[1]) {
             const slug = decodeURIComponent(match[1]);
             prefetchBlogPost(slug);
           }
-        } else if (href && href.includes('/services/')) {
+        }
+        // Service
+        else if (href && href.includes('/services/')) {
           const match = href.match(/\/services\/([^/#?]+)/);
           if (match && match[1]) {
             const serviceId = decodeURIComponent(match[1]);
@@ -217,7 +274,7 @@ export const prefetchVisibleLinks = () => {
 
   // Function to observe links
   const observeLinks = () => {
-    const links = document.querySelectorAll('a[href*="/blog/"], a[href*="/services/"]');
+    const links = document.querySelectorAll('a[href*="/blog/"], a[href*="/services/"], a[href*="app.mynotary.io/form"]');
     links.forEach((link) => {
       // Only observe if not already observed
       if (!link.dataset.prefetchObserved) {
