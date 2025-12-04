@@ -59,20 +59,6 @@ const CTAPopup = () => {
     }
   }, [service?.base_price, formatPrice, currency]);
 
-  useEffect(() => {
-    // Check if popup has already been shown in this session
-    const popupShown = sessionStorage.getItem('cta_popup_shown');
-    
-    if (!popupShown) {
-      // Show popup after 5 seconds
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-        sessionStorage.setItem('cta_popup_shown', 'true');
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   // Prevent body scroll when popup is visible
   useEffect(() => {
