@@ -38,6 +38,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
         .from('services')
         .select(getServiceFields())
         .eq('is_active', true)
+        .eq('show_in_list', true)
         .neq('service_id', currentServiceId)
         .order('created_at', { ascending: true })
         .limit(6);
@@ -101,20 +102,20 @@ const OtherServicesSection = ({ currentServiceId }) => {
                     <Icon icon="iconoir:badge-check" className="w-10 h-10 text-black" />
                   )}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">{serviceItem.name}</h3>
+                <h3 className="text-xl font-bold text-gray-900">{serviceItem.list_title || serviceItem.name}</h3>
               </div>
 
               <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed flex-1">{serviceItem.short_description || serviceItem.description}</p>
 
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mt-auto items-center sm:items-end">
-                <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center sm:justify-start">
+              <div className="flex flex-col gap-3 mt-auto items-center">
+                <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center">
                   <span className="btn-text inline-block">{t('services.learnMore')}</span>
                   <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>
                 {serviceItem.base_price && (
-                  <div className="flex items-center gap-2 justify-center sm:justify-start">
+                  <div className="flex items-center gap-2 justify-center">
                     <PriceDisplay price={serviceItem.base_price} showFrom className="text-lg font-bold text-gray-900" />
                   </div>
                 )}
@@ -294,7 +295,7 @@ const ServiceDetail = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
             <div className="max-w-3xl">
               <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight animate-fade-in`}>
-                {service.name}
+                {service.page_h1 || service.name}
               </h1>
 
               <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl animate-fade-in animation-delay-200`}>
@@ -317,25 +318,25 @@ const ServiceDetail = () => {
                 {ctaPrice && (
                   <div className="text-white flex items-center gap-1">
                     <span className="text-base font-semibold">{ctaPrice}</span>
-                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')} - no hidden fee</span>
                   </div>
                 )}
               </div>
 
               {/* Features */}
-              <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
-                <div className="flex items-center gap-2">
-                  <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+              <div className={`flex ${isMobile ? 'flex-col items-start' : 'flex-row items-center'} ${isMobile ? 'gap-3' : 'gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
+                <div className="flex items-center gap-2 whitespace-nowrap">
+                  <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                   <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                <div className="flex items-center gap-2 whitespace-nowrap">
+                  <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                   <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+                <div className="flex items-center gap-2 whitespace-nowrap">
+                  <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                   <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
                 </div>
               </div>

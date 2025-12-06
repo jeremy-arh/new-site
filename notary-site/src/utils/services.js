@@ -4,6 +4,7 @@
  * Champs supportés pour la traduction :
  * - name, description, short_description, cta (colonnes existantes en anglais)
  * - meta_title, meta_description, detailed_description (colonnes créées si nécessaire)
+ * - list_title, page_h1 (titres pour les listes et pages de service)
  * 
  * Pour chaque champ, les versions multilingues sont disponibles avec les suffixes :
  * _fr, _es, _de, _it, _pt
@@ -59,10 +60,23 @@ export const getServiceFields = () => {
     detailed_description_de,
     detailed_description_it,
     detailed_description_pt,
+    list_title,
+    list_title_fr,
+    list_title_es,
+    list_title_de,
+    list_title_it,
+    list_title_pt,
+    page_h1,
+    page_h1_fr,
+    page_h1_es,
+    page_h1_de,
+    page_h1_it,
+    page_h1_pt,
     icon,
     color,
     base_price,
     is_active,
+    show_in_list,
     created_at,
     updated_at
   `.replace(/\s+/g, ' ').trim();
@@ -70,7 +84,7 @@ export const getServiceFields = () => {
 
 /**
  * Obtient le nom du champ selon la langue
- * @param {string} field - Nom du champ (name, description, short_description, cta, meta_title, meta_description, detailed_description)
+ * @param {string} field - Nom du champ (name, description, short_description, cta, meta_title, meta_description, detailed_description, list_title, page_h1)
  * @param {string} language - Code de langue (en, fr, es, de, it, pt)
  * @returns {string} - Nom du champ avec suffixe de langue (ou sans suffixe pour 'en')
  */
@@ -88,7 +102,7 @@ export const getLocalizedField = (field, language) => {
 /**
  * Obtient la valeur localisée d'un service
  * @param {object} service - Objet service de la base de données
- * @param {string} field - Nom du champ (name, description, short_description, cta, meta_title, meta_description, detailed_description)
+ * @param {string} field - Nom du champ (name, description, short_description, cta, meta_title, meta_description, detailed_description, list_title, page_h1)
  * @param {string} language - Code de langue
  * @returns {string} - Valeur localisée ou valeur par défaut
  */
@@ -125,9 +139,18 @@ export const getLocalizedServiceValue = (service, field, language) => {
 export const formatServiceForLanguage = (service, language) => {
   if (!service) return null;
   
+  // Récupérer les valeurs localisées
+  const name = getLocalizedServiceValue(service, 'name', language);
+  const listTitle = getLocalizedServiceValue(service, 'list_title', language);
+  const pageH1 = getLocalizedServiceValue(service, 'page_h1', language);
+  
   return {
     ...service,
-    name: getLocalizedServiceValue(service, 'name', language),
+    name: name,
+    // list_title: utilise list_title si disponible, sinon fallback sur name
+    list_title: listTitle || name,
+    // page_h1: utilise page_h1 si disponible, sinon fallback sur name
+    page_h1: pageH1 || name,
     description: getLocalizedServiceValue(service, 'description', language),
     short_description: getLocalizedServiceValue(service, 'short_description', language),
     cta: getLocalizedServiceValue(service, 'cta', language),

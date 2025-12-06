@@ -196,7 +196,7 @@ const Navbar = memo(() => {
           }}
         >
           <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
-            <div className={`flex justify-between items-center ${isMobile ? 'h-14' : 'h-20'} overflow-visible`}>
+            <div className={`flex ${isMobile ? 'justify-between' : 'justify-center'} items-center ${isMobile ? 'h-14' : 'h-20'} overflow-visible ${isMobile ? '' : 'gap-8'}`}>
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
@@ -207,8 +207,8 @@ const Navbar = memo(() => {
               />
             </a>
 
-            {/* Desktop Navigation */}
-            <div className={`${isMobile ? 'hidden' : 'flex'} items-center space-x-8 overflow-visible flex-shrink-0`}>
+            {/* Desktop Navigation - Centered with equal gaps */}
+            <div className={`${isMobile ? 'hidden' : 'flex'} items-center overflow-visible flex-shrink-0 gap-8`}>
               <a 
                 href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')} 
                 className="nav-link text-base whitespace-nowrap"
@@ -347,7 +347,7 @@ const Navbar = memo(() => {
 
               <div className="w-px h-6 bg-gray-300 flex-shrink-0"></div>
 
-              <div className="flex items-center space-x-4 flex-shrink-0 whitespace-nowrap">
+              <div className="flex items-center gap-4 flex-shrink-0 whitespace-nowrap">
                 <LanguageSelector />
                 <CurrencySelector />
               </div>
@@ -362,7 +362,11 @@ const Navbar = memo(() => {
               >
                 {t('nav.login')}
               </a>
-              <div className={`relative inline-flex items-center gap-3 ${isMobile ? '' : 'overflow-visible'} flex-shrink-0`}>
+            </div>
+
+            {/* CTA Button */}
+            <div className={`${isMobile ? 'hidden' : 'flex'} items-center gap-3 overflow-visible flex-shrink-0`}>
+              <div className={`relative inline-flex items-center gap-3 overflow-visible flex-shrink-0`}>
                 <a 
                   href={getFormUrl(currency, currentServiceId)} 
                   className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
@@ -379,7 +383,7 @@ const Navbar = memo(() => {
                 {formattedPrice && (
                   <div className="text-white flex items-center gap-1 whitespace-nowrap flex-shrink-0">
                     <span className="text-base font-semibold whitespace-nowrap">{formattedPrice}</span>
-                    <span className="text-xs font-normal text-white/70 whitespace-nowrap">{t('services.perDocument')}</span>
+                    <span className="text-xs font-normal text-white/70 whitespace-nowrap">{t('services.perDocument')} - no hidden fee</span>
                   </div>
                 )}
               </div>

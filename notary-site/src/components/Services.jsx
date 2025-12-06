@@ -27,6 +27,7 @@ const Services = () => {
         .from('services')
         .select(getServiceFields())
         .eq('is_active', true)
+        .eq('show_in_list', true)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
@@ -82,20 +83,20 @@ const Services = () => {
                       <Icon icon="iconoir:badge-check" className="w-10 h-10 text-black" />
                     )}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">{service.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-900">{service.list_title || service.name}</h3>
                 </div>
 
                 <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed flex-1">{service.short_description || service.description}</p>
 
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mt-auto items-center sm:items-end">
-                  <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center sm:justify-start">
+                <div className="flex flex-col gap-3 mt-auto items-center">
+                  <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center">
                     <span className="btn-text inline-block">{t('services.learnMore')}</span>
                     <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
                   {service.base_price && (
-                    <div className="flex items-center gap-2 justify-center sm:justify-start">
+                    <div className="flex items-center gap-2 justify-center">
                       <PriceDisplay price={service.base_price} showFrom className="text-lg font-bold text-gray-900" />
                     </div>
                   )}

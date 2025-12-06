@@ -76,7 +76,7 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
             {formattedPrice && (
               <div className="text-gray-900 flex items-center gap-1">
                 <span className="text-base font-semibold">{formattedPrice}</span>
-                <span className="text-xs font-normal text-gray-500">{t('services.perDocument')}</span>
+                <span className="text-xs font-normal text-gray-500">{t('services.perDocument')} - no hidden fee</span>
               </div>
             )}
           </div>

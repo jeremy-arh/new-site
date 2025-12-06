@@ -21,7 +21,7 @@ const PriceDisplay = ({ price, showFrom = false, className = '' }) => {
   return (
     <span className={className}>
       {formattedPrice}
-      {showFrom && <span className="text-xs text-gray-500 ml-2 font-normal">{t('services.perDocument')}</span>}
+      {showFrom && <span className="text-xs text-gray-500 ml-2 font-normal">{t('services.perDocument')} - no hidden fee</span>}
     </span>
   );
 };

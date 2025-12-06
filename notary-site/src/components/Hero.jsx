@@ -62,18 +62,18 @@ const Hero = memo(() => {
 
             {/* Features */}
             <div className={`flex ${isMobile ? 'flex-col items-start gap-3' : 'flex-row items-center gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
-              <div className="flex items-center gap-2">
-                <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                 <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                 <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white`} />
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
                 <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
               </div>
             </div>

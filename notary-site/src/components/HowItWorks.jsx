@@ -220,7 +220,7 @@ const HowItWorks = memo(() => {
                 {formattedPrice && (
                   <div className="text-white flex items-center gap-1 justify-center">
                     <span className="text-base font-semibold">{formattedPrice}</span>
-                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')}</span>
+                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')} - no hidden fee</span>
                   </div>
                 )}
               </div>
