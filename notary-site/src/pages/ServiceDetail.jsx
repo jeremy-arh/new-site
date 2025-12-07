@@ -279,9 +279,9 @@ const ServiceDetail = () => {
         ]}
       />
       {/* Hero Section - Similar to Home Hero */}
-      <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
+      <section>
         <div
-          className={`relative ${isMobile ? '' : 'rounded-3xl'} overflow-hidden ${isMobile ? 'min-h-screen' : 'min-h-0 h-[calc(100vh-110px)]'} flex items-center`}
+          className="relative overflow-hidden min-h-screen flex items-center"
           style={{
             backgroundImage: `url(${bgService})`,
             backgroundSize: 'cover',
@@ -345,67 +345,199 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Why Choose My Notary Section */}
-      <section className="py-20 px-[30px] bg-white overflow-hidden">
-        <div className="max-w-full mx-auto">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-            {t('serviceDetail.whyChooseTitle')}
-          </h2>
-          <div className="relative w-full">
-            <div className="infinite-scroll-container">
-              <div className="flex flex-nowrap gap-6 animate-scroll-infinite">
-                {/* First set of cards */}
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
-                  <Icon icon="lets-icons:world-2-light" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.legallyValid.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.legallyValid.description')}</p>
+      {/* Pricing Section - Full Height Glassy Design */}
+      <section className="min-h-screen flex items-center justify-center bg-black px-4 sm:px-[30px] py-8 sm:py-16 relative">
+        <div className="max-w-[1300px] w-full mx-auto">
+          {/* Glassy Pricing Card */}
+          <div 
+            className="rounded-2xl sm:rounded-3xl overflow-hidden relative"
+            style={{
+              background: 'rgba(20, 20, 20, 0.6)',
+              backdropFilter: 'blur(40px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+            }}
+          >
+            <div className="flex flex-col lg:flex-row">
+              {/* Left Side - Price */}
+              <div className="lg:w-2/5 relative overflow-hidden p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center items-center lg:items-start border-b lg:border-b-0 lg:border-r border-white/10">
+                {/* Badge - Top Left Corner */}
+                <div 
+                  className="absolute top-0 left-0 z-20 inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3"
+                  style={{
+                    background: 'white',
+                    color: '#047857',
+                    fontWeight: '600',
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    borderTopLeftRadius: '16px',
+                    borderTopRightRadius: '0',
+                    borderBottomLeftRadius: '0',
+                    borderBottomRightRadius: '16px'
+                  }}
+                >
+                  <span 
+                    className="relative inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0"
+                    style={{
+                      backgroundColor: '#047857',
+                      animation: 'pulseDot 2s ease-in-out infinite'
+                    }}
+                  >
+                    <span 
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        backgroundColor: '#047857',
+                        animation: 'pingDot 2s cubic-bezier(0, 0, 0.2, 1) infinite'
+                      }}
+                    ></span>
+                  </span>
+                  <span className="whitespace-nowrap text-xs sm:text-sm">{t('serviceDetail.pricing.availableNow')}</span>
                 </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
-                  <Icon icon="fluent:flash-32-regular" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.fastOnline.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.fastOnline.description')}</p>
+
+                {/* Ultra glassy background with BLACK gradient */}
+                <div 
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%)',
+                    backdropFilter: 'blur(120px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(120px) saturate(200%)'
+                  }}
+                ></div>
+                
+                {/* Glass reflection effect */}
+                <div 
+                  className="absolute top-0 left-0 right-0 h-1/3 opacity-20"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%)',
+                    pointerEvents: 'none'
+                  }}
+                ></div>
+                
+                {/* Content */}
+                <div className="relative z-10 text-white w-full mt-8 sm:mt-0">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center lg:text-left">{service.name}</h2>
+                  
+                  {service.base_price ? (
+                    <>
+                      <div className="text-center lg:text-left w-full mb-4 sm:mb-6">
+                        <div className="flex items-baseline justify-center lg:justify-start gap-2 mb-2 sm:mb-3">
+                          <PriceDisplay 
+                            price={service.base_price} 
+                            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white"
+                          />
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-400">{t('services.perDocument')}</p>
+                      </div>
+                      <div className="flex flex-col gap-3 sm:gap-4 w-full">
+                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                          <Icon icon="iconoir:check-circle" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                          <span>{t('serviceDetail.pricing.noHiddenFee')}</span>
+                        </div>
+                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                          <Icon icon="iconoir:clock" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                          <span>{t('serviceDetail.pricing.sameDayDelivery')}</span>
+                        </div>
+                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                          <Icon icon="iconoir:shield-check" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                          <span>{t('serviceDetail.pricing.secure')}</span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center lg:text-left">
+                      <p className="text-base sm:text-lg text-gray-300">{t('serviceDetail.pricing.contactForPricing')}</p>
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
-                  <Icon icon="si:lock-line" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.securePrivacy.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.securePrivacy.description')}</p>
+              </div>
+
+              {/* Right Side - Benefits and CTA */}
+              <div className="lg:w-3/5 flex flex-col p-6 sm:p-8 lg:p-10 xl:p-12 bg-white/5">
+                {/* Benefits List */}
+                <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4 flex-1">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.legallyValid.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.legallyValid.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.sameDay.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.sameDay.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.officialNotarization.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.officialNotarization.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.available247.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.available247.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.transparentFee.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.transparentFee.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.bankGradeSecurity.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.bankGradeSecurity.description')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.globalCompliance.title')}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.globalCompliance.description')}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
-                  <Icon icon="streamline-ultimate:certified-diploma" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.certifiedNotary.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.certifiedNotary.description')}</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]">
-                  <Icon icon="ci:wavy-check" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.guaranteedAcceptance.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.guaranteedAcceptance.description')}</p>
-                </div>
-                {/* Duplicate set for seamless loop */}
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
-                  <Icon icon="lets-icons:world-2-light" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.legallyValid.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.legallyValid.description')}</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
-                  <Icon icon="fluent:flash-32-regular" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.fastOnline.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.fastOnline.description')}</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
-                  <Icon icon="si:lock-line" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.securePrivacy.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.securePrivacy.description')}</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
-                  <Icon icon="streamline-ultimate:certified-diploma" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.certifiedNotary.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.certifiedNotary.description')}</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-300 flex-shrink-0 w-[350px]" aria-hidden="true">
-                  <Icon icon="ci:wavy-check" className="w-12 h-12 text-black mb-4" />
-                  <h3 className="text-gray-900 mb-2 text-base font-semibold">{t('serviceDetail.whyChoose.guaranteedAcceptance.title')}</h3>
-                  <p className="text-gray-600 text-xs">{t('serviceDetail.whyChoose.guaranteedAcceptance.description')}</p>
-                </div>
+
+                {/* CTA Button - Ultra Glassy with Blue Gradient */}
+                <a
+                  href={getFormUrl(currency, service?.service_id || serviceId)}
+                  onClick={() => {
+                    trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
+                  }}
+                  className="block w-full text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center relative overflow-hidden group cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(51, 31, 226, 0.8) 0%, rgba(42, 26, 199, 0.9) 50%, rgba(51, 31, 226, 0.8) 100%)',
+                    backdropFilter: 'blur(40px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+                    boxShadow: '0 8px 32px 0 rgba(51, 31, 226, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  {/* Glass reflection effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  
+                  {/* Blue gradient overlay */}
+                  <div 
+                    className="absolute inset-0 opacity-80"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(51, 31, 226, 0.6) 0%, rgba(42, 26, 199, 0.8) 50%, rgba(51, 31, 226, 0.6) 100%)'
+                    }}
+                  ></div>
+                  
+                  <span className="inline-block flex items-center justify-center gap-2 relative z-10">
+                    <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                    {service.cta || t('nav.notarizeNow')}
+                  </span>
+                </a>
               </div>
             </div>
           </div>
@@ -416,26 +548,71 @@ const ServiceDetail = () => {
       <section className="py-20 px-[30px] bg-gray-50">
         <div className="max-w-[1300px] mx-auto">
           {(() => {
-            const descriptionHtml = service.detailed_description || service.description || '';
-            // Extraire le premier h2 du HTML
-            const h2Match = descriptionHtml.match(/<h2[^>]*>(.*?)<\/h2>/is);
-            const firstH2Content = h2Match ? h2Match[1] : null;
-            const contentWithoutFirstH2 = h2Match 
-              ? descriptionHtml.replace(h2Match[0], '').trim()
-              : descriptionHtml;
+            // Chercher le h2 dans detailed_description d'abord, puis dans description
+            const detailedDesc = service.detailed_description || '';
+            const desc = service.description || '';
+            const descriptionHtml = detailedDesc || desc;
             
+            // Extraire le premier h2 du HTML de manière très robuste
+            // Gère les cas avec ou sans attributs, sur une ou plusieurs lignes
+            // Utilise une regex non-greedy pour capturer le premier h2
+            const h2Regex = /<h2(?:\s+[^>]*)?>([\s\S]*?)<\/h2>/i;
+            let h2Match = null;
+            let firstH2Content = null;
+            let contentWithoutFirstH2 = descriptionHtml;
+            
+            // Chercher dans detailed_description d'abord
+            if (detailedDesc) {
+              h2Match = detailedDesc.match(h2Regex);
+            }
+            
+            // Si pas trouvé dans detailed_description, chercher dans description
+            if (!h2Match && desc) {
+              h2Match = desc.match(h2Regex);
+            }
+            
+            if (h2Match && h2Match[1]) {
+              // Extraire le contenu du h2 et nettoyer les balises HTML internes
+              firstH2Content = h2Match[1]
+                .replace(/<[^>]+>/g, '') // Supprimer toutes les balises HTML internes
+                .replace(/&nbsp;/g, ' ') // Remplacer &nbsp; par des espaces
+                .replace(/&amp;/g, '&') // Remplacer &amp; par &
+                .replace(/&lt;/g, '<') // Remplacer &lt; par <
+                .replace(/&gt;/g, '>') // Remplacer &gt; par >
+                .replace(/&quot;/g, '"') // Remplacer &quot; par "
+                .replace(/&#39;/g, "'") // Remplacer &#39; par '
+                .replace(/&#x27;/g, "'") // Remplacer &#x27; par '
+                .replace(/\s+/g, ' ') // Normaliser les espaces multiples
+                .trim();
+              
+              // Retirer le h2 du contenu pour éviter la duplication
+              // Retirer dans le champ où il a été trouvé
+              if (detailedDesc && detailedDesc.includes(h2Match[0])) {
+                contentWithoutFirstH2 = detailedDesc.replace(h2Match[0], '').trim();
+              } else if (desc && desc.includes(h2Match[0])) {
+                contentWithoutFirstH2 = desc.replace(h2Match[0], '').trim();
+              }
+              
+              // Debug en développement
+              if (process.env.NODE_ENV === 'development') {
+                console.log('[ServiceDetail] H2 found:', firstH2Content);
+                console.log('[ServiceDetail] Found in:', detailedDesc ? 'detailed_description' : 'description');
+              }
+            } else {
+              // Debug en développement
+              if (process.env.NODE_ENV === 'development') {
+                console.log('[ServiceDetail] No H2 found in description');
+                console.log('[ServiceDetail] Detailed description preview:', detailedDesc.substring(0, 200));
+                console.log('[ServiceDetail] Description preview:', desc.substring(0, 200));
+              }
+            }
+            
+            // Toujours utiliser le h2 s'il existe, sinon utiliser le titre par défaut
             return (
               <>
-                {firstH2Content ? (
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in"
-                    dangerouslySetInnerHTML={{ __html: firstH2Content }}
-                  />
-                ) : (
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-                    {t('serviceDetail.whatIs')} <span>{service.name}</span>?
-                  </h2>
-                )}
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
+                  {firstH2Content || `${t('serviceDetail.whatIs')} ${service.name}?`}
+                </h2>
                 <div className="max-w-6xl mx-auto">
                   <div className="relative animate-fade-in animation-delay-200">
                     <div

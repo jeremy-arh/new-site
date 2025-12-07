@@ -63,6 +63,43 @@ export const translations = {
       showLess: 'Show less',
       readMore: 'Read more',
       backToServices: 'Back to all services',
+      pricing: {
+        availableNow: 'Available Now',
+        noHiddenFee: 'No hidden fee',
+        sameDayDelivery: 'Same-day delivery',
+        secure: '100% secure',
+        contactForPricing: 'Contact us for pricing',
+        benefits: {
+          legallyValid: {
+            title: 'Legally Valid Worldwide',
+            description: 'Our certifications are officially recognized by authorities, banks, and governments internationally.',
+          },
+          sameDay: {
+            title: 'Same Day Service',
+            description: 'Get your documents validated the very same day. Fast turnaround to meet your urgent deadlines.',
+          },
+          officialNotarization: {
+            title: 'Official Notarization',
+            description: 'Every document is verified and digitally signed by a licensed practicing notary for full legal validity.',
+          },
+          available247: {
+            title: 'Available 24/7',
+            description: 'Our platform and notaries are accessible round the clock via video. Book anytime, day or night.',
+          },
+          transparentFee: {
+            title: 'Transparent Flat Fee',
+            description: 'No hidden costs, no subscription, everything included.',
+          },
+          bankGradeSecurity: {
+            title: 'Bank-Grade Security',
+            description: 'We protect your personal data with high-level encryption (AES-256) and strict confidentiality standards.',
+          },
+          globalCompliance: {
+            title: 'Global Compliance',
+            description: 'Our certifications are designed to meet the strict acceptance standards of embassies and foreign institutions.',
+          },
+        },
+      },
     },
     // How It Works
     howItWorks: {
@@ -424,6 +461,43 @@ export const translations = {
       showLess: 'Afficher moins',
       readMore: 'Lire la suite',
       backToServices: 'Retour à tous les services',
+      pricing: {
+        availableNow: 'Disponible maintenant',
+        noHiddenFee: 'Aucun frais caché',
+        sameDayDelivery: 'Livraison le jour même',
+        secure: '100% sécurisé',
+        contactForPricing: 'Contactez-nous pour les tarifs',
+        benefits: {
+          legallyValid: {
+            title: 'Valide légalement dans le monde entier',
+            description: 'Nos certifications sont officiellement reconnues par les autorités, les banques et les gouvernements à l\'échelle internationale.',
+          },
+          sameDay: {
+            title: 'Service le jour même',
+            description: 'Obtenez vos documents validés le jour même. Délai rapide pour répondre à vos urgences.',
+          },
+          officialNotarization: {
+            title: 'Notarisation officielle',
+            description: 'Chaque document est vérifié et signé numériquement par un notaire agréé en exercice pour une validité légale complète.',
+          },
+          available247: {
+            title: 'Disponible 24/7',
+            description: 'Notre plateforme et nos notaires sont accessibles 24h/24 et 7j/7 via vidéo. Réservez à tout moment, jour et nuit.',
+          },
+          transparentFee: {
+            title: 'Tarif forfaitaire transparent',
+            description: 'Aucun coût caché, pas d\'abonnement, tout inclus.',
+          },
+          bankGradeSecurity: {
+            title: 'Sécurité de niveau bancaire',
+            description: 'Nous protégeons vos données personnelles avec un chiffrement de haut niveau (AES-256) et des normes de confidentialité strictes.',
+          },
+          globalCompliance: {
+            title: 'Conformité mondiale',
+            description: 'Nos certifications sont conçues pour répondre aux normes d\'acceptation strictes des ambassades et des institutions étrangères.',
+          },
+        },
+      },
     },
     testimonial: {
       quote: '"Enfin une solution simple et efficace"',
@@ -649,6 +723,43 @@ export const translations = {
       showLess: 'Mostrar menos',
       readMore: 'Leer más',
       backToServices: 'Volver a todos los servicios',
+      pricing: {
+        availableNow: 'Disponible ahora',
+        noHiddenFee: 'Sin costos ocultos',
+        sameDayDelivery: 'Entrega el mismo día',
+        secure: '100% seguro',
+        contactForPricing: 'Contáctenos para precios',
+        benefits: {
+          legallyValid: {
+            title: 'Válido legalmente en todo el mundo',
+            description: 'Nuestras certificaciones son reconocidas oficialmente por autoridades, bancos y gobiernos internacionalmente.',
+          },
+          sameDay: {
+            title: 'Servicio el mismo día',
+            description: 'Obtenga sus documentos validados el mismo día. Entrega rápida para cumplir con sus plazos urgentes.',
+          },
+          officialNotarization: {
+            title: 'Notarización oficial',
+            description: 'Cada documento es verificado y firmado digitalmente por un notario autorizado en ejercicio para validez legal completa.',
+          },
+          available247: {
+            title: 'Disponible 24/7',
+            description: 'Nuestra plataforma y notarios son accesibles las 24 horas del día mediante video. Reserve en cualquier momento, día o noche.',
+          },
+          transparentFee: {
+            title: 'Tarifa plana transparente',
+            description: 'Sin costos ocultos, sin suscripción, todo incluido.',
+          },
+          bankGradeSecurity: {
+            title: 'Seguridad de nivel bancario',
+            description: 'Protegemos sus datos personales con cifrado de alto nivel (AES-256) y estándares estrictos de confidencialidad.',
+          },
+          globalCompliance: {
+            title: 'Cumplimiento global',
+            description: 'Nuestras certificaciones están diseñadas para cumplir con los estándares estrictos de aceptación de embajadas e instituciones extranjeras.',
+          },
+        },
+      },
     },
     testimonial: {
       quote: '"Por fin una solución simple y eficaz"',
@@ -876,6 +987,43 @@ export const translations = {
       showLess: 'Weniger anzeigen',
       readMore: 'Mehr lesen',
       backToServices: 'Zurück zu allen Dienstleistungen',
+      pricing: {
+        availableNow: 'Jetzt verfügbar',
+        noHiddenFee: 'Keine versteckten Gebühren',
+        sameDayDelivery: 'Lieferung am selben Tag',
+        secure: '100% sicher',
+        contactForPricing: 'Kontaktieren Sie uns für Preise',
+        benefits: {
+          legallyValid: {
+            title: 'Weltweit rechtlich gültig',
+            description: 'Unsere Zertifizierungen werden offiziell von Behörden, Banken und Regierungen international anerkannt.',
+          },
+          sameDay: {
+            title: 'Service am selben Tag',
+            description: 'Erhalten Sie Ihre Dokumente noch am selben Tag validiert. Schnelle Bearbeitung, um Ihre dringenden Termine einzuhalten.',
+          },
+          officialNotarization: {
+            title: 'Offizielle Notarisierung',
+            description: 'Jedes Dokument wird von einem zugelassenen praktizierenden Notar überprüft und digital signiert für vollständige rechtliche Gültigkeit.',
+          },
+          available247: {
+            title: '24/7 verfügbar',
+            description: 'Unsere Plattform und Notare sind rund um die Uhr per Video erreichbar. Buchen Sie jederzeit, Tag und Nacht.',
+          },
+          transparentFee: {
+            title: 'Transparente Pauschale',
+            description: 'Keine versteckten Kosten, kein Abonnement, alles inklusive.',
+          },
+          bankGradeSecurity: {
+            title: 'Bank-Level-Sicherheit',
+            description: 'Wir schützen Ihre persönlichen Daten mit hochwertiger Verschlüsselung (AES-256) und strengen Vertraulichkeitsstandards.',
+          },
+          globalCompliance: {
+            title: 'Globale Compliance',
+            description: 'Unsere Zertifizierungen sind darauf ausgelegt, die strengen Akzeptanzstandards von Botschaften und ausländischen Institutionen zu erfüllen.',
+          },
+        },
+      },
     },
     testimonial: {
       quote: '"Ein reibungsloses und vollständig digitales Erlebnis"',
@@ -1103,6 +1251,43 @@ export const translations = {
       showLess: 'Mostra meno',
       readMore: 'Leggi di più',
       backToServices: 'Torna a tutti i servizi',
+      pricing: {
+        availableNow: 'Disponibile ora',
+        noHiddenFee: 'Nessun costo nascosto',
+        sameDayDelivery: 'Consegna lo stesso giorno',
+        secure: '100% sicuro',
+        contactForPricing: 'Contattaci per i prezzi',
+        benefits: {
+          legallyValid: {
+            title: 'Valido legalmente in tutto il mondo',
+            description: 'Le nostre certificazioni sono ufficialmente riconosciute da autorità, banche e governi a livello internazionale.',
+          },
+          sameDay: {
+            title: 'Servizio lo stesso giorno',
+            description: 'Ottieni i tuoi documenti convalidati lo stesso giorno. Tempi di consegna rapidi per soddisfare le tue scadenze urgenti.',
+          },
+          officialNotarization: {
+            title: 'Notarizzazione ufficiale',
+            description: 'Ogni documento è verificato e firmato digitalmente da un notaio autorizzato in esercizio per piena validità legale.',
+          },
+          available247: {
+            title: 'Disponibile 24/7',
+            description: 'La nostra piattaforma e i notai sono accessibili 24 ore su 24 tramite video. Prenota in qualsiasi momento, giorno e notte.',
+          },
+          transparentFee: {
+            title: 'Tariffa fissa trasparente',
+            description: 'Nessun costo nascosto, nessun abbonamento, tutto incluso.',
+          },
+          bankGradeSecurity: {
+            title: 'Sicurezza di livello bancario',
+            description: 'Proteggiamo i tuoi dati personali con crittografia di alto livello (AES-256) e standard rigorosi di riservatezza.',
+          },
+          globalCompliance: {
+            title: 'Conformità globale',
+            description: 'Le nostre certificazioni sono progettate per soddisfare gli standard rigorosi di accettazione di ambasciate e istituzioni straniere.',
+          },
+        },
+      },
     },
     testimonial: {
       quote: '"Un\'esperienza fluida e completamente digitale"',
@@ -1330,6 +1515,43 @@ export const translations = {
       showLess: 'Mostrar menos',
       readMore: 'Ler mais',
       backToServices: 'Voltar para todos os serviços',
+      pricing: {
+        availableNow: 'Disponível agora',
+        noHiddenFee: 'Sem taxas ocultas',
+        sameDayDelivery: 'Entrega no mesmo dia',
+        secure: '100% seguro',
+        contactForPricing: 'Entre em contato para preços',
+        benefits: {
+          legallyValid: {
+            title: 'Válido legalmente em todo o mundo',
+            description: 'Nossas certificações são oficialmente reconhecidas por autoridades, bancos e governos internacionalmente.',
+          },
+          sameDay: {
+            title: 'Serviço no mesmo dia',
+            description: 'Obtenha seus documentos validados no mesmo dia. Entrega rápida para atender seus prazos urgentes.',
+          },
+          officialNotarization: {
+            title: 'Notarização oficial',
+            description: 'Cada documento é verificado e assinado digitalmente por um tabelião autorizado em exercício para validade legal completa.',
+          },
+          available247: {
+            title: 'Disponível 24/7',
+            description: 'Nossa plataforma e tabeliões estão acessíveis 24 horas por dia via vídeo. Agende a qualquer momento, dia ou noite.',
+          },
+          transparentFee: {
+            title: 'Taxa fixa transparente',
+            description: 'Sem custos ocultos, sem assinatura, tudo incluído.',
+          },
+          bankGradeSecurity: {
+            title: 'Segurança de nível bancário',
+            description: 'Protegemos seus dados pessoais com criptografia de alto nível (AES-256) e padrões rigorosos de confidencialidade.',
+          },
+          globalCompliance: {
+            title: 'Conformidade global',
+            description: 'Nossas certificações são projetadas para atender aos rigorosos padrões de aceitação de embaixadas e instituições estrangeiras.',
+          },
+        },
+      },
     },
     testimonial: {
       quote: '"Uma experiência suave e totalmente digital"',

@@ -174,11 +174,11 @@ const Navbar = memo(() => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isMobile ? 'px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
+      <nav className={`fixed w-full top-0 z-50 ${isMobile ? 'transition-transform duration-300 px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
         !isHeaderVisible && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div
-          className={`transition-all duration-300 ${isMobile ? 'rounded-2xl' : 'rounded-none bg-[#FEFEFE]'}`}
+          className={`${isMobile ? 'transition-all duration-300' : ''} ${isMobile ? 'rounded-2xl' : 'rounded-none bg-[#FEFEFE]'}`}
           style={isMobile ? (isMenuOpen ? {
             background: 'transparent',
             borderRadius: '16px',
@@ -196,7 +196,9 @@ const Navbar = memo(() => {
           }}
         >
           <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
-            <div className={`flex ${isMobile ? 'justify-between' : 'justify-center'} items-center ${isMobile ? 'h-14' : 'h-20'} overflow-visible ${isMobile ? '' : 'gap-8'}`}>
+            <div 
+              className={`flex items-center justify-between ${isMobile ? 'h-14' : 'h-20'}`}
+            >
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
@@ -207,8 +209,11 @@ const Navbar = memo(() => {
               />
             </a>
 
-            {/* Desktop Navigation - Centered with equal gaps */}
-            <div className={`${isMobile ? 'hidden' : 'flex'} items-center overflow-visible flex-shrink-0 gap-8`}>
+            {/* Desktop Navigation + CTA - Right aligned */}
+            <div 
+              className={`${isMobile ? 'hidden' : 'flex'} items-center gap-8 flex-shrink-0`}
+              style={{ marginLeft: 'auto' }}
+            >
               <a 
                 href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')} 
                 className="nav-link text-base whitespace-nowrap"
@@ -347,14 +352,14 @@ const Navbar = memo(() => {
 
               <div className="w-px h-6 bg-gray-300 flex-shrink-0"></div>
 
-              <div className="flex items-center gap-4 flex-shrink-0 whitespace-nowrap">
+              <div className="flex items-center gap-4 flex-shrink-0">
                 <LanguageSelector />
                 <CurrencySelector />
               </div>
 
               <a 
                 href="https://app.mynotary.io/login" 
-                className="nav-link text-base font-semibold whitespace-nowrap"
+                className="nav-link text-base font-semibold whitespace-nowrap flex-shrink-0"
                 onClick={() => {
                   trackPlausibleLoginClick('navbar_desktop');
                   trackLoginClick('navbar_desktop', location.pathname);
@@ -362,31 +367,21 @@ const Navbar = memo(() => {
               >
                 {t('nav.login')}
               </a>
-            </div>
 
-            {/* CTA Button */}
-            <div className={`${isMobile ? 'hidden' : 'flex'} items-center gap-3 overflow-visible flex-shrink-0`}>
-              <div className={`relative inline-flex items-center gap-3 overflow-visible flex-shrink-0`}>
-                <a 
-                  href={getFormUrl(currency, currentServiceId)} 
-                  className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
-                  onClick={() => {
-                    trackPlausibleCTAClick('navbar_desktop');
-                    trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
-                  }}
-                >
-                  <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
-                    <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white flex-shrink-0" />
-                    <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
-                  </span>
-                </a>
-                {formattedPrice && (
-                  <div className="text-white flex items-center gap-1 whitespace-nowrap flex-shrink-0">
-                    <span className="text-base font-semibold whitespace-nowrap">{formattedPrice}</span>
-                    <span className="text-xs font-normal text-white/70 whitespace-nowrap">{t('services.perDocument')} - no hidden fee</span>
-                  </div>
-                )}
-              </div>
+              {/* CTA Button */}
+              <a 
+                href={getFormUrl(currency, currentServiceId)} 
+                className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
+                onClick={() => {
+                  trackPlausibleCTAClick('navbar_desktop');
+                  trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
+                }}
+              >
+                <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
+                  <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white flex-shrink-0" />
+                  <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
+                </span>
+              </a>
             </div>
 
             {/* Animated Hamburger Menu Button */}

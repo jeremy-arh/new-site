@@ -627,6 +627,50 @@
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(4, 120, 87, 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(4, 120, 87, 0);
+  }
+}
+
+@keyframes pingDot {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(2.5);
+    opacity: 0.6;
+  }
+  75%, 100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
 /* Stagger Animation for Lists */
 @keyframes staggerFadeIn {
   from {
@@ -659,3 +703,54 @@
 .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
 .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
 .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Animated waves for glassy pricing block */
+@keyframes wave-1 {
+  0% {
+    transform: translateX(0) translateY(50%);
+  }
+  50% {
+    transform: translateX(-25%) translateY(45%);
+  }
+  100% {
+    transform: translateX(0) translateY(50%);
+  }
+}
+
+@keyframes wave-2 {
+  0% {
+    transform: translateX(0) translateY(50%);
+  }
+  50% {
+    transform: translateX(25%) translateY(55%);
+  }
+  100% {
+    transform: translateX(0) translateY(50%);
+  }
+}
+
+@keyframes wave-3 {
+  0% {
+    transform: translateX(0) translateY(50%);
+  }
+  50% {
+    transform: translateX(-15%) translateY(48%);
+  }
+  100% {
+    transform: translateX(0) translateY(50%);
+  }
+}
+
+.animate-wave-1 {
+  animation: wave-1 8s ease-in-out infinite;
+}
+
+.animate-wave-2 {
+  animation: wave-2 10s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.animate-wave-3 {
+  animation: wave-3 12s ease-in-out infinite;
+  animation-delay: -4s;
+}
