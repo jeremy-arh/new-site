@@ -2,8 +2,10 @@ import { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import logoBlanc from '../assets/logo-blanc.svg';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Footer = memo(() => {
+  const { t } = useTranslation();
   const [recentPosts, setRecentPosts] = useState([]);
 
   const fetchRecentPosts = useCallback(async () => {
@@ -109,6 +111,13 @@ const Footer = memo(() => {
 
         {/* Divider */}
         <div className="border-t border-gray-800 my-8"></div>
+
+        {/* Disclaimer */}
+        <div className="mb-6">
+          <p className="text-xs text-gray-500 leading-relaxed max-w-4xl mx-auto text-center">
+            {t('footer.disclaimer')}
+          </p>
+        </div>
 
         {/* Copyright */}
         <div className="text-center">

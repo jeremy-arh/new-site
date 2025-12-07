@@ -234,6 +234,10 @@ export const translations = {
       contact: 'Contact us',
       notarize: 'Notarize now',
     },
+    // Footer
+    footer: {
+      disclaimer: 'Disclaimer: MyNotary is a private company and is not affiliated with any government agency. We strictly provide professional notary services for certifying copies of existing documents. We do not issue, renew, or sell official government documents like passports.',
+    },
   },
   fr: {
     nav: {
@@ -454,6 +458,10 @@ export const translations = {
       description: 'Notre équipe vous répond en moins de 2 heures. Disponible du lundi au vendredi, 9h-18h.',
       contact: 'Parler à un conseiller',
       notarize: 'Commencer maintenant',
+    },
+    // Footer
+    footer: {
+      disclaimer: 'Avertissement : MyNotary est une entreprise privée et n\'est affiliée à aucune agence gouvernementale. Nous fournissons strictement des services notariaux professionnels pour certifier des copies de documents existants. Nous n\'émettons pas, ne renouvelons pas et ne vendons pas de documents gouvernementaux officiels comme les passeports.',
     },
   },
   es: {
@@ -678,6 +686,10 @@ export const translations = {
       contact: 'Hablar con un asesor',
       notarize: 'Empezar ahora',
     },
+    // Footer
+    footer: {
+      disclaimer: 'Descargo de responsabilidad: MyNotary es una empresa privada y no está afiliada a ninguna agencia gubernamental. Proporcionamos estrictamente servicios notariales profesionales para certificar copias de documentos existentes. No emitimos, renovamos ni vendemos documentos gubernamentales oficiales como pasaportes.',
+    },
   },
   de: {
     nav: {
@@ -900,6 +912,10 @@ export const translations = {
       description: 'Unser Team antwortet Ihnen innerhalb von 2 Stunden. Erreichbar Montag bis Freitag, 9-18 Uhr.',
       contact: 'Mit Berater sprechen',
       notarize: 'Jetzt starten',
+    },
+    // Footer
+    footer: {
+      disclaimer: 'Haftungsausschluss: MyNotary ist ein privates Unternehmen und steht in keiner Verbindung zu einer Regierungsbehörde. Wir bieten ausschließlich professionelle Notardienstleistungen zur Zertifizierung von Kopien bestehender Dokumente an. Wir stellen keine offiziellen Regierungsdokumente wie Pässe aus, erneuern oder verkaufen sie nicht.',
     },
   },
   it: {
@@ -1124,6 +1140,10 @@ export const translations = {
       contact: 'Parla con un consulente',
       notarize: 'Inizia ora',
     },
+    // Footer
+    footer: {
+      disclaimer: 'Disclaimer: MyNotary è un\'azienda privata e non è affiliata ad alcuna agenzia governativa. Forniamo rigorosamente servizi notarili professionali per certificare copie di documenti esistenti. Non emettiamo, rinnoviamo o vendiamo documenti governativi ufficiali come i passaporti.',
+    },
   },
   pt: {
     nav: {
@@ -1346,6 +1366,10 @@ export const translations = {
       description: 'Nossa equipe responde em menos de 2 horas. Disponível de segunda a sexta, 9h-18h.',
       contact: 'Falar com um consultor',
       notarize: 'Começar agora',
+    },
+    // Footer
+    footer: {
+      disclaimer: 'Aviso Legal: MyNotary é uma empresa privada e não está afiliada a nenhuma agência governamental. Fornecemos estritamente serviços notariais profissionais para certificar cópias de documentos existentes. Não emitimos, renovamos ou vendemos documentos governamentais oficiais como passaportes.',
     },
   },
 };
