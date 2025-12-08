@@ -34,26 +34,18 @@ const TermsConditions = () => {
       <section className="py-20 px-[30px]">
         <div className="max-w-[1100px] mx-auto">
           <div className="prose prose-lg max-w-none">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">MY NOTARY</h2>
-              <hr className="border-gray-300 my-6" />
-            </div>
-
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">1. PLATFORM OVERVIEW</h2>
             <p className="text-gray-600 mb-6">
-              My Notary (hereinafter "the Platform") is an online service accessible via the website mynotary.io, operated by My Notary, SIRET 79116757000021 (hereinafter "My Notary", "we", "our"), which connects clients with certified notaries for the notarization of documents intended for international use.
-            </p>
-            <p className="text-gray-600 mb-6">
-              The Platform facilitates appointment scheduling, remote online notarization (RON) sessions, and apostille processing in accordance with the Hague Convention.
+              My Notary (hereinafter "the Platform") is an online service accessible via the website mynotary.io, operated by My Notary (hereinafter "My Notary", "we", "our"), which connects clients with certified notaries for the notarization of documents intended for international use. The Platform facilitates appointment scheduling, remote online notarization (RON) sessions, and apostille processing in accordance with the Hague Convention.
             </p>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">2. DEFINITIONS</h2>
             <ul className="list-disc pl-6 text-gray-600 mb-6 space-y-2">
-              <li><strong>Client</strong>: any natural or legal person using the Platform to have documents notarized</li>
-              <li><strong>Notary</strong>: certified and licensed public notary, partner of the Platform</li>
-              <li><strong>RON</strong>: Remote Online Notarization, remote notarization procedure via video conference</li>
-              <li><strong>Apostille</strong>: official certification attesting to the authenticity of a public document for international use</li>
-              <li><strong>Services</strong>: all services offered by the Platform</li>
+              <li><strong>Client</strong>: Any natural or legal person using the Platform to have documents notarized.</li>
+              <li><strong>Notary</strong>: Certified and licensed public notary, partner of the Platform.</li>
+              <li><strong>RON</strong>: Remote Online Notarization, a remote notarization procedure via video conference.</li>
+              <li><strong>Apostille</strong>: Official certification attesting to the authenticity of a public document for international use.</li>
+              <li><strong>Services</strong>: All services offered by the Platform.</li>
             </ul>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">3. ACCEPTANCE OF TERMS</h2>
@@ -128,8 +120,6 @@ const TermsConditions = () => {
             <ul className="list-disc pl-6 text-gray-600 mb-6 space-y-2">
               <li>Legal advice</li>
               <li>Interpretation of your document content</li>
-              <li>Guarantee of acceptance of your documents by destination authorities</li>
-              <li>Translation services</li>
             </ul>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">6. CLIENT OBLIGATIONS</h2>
@@ -175,13 +165,15 @@ const TermsConditions = () => {
             
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">8.1 Service Prices</h3>
             <p className="text-gray-600 mb-6">
-              Our Services rates are indicated on the Platform in euros (€) and include:
+              Our Services rates are indicated on the Platform in the applicable currencies (e.g., Euros, Dollars, etc.).
+            </p>
+            <p className="text-gray-600 mb-4">
+              The displayed price corresponds to the rate per notarized document. This base rate does not include the following items, which are charged as supplements or options at the prices indicated on the Platform:
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li>Notary fees</li>
-              <li>Platform service fees</li>
-              <li>Apostille fees</li>
-              <li>Shipping fees (depending on the option chosen)</li>
+              <li>The cost for any additional signatory added to the main signatory</li>
+              <li>Apostille fees (optional service)</li>
+              <li>Shipping fees (optional service)</li>
             </ul>
             <p className="text-gray-600 mb-6">
               Prices are subject to change at any time, but the applicable rates are those in effect at the time of booking.
@@ -194,7 +186,7 @@ const TermsConditions = () => {
               <li>Other payment methods available on the Platform</li>
             </ul>
             <p className="text-gray-600 mb-6">
-              Payment is due at the time of appointment booking.
+              Financial transactions are secured and processed by our payment service provider, Stripe. Payment is due at the time of appointment booking.
             </p>
 
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">8.3 Invoicing</h3>
@@ -251,9 +243,8 @@ const TermsConditions = () => {
             
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">11.1 Collection and Processing</h3>
             <p className="text-gray-600 mb-4">
-              My Notary collects and processes your personal data in accordance with the General Data Protection Regulation (GDPR) and applicable laws.
+              My Notary collects and processes your personal data in accordance with the General Data Protection Regulation (GDPR) and applicable laws. Data collected includes:
             </p>
-            <p className="text-gray-600 mb-4">Data collected includes:</p>
             <ul className="list-disc pl-6 text-gray-600 mb-6 space-y-2">
               <li>Identification information</li>
               <li>Contact details</li>
@@ -331,7 +322,7 @@ const TermsConditions = () => {
               <li>Service interruptions related to force majeure</li>
               <li>Errors in documents provided by the Client</li>
               <li>Rejection of your documents by destination authorities</li>
-              <li>Legal consequences of the content of your documents</li>
+              <li>Legal consequences related to the content of your documents</li>
             </ul>
 
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">13.3 Client Warranties</h3>
@@ -360,10 +351,7 @@ const TermsConditions = () => {
             
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">15.1 Complaints</h3>
             <p className="text-gray-600 mb-6">
-              For any complaint, contact our customer service at: <a href="mailto:support@mynotary.io" className="text-black font-semibold hover:underline">support@mynotary.io</a>
-            </p>
-            <p className="text-gray-600 mb-6">
-              We commit to responding within [X] business days.
+              For any complaint, contact our customer service at: <a href="mailto:support@mynotary.io" className="text-black font-semibold hover:underline">support@mynotary.io</a> We commit to responding within [X] business days.
             </p>
 
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">15.2 Mediation</h3>
@@ -415,7 +403,6 @@ const TermsConditions = () => {
             </p>
             <div className="text-gray-600 mb-6 space-y-2">
               <p><strong>My Notary</strong></p>
-              <p>SIRET: 79116757000021</p>
               <p>Email: <a href="mailto:support@mynotary.io" className="text-black font-semibold hover:underline">support@mynotary.io</a></p>
             </div>
 
