@@ -27,7 +27,7 @@ const getFlagUrl = (lang) => {
 };
 
 const LanguageSelector = () => {
-  const { language, setLanguage, supportedLanguages, isLoading } = useLanguage();
+  const { language, setLanguage, supportedLanguages } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -52,10 +52,6 @@ const LanguageSelector = () => {
     setLanguage(newLanguage);
     setIsOpen(false);
   };
-
-  if (isLoading) {
-    return null; // Ne rien afficher pendant le chargement
-  }
 
   return (
     <div className="relative" ref={dropdownRef}>

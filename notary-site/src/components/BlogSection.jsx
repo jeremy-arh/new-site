@@ -8,7 +8,6 @@ import { formatBlogPostsForLanguage } from '../utils/blog';
 
 const BlogSection = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const { language, getLocalizedPath } = useLanguage();
 
@@ -32,8 +31,6 @@ const BlogSection = () => {
       setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -64,11 +61,7 @@ const BlogSection = () => {
         </div>
 
         {/* Blog Cards */}
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          </div>
-        ) : posts.length === 0 ? (
+        {posts.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 text-lg">{t('blog.noArticles')}</p>
           </div>

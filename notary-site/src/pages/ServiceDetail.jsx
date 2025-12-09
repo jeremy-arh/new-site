@@ -3,7 +3,6 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
 import { supabase } from '../lib/supabase';
-import { cache } from '../utils/cache';
 import { Icon } from '@iconify/react';
 import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
@@ -18,12 +17,10 @@ import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
 import MobileCTA from '../components/MobileCTA';
 import PriceDisplay from '../components/PriceDisplay';
-import bgService from '../assets/bg-service.svg';
 
 // Other Services Section Component
 const OtherServicesSection = ({ currentServiceId }) => {
   const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const { language, getLocalizedPath } = useLanguage();
   const location = useLocation();
@@ -50,22 +47,8 @@ const OtherServicesSection = ({ currentServiceId }) => {
       setServices(formattedServices);
     } catch (error) {
       console.error('Error fetching other services:', error);
-    } finally {
-      setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <section id="other-services" className="py-20 px-4 sm:px-[30px] bg-white">
-        <div className="max-w-[1300px] mx-auto">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (services.length === 0) {
     return null;
@@ -132,7 +115,6 @@ const ServiceDetail = () => {
   const { serviceId: rawServiceId } = useParams();
   const location = useLocation();
   const [service, setService] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const { formatPrice, currency } = useCurrency();
@@ -166,11 +148,9 @@ const ServiceDetail = () => {
   const fetchService = async () => {
     if (!serviceId) {
       setError(t('common.error'));
-      setLoading(false);
       return;
     }
 
-    setLoading(true);
     setError(null);
 
     try {
@@ -188,7 +168,6 @@ const ServiceDetail = () => {
 
       if (!data) {
         setError(t('common.error'));
-        setLoading(false);
         return;
       }
 
@@ -218,18 +197,8 @@ const ServiceDetail = () => {
     } catch (error) {
       console.error('Error fetching service:', error);
       setError(t('serviceDetail.loadServiceError'));
-    } finally {
-      setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
 
   if (error || !service) {
     return (
@@ -283,7 +252,7 @@ const ServiceDetail = () => {
         <div
           className="relative overflow-hidden min-h-screen flex items-center"
           style={{
-            backgroundImage: `url(${bgService})`,
+            backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/91775e7d-05e2-40fc-1ba0-717d004a1900/public)`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}

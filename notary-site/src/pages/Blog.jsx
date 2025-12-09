@@ -11,7 +11,6 @@ import MobileCTA from '../components/MobileCTA';
 const Blog = () => {
   const location = useLocation();
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categories, setCategories] = useState([]);
   const { t } = useTranslation();
@@ -48,8 +47,6 @@ const Blog = () => {
       setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -143,11 +140,7 @@ const Blog = () => {
       {/* Blog Posts Grid */}
       <section className="py-20 px-[30px] bg-white">
         <div className="max-w-[1300px] mx-auto">
-          {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-            </div>
-          ) : posts.length === 0 ? (
+          {posts.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-600 text-lg">{t('blog.noArticlesCategory')}</p>
             </div>

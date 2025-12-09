@@ -11,7 +11,6 @@ import PriceDisplay from './PriceDisplay';
 
 const Services = () => {
   const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { language, getLocalizedPath } = useLanguage();
   const { t } = useTranslation();
 
@@ -37,8 +36,6 @@ const Services = () => {
       setServices(formattedServices);
     } catch (error) {
       console.error('Error fetching services:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -55,11 +52,7 @@ const Services = () => {
           </h2>
         </div>
 
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          </div>
-        ) : services.length === 0 ? (
+        {services.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 text-lg">{t('services.noServices')}</p>
           </div>

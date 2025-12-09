@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
-import logoNoir from '../assets/logo-noir.svg';
-import logoBlanc from '../assets/logo-blanc.svg';
 import { trackCTAClick as trackPlausibleCTAClick, trackLoginClick as trackPlausibleLoginClick, trackNavigationClick as trackPlausibleNavigationClick } from '../utils/plausible';
 import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -202,7 +200,7 @@ const Navbar = memo(() => {
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
-                src={isMobile && !isMenuOpen ? logoBlanc : logoNoir}
+                src={isMobile && !isMenuOpen ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public' : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/public'}
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
                 width="130"

@@ -11,21 +11,17 @@
  */
 
 // Import all images statically to avoid issues with import.meta.glob and Terser
-import heroBg from '../assets/hero-bg.svg';
 import step1 from '../assets/step-1.svg';
 import step2 from '../assets/step-2.svg';
 import step3 from '../assets/step-3.svg';
 import step4 from '../assets/step-4.svg';
-import testimonialAvatar from '../assets/testimonial-avatar.svg';
 
 // Image map for lookup
 const imageMap = {
-  'hero-bg': heroBg,
   'step-1': step1,
   'step-2': step2,
   'step-3': step3,
   'step-4': step4,
-  'testimonial-avatar': testimonialAvatar,
 };
 
 export const getImageUrl = (imageName) => {

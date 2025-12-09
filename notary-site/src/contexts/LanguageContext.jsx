@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const LanguageContext = createContext({
   language: DEFAULT_LANGUAGE,
-  isLoading: true,
   setLanguage: () => {},
   getLocalizedPath: () => {},
 });
@@ -19,7 +18,6 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguageState] = useState(DEFAULT_LANGUAGE);
-  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -44,7 +42,6 @@ export const LanguageProvider = ({ children }) => {
           // Si une langue est dans l'URL, l'utilise et la sauvegarde
           setLanguageState(urlLanguage);
           saveLanguageToStorage(urlLanguage);
-          setIsLoading(false);
           return;
         }
 
@@ -52,7 +49,6 @@ export const LanguageProvider = ({ children }) => {
         const savedLanguage = getLanguageFromStorage();
         if (savedLanguage !== DEFAULT_LANGUAGE) {
           setLanguageState(savedLanguage);
-          setIsLoading(false);
           // Redirige vers l'URL avec la langue si nécessaire
           const newPath = getLocalizedPath(location.pathname, savedLanguage);
           if (newPath !== location.pathname) {
@@ -75,8 +71,6 @@ export const LanguageProvider = ({ children }) => {
         }
       } catch (error) {
         console.warn('Error initializing language:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -113,7 +107,6 @@ export const LanguageProvider = ({ children }) => {
   return (
     <LanguageContext.Provider value={{
       language,
-      isLoading,
       setLanguage,
       getLocalizedPath,
       supportedLanguages: SUPPORTED_LANGUAGES,

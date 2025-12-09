@@ -14,12 +14,10 @@ import { useTranslation } from '../hooks/useTranslation';
 import { formatBlogPostForLanguage, formatBlogPostsForLanguage } from '../utils/blog';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
-import ctaBg from '../assets/cta-bg.webp';
 
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hasHeadings, setHasHeadings] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState([]);
@@ -92,7 +90,6 @@ const BlogPost = () => {
 
         if (!data) {
           setError('Article not found');
-          setLoading(false);
           return;
         }
 
@@ -103,7 +100,6 @@ const BlogPost = () => {
       } catch (error) {
         console.error('Error fetching blog post:', error);
         setError('Failed to load article');
-        setLoading(false);
         return;
       }
     }
@@ -120,11 +116,9 @@ const BlogPost = () => {
         .from('blog_posts')
         .update({ views_count: (postData.views_count || 0) + 1 })
         .eq('id', postData.id)
-        .then(() => {})
-        .catch((err) => console.error('Error updating view count:', err));
+      .then(() => {})
+      .catch((err) => console.error('Error updating view count:', err));
     }
-
-    setLoading(false);
   };
 
   const fetchRelatedPosts = async () => {
@@ -181,14 +175,6 @@ const BlogPost = () => {
       day: 'numeric'
     });
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
 
   if (error || !post) {
     return (
@@ -333,7 +319,7 @@ const BlogPost = () => {
           <div 
             className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
             style={{
-              backgroundImage: `url(${ctaBg})`,
+              backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d84aca7a-998a-4ff6-1862-7676557ab400/public)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'

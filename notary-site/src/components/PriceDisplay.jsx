@@ -6,15 +6,15 @@ import { useTranslation } from '../hooks/useTranslation';
  * Component to display price with automatic currency conversion
  */
 const PriceDisplay = ({ price, showFrom = false, className = '' }) => {
-  const { formatPrice, isLoading } = useCurrency();
+  const { formatPrice } = useCurrency();
   const { t } = useTranslation();
   const [formattedPrice, setFormattedPrice] = useState(`${price}€`);
 
   useEffect(() => {
-    if (price && !isLoading) {
+    if (price) {
       formatPrice(price).then(setFormattedPrice);
     }
-  }, [price, formatPrice, isLoading]);
+  }, [price, formatPrice]);
 
   if (!price) return null;
 
@@ -27,11 +27,6 @@ const PriceDisplay = ({ price, showFrom = false, className = '' }) => {
 };
 
 export default PriceDisplay;
-
-
-
-
-
 
 
 

@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter as Router, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { CurrencyProvider, useCurrency } from './contexts/CurrencyContext'
@@ -12,13 +12,6 @@ import { useScrollAnimation } from './hooks/useScrollAnimation'
 import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices, prefetchForm } from './utils/prefetch'
 import { trackPageView as trackPlausiblePageView } from './utils/plausible'
 import { trackPageView, trackScrollDepth } from './utils/analytics'
-
-// Loading component
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-  </div>
-)
 
 // Component to track page views and scroll depth
 function PageViewTracker() {
@@ -125,9 +118,7 @@ function App() {
             <FormPrefetcher />
             <div className="min-h-screen">
               <Navbar />
-              <Suspense fallback={<PageLoader />}>
-                <LanguageRouter />
-              </Suspense>
+              <LanguageRouter />
               <Footer />
               <CTAPopup />
             </div>

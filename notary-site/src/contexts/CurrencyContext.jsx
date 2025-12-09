@@ -3,7 +3,6 @@ import { initializeCurrency, convertPrice } from '../utils/currency';
 
 const CurrencyContext = createContext({
   currency: 'EUR',
-  isLoading: true,
   formatPrice: (price) => `${price}€`,
   setCurrency: () => {},
 });
@@ -20,7 +19,6 @@ const USER_CURRENCY_KEY = 'user_selected_currency';
 
 export const CurrencyProvider = ({ children }) => {
   const [currency, setCurrencyState] = useState('EUR');
-  const [isLoading, setIsLoading] = useState(true);
   const [conversionCache, setConversionCache] = useState({});
 
   // Load user-selected currency from localStorage or detect from IP
@@ -31,7 +29,6 @@ export const CurrencyProvider = ({ children }) => {
         const savedCurrency = localStorage.getItem(USER_CURRENCY_KEY);
         if (savedCurrency) {
           setCurrencyState(savedCurrency);
-          setIsLoading(false);
           return;
         }
 
@@ -40,8 +37,6 @@ export const CurrencyProvider = ({ children }) => {
         setCurrencyState(detectedCurrency);
       } catch (error) {
         console.warn('Error initializing currency:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -92,7 +87,6 @@ export const CurrencyProvider = ({ children }) => {
   return (
     <CurrencyContext.Provider value={{
       currency,
-      isLoading,
       formatPrice,
       formatPriceSync,
       setCurrency,

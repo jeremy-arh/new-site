@@ -1,6 +1,5 @@
 import { memo, useMemo, useState, useEffect, useCallback } from 'react';
 import { Icon } from '@iconify/react';
-import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -8,7 +7,7 @@ import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
 
 const Hero = memo(() => {
-  const heroBg = useMemo(() => getImageUrl('hero-bg'), []);
+  const heroBg = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/public';
   const { currency } = useCurrency();
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
