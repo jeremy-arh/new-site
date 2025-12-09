@@ -50,7 +50,7 @@ const DEFAULT_CURRENCY = 'EUR';
 /**
  * Get currency from cache
  */
-const getCachedCurrency = () => {
+export const getCachedCurrency = () => {
   try {
     const cached = localStorage.getItem(CURRENCY_CACHE_KEY);
     if (cached) {

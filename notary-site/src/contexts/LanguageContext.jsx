@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { initializeLanguage, saveLanguageToStorage, getLanguageFromStorage, extractLanguageFromPath, removeLanguageFromPath, addLanguageToPath, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../utils/language';
+import { detectLanguageFromIP, saveLanguageToStorage, getLanguageFromStorage, extractLanguageFromPath, removeLanguageFromPath, addLanguageToPath, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../utils/language';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const LanguageContext = createContext({
@@ -31,57 +31,56 @@ export const LanguageProvider = ({ children }) => {
     return addLanguageToPath(cleanPath, targetLang);
   };
 
-  // Initialise la langue au chargement
+  // Initialise la langue au chargement (sans bloquer le rendu)
   useEffect(() => {
-    const init = async () => {
+    // 1) Langue dans l'URL prioritaire
+    const urlLanguage = extractLanguageFromPath(location.pathname);
+    if (urlLanguage && urlLanguage !== DEFAULT_LANGUAGE) {
+      setLanguageState(urlLanguage);
+      saveLanguageToStorage(urlLanguage);
+      return;
+    }
+
+    // 2) Langue sauvegardée
+    const savedLanguage = getLanguageFromStorage();
+    if (savedLanguage && savedLanguage !== DEFAULT_LANGUAGE) {
+      setLanguageState(savedLanguage);
+      const newPath = getLocalizedPath(location.pathname, savedLanguage);
+      if (newPath !== location.pathname) {
+        navigate(newPath, { replace: true });
+      }
+      return;
+    }
+
+    // 3) Langue par défaut immédiate, détection IP différée
+    const applyDetectedLanguage = async () => {
       try {
-        // Vérifie d'abord si une langue est présente dans l'URL
-        const urlLanguage = extractLanguageFromPath(location.pathname);
-        
-        if (urlLanguage !== DEFAULT_LANGUAGE) {
-          // Si une langue est dans l'URL, l'utilise et la sauvegarde
-          setLanguageState(urlLanguage);
-          saveLanguageToStorage(urlLanguage);
-          return;
-        }
-
-        // Sinon, vérifie le localStorage
-        const savedLanguage = getLanguageFromStorage();
-        if (savedLanguage !== DEFAULT_LANGUAGE) {
-          setLanguageState(savedLanguage);
-          // Redirige vers l'URL avec la langue si nécessaire
-          const newPath = getLocalizedPath(location.pathname, savedLanguage);
-          if (newPath !== location.pathname) {
-            navigate(newPath, { replace: true });
-          }
-          return;
-        }
-
-        // Sinon, détecte via IP
-        const detectedLanguage = await initializeLanguage();
-        setLanguageState(detectedLanguage);
-        saveLanguageToStorage(detectedLanguage);
-        
-        // Redirige vers l'URL avec la langue si nécessaire
-        if (detectedLanguage !== DEFAULT_LANGUAGE) {
-          const newPath = getLocalizedPath(location.pathname, detectedLanguage);
-          if (newPath !== location.pathname) {
-            navigate(newPath, { replace: true });
+        const detectedLanguage = await detectLanguageFromIP();
+        if (detectedLanguage && detectedLanguage !== language) {
+          setLanguageState(detectedLanguage);
+          saveLanguageToStorage(detectedLanguage);
+          if (detectedLanguage !== DEFAULT_LANGUAGE) {
+            const newPath = getLocalizedPath(location.pathname, detectedLanguage);
+            if (newPath !== location.pathname) {
+              navigate(newPath, { replace: true });
+            }
           }
         }
       } catch (error) {
-        console.warn('Error initializing language:', error);
+        console.warn('Error detecting language from IP:', error);
       }
     };
 
-    init();
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(applyDetectedLanguage, { timeout: 2000 });
+    } else {
+      setTimeout(applyDetectedLanguage, 1500);
+    }
   }, []); // Seulement au montage initial
 
   // Met à jour la langue quand l'URL change (mais seulement si c'est un changement d'URL, pas un changement de langue manuel)
   useEffect(() => {
     const urlLanguage = extractLanguageFromPath(location.pathname);
-    // Ne mettre à jour que si la langue dans l'URL est différente ET que ce n'est pas juste un changement de langue manuel
-    // On vérifie aussi que la langue dans l'URL est valide pour éviter les boucles
     if (urlLanguage !== language && SUPPORTED_LANGUAGES.includes(urlLanguage)) {
       setLanguageState(urlLanguage);
       saveLanguageToStorage(urlLanguage);

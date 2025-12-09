@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { initializeCurrency, convertPrice } from '../utils/currency';
+import { initializeCurrency, convertPrice, getCachedCurrency } from '../utils/currency';
 
 const CurrencyContext = createContext({
   currency: 'EUR',
@@ -21,26 +21,38 @@ export const CurrencyProvider = ({ children }) => {
   const [currency, setCurrencyState] = useState('EUR');
   const [conversionCache, setConversionCache] = useState({});
 
-  // Load user-selected currency from localStorage or detect from IP
+  // Load user-selected currency from localStorage or detect from IP (différé)
   useEffect(() => {
-    const init = async () => {
-      try {
-        // Check if user has manually selected a currency
-        const savedCurrency = localStorage.getItem(USER_CURRENCY_KEY);
-        if (savedCurrency) {
-          setCurrencyState(savedCurrency);
-          return;
-        }
+    // 1) Priorité : choix utilisateur stocké
+    const savedCurrency = localStorage.getItem(USER_CURRENCY_KEY);
+    if (savedCurrency) {
+      setCurrencyState(savedCurrency);
+      return;
+    }
 
-        // Otherwise, detect from IP
+    // 2) Cache (évite le fetch dès le chargement)
+    const cached = getCachedCurrency();
+    if (cached) {
+      setCurrencyState(cached);
+    }
+
+    // 3) Détection différée (hors chemin critique)
+    const runDetection = async () => {
+      try {
         const detectedCurrency = await initializeCurrency();
-        setCurrencyState(detectedCurrency);
+        if (detectedCurrency) {
+          setCurrencyState(detectedCurrency);
+        }
       } catch (error) {
         console.warn('Error initializing currency:', error);
       }
     };
 
-    init();
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(runDetection, { timeout: 2000 });
+    } else {
+      setTimeout(runDetection, 1500);
+    }
   }, []);
 
   // Function to set currency (called by CurrencySelector)

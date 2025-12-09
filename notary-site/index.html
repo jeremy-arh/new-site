@@ -28,8 +28,17 @@
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://plausible.io" />
     <link rel="dns-prefetch" href="https://client.crisp.chat" />
+    <link rel="dns-prefetch" href="https://ipapi.co" />
+    <link rel="dns-prefetch" href="https://api.exchangerate-api.com" />
+    <link rel="dns-prefetch" href="https://flagcdn.com" />
+    <link rel="dns-prefetch" href="https://imagedelivery.net" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://plausible.io" />
+    <link rel="preconnect" href="https://ipapi.co" crossorigin />
+    <link rel="preconnect" href="https://api.exchangerate-api.com" crossorigin />
+    <link rel="preconnect" href="https://flagcdn.com" crossorigin />
+    <link rel="preconnect" href="https://imagedelivery.net" crossorigin />
     <!-- Preconnect to Supabase for faster API calls -->
     <link rel="preconnect" href="https://api.supabase.co" crossorigin />
 
@@ -40,17 +49,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <!-- Preload critical fonts and styles only -->
-    <!-- Images are loaded via React components, no need to preload in HTML -->
+    <!-- Preload LCP images -->
+    <link rel="preload" as="image" href="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/public" />
+    <link rel="preload" as="image" href="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/91775e7d-05e2-40fc-1ba0-717d004a1900/public" />
+    <link rel="preload" as="image" href="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d84aca7a-998a-4ff6-1862-7676557ab400/public" />
     
     <!-- Plausible Analytics -->
     <script defer data-domain="mynotary.io" src="https://plausible.io/js/script.js"></script>
     
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MR7JDNSD');</script>
+    <!-- Google Tag Manager - chargé en différé pour ne pas bloquer le rendu -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function loadGTM() {
+        var f = document.getElementsByTagName('script')[0];
+        var j = document.createElement('script');
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MR7JDNSD';
+        f.parentNode.insertBefore(j, f);
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGTM, { timeout: 2000 });
+      } else {
+        setTimeout(loadGTM, 1500);
+      }
+    </script>
     <!-- End Google Tag Manager -->
   </head>
   <body>
@@ -62,17 +84,22 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Crisp Chat - Loaded async to not block rendering -->
+    <!-- Crisp Chat - différé après rendu -->
     <script type="text/javascript">
       window.$crisp=[];
       window.CRISP_WEBSITE_ID="fd0c2560-46ba-4da6-8979-47748ddf247a";
-      (function(){
-        d=document;
-        s=d.createElement("script");
+      function loadCrisp(){
+        var d=document;
+        var s=d.createElement("script");
         s.src="https://client.crisp.chat/l.js";
         s.async=1;
         d.getElementsByTagName("head")[0].appendChild(s);
-      })();
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadCrisp, { timeout: 3000 });
+      } else {
+        setTimeout(loadCrisp, 2500);
+      }
     </script>
   </body>
 </html>
