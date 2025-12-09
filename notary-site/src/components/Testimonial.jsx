@@ -5,6 +5,12 @@ const Testimonial = memo(() => {
   const { t, language } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Helper pour fallback si la traduction manque (évite d'afficher la clé)
+  const tt = (key, fallback) => {
+    const value = t(key);
+    return value === key ? fallback : value;
+  };
+
   // 4 testimonials avec traductions
   const testimonials = [
     {
@@ -45,41 +51,39 @@ const Testimonial = memo(() => {
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="py-20 px-[30px] bg-white overflow-hidden">
-      <div className="max-w-[1300px] mx-auto">
-        <div className="bg-gray-50 rounded-3xl overflow-hidden shadow-2xl transition-shadow duration-500 scroll-fade-in">
-          {/* Content */}
-          <div className="p-8 lg:p-12 flex flex-col justify-center space-y-6 relative min-h-[400px]">
-            {/* Carousel transition */}
+    <section className="pt-16 md:pt-24 pb-10 md:pb-16 px-4 sm:px-[30px] bg-white overflow-hidden scroll-mt-28 md:scroll-mt-32">
+      <div className="max-w-[1100px] mx-auto scroll-fade-in">
+        <div className="relative rounded-3xl overflow-hidden">
+          {/* Carousel */}
+          <div className="p-6 sm:p-8 lg:p-12 flex flex-col justify-center space-y-6 relative min-h-[360px] sm:min-h-[420px]">
             <div className="relative overflow-hidden">
-              <div 
+              <div
                 className="flex transition-transform duration-700 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
                 {testimonials.map((testimonial, index) => (
-                  <div 
+                  <div
                     key={index}
-                    className="w-full flex-shrink-0 px-4"
+                    className="w-full flex-shrink-0 px-1 sm:px-4"
                   >
-                    <div className="relative">
-                      <svg className="w-12 h-12 text-gray-300 opacity-50 absolute -top-4 -left-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                      </svg>
-                      <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 relative z-10">
+                    <div className="relative mb-5 sm:mb-6 pt-2 sm:pt-4 pl-1 sm:pl-2">
+                      <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center shadow-md">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" d="M7 12h4m-4 0c0-3.866 3.134-7 7-7v2c-2.761 0-5 2.239-5 5h2c0 2.761-2.239 5-5 5v-2c1.657 0 3-1.343 3-3H7Zm8 0h4m-4 0c0-3.866 3.134-7 7-7v2c-2.761 0-5 2.239-5 5h2c0 2.761-2.239 5-5 5v-2c1.657 0 3-1.343 3-3h-2Z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 leading-snug pl-14 sm:pl-16">
                         {testimonial.quote}
                       </h3>
                     </div>
 
-                    <p className="text-gray-700 text-lg leading-relaxed">
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed lg:text-lg">
                       {testimonial.text}
                     </p>
 
-                    <div className="flex items-center gap-4 pt-4">
-                      <div className="w-1 h-16 bg-black rounded-full"></div>
-                      <div>
-                        <div className="text-xl font-bold text-gray-900 mb-1">{testimonial.author}</div>
-                        <div className="text-sm text-gray-600 font-semibold">{testimonial.role}</div>
-                      </div>
+                    <div className="pt-5 sm:pt-6 text-left">
+                      <div className="text-base sm:text-lg font-semibold text-gray-900">{testimonial.author}</div>
+                      <div className="text-[11px] sm:text-xs text-gray-600 font-medium uppercase tracking-wide mt-0.5">{testimonial.role}</div>
                     </div>
                   </div>
                 ))}
@@ -87,13 +91,13 @@ const Testimonial = memo(() => {
             </div>
 
             {/* Indicators */}
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-2 mt-6">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentIndex ? 'bg-black w-8' : 'bg-gray-300 w-2'
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    index === currentIndex ? 'bg-gray-900 w-10' : 'bg-gray-300 w-3'
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />

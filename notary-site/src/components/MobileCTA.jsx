@@ -69,7 +69,7 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
               }}
             >
               <span className="btn-text inline-block inline-flex items-center justify-center gap-2">
-                <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+                <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white" />
                 {defaultCtaText}
               </span>
             </a>

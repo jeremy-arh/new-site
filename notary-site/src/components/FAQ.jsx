@@ -62,16 +62,16 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="py-20 px-[30px] bg-gray-50 overflow-hidden">
+    <section id="faq" className="py-16 md:py-20 px-2 md:px-6 bg-gray-50 overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
+        <div className="text-center mb-10">
+          <div className="inline-block px-3 py-2 bg-black text-white rounded-full text-sm font-semibold mb-3 scroll-fade-in">
             {t('faq.title')}
           </div>
         </div>
 
         {/* Barre de recherche */}
-        <div className="mb-8 max-w-2xl mx-auto">
+        <div className="mb-8 max-w-2xl mx-auto px-1 md:px-0">
           <div className="relative">
             <input
               type="text"
@@ -81,10 +81,10 @@ const FAQ = () => {
                 setOpenIndex(null); // Fermer les FAQs ouvertes lors de la recherche
               }}
               placeholder={t('faq.searchPlaceholder')}
-              className="w-full px-6 py-4 pl-14 pr-4 text-gray-900 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-400 transition-all duration-300 text-base placeholder-gray-400"
+              className="w-full px-5 py-4 pl-12 pr-4 text-gray-900 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-400 transition-all duration-300 text-base placeholder-gray-400"
             />
             <svg
-              className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ const FAQ = () => {
 
         {/* Message si aucun résultat */}
         {searchQuery && filteredFAQs.length === 0 && (
-          <div className="text-center py-12 px-4">
+          <div className="text-center py-10 px-2 md:px-4">
             <div className="max-w-md mx-auto">
               <svg
                 className="w-16 h-16 mx-auto text-gray-300 mb-4"
@@ -148,7 +148,7 @@ const FAQ = () => {
               </p>
               <button
                 onClick={openCrispChat}
-                className="inline-block px-6 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105"
+                className="inline-block px-5 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105"
               >
                 Contact us
               </button>
@@ -157,7 +157,7 @@ const FAQ = () => {
         )}
 
         {/* Liste des FAQs filtrées */}
-        <div className="space-y-4">
+        <div className="space-y-4 px-0 md:px-0">
           {filteredFAQs.map((faq, displayIndex) => {
             const originalIndex = faq.originalIndex;
             return (
@@ -167,9 +167,9 @@ const FAQ = () => {
             >
               <button
                 onClick={() => toggleFAQ(originalIndex)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-all duration-300 group"
+                className="w-full px-5 py-4 md:px-6 md:py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-all duration-300 group"
               >
-                <span className="text-lg font-bold text-gray-900 pr-4 transition-all">{faq.question}</span>
+                <span className="text-base md:text-lg font-bold text-gray-900 pr-4 transition-all">{faq.question}</span>
                 <div className={`w-8 h-8 flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${
                   openIndex === originalIndex ? 'rotate-180' : ''
                 }`}>
@@ -192,8 +192,8 @@ const FAQ = () => {
               </button>
 
               {openIndex === originalIndex && (
-                <div className="px-6 pb-5 animate-slide-up">
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                <div className="px-5 md:px-6 pb-5 animate-slide-up">
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
                     {faq.answer}
                   </p>
                 </div>

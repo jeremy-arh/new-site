@@ -196,7 +196,7 @@ const BlogPost = () => {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">Article Not Found</h1>
         <p className="text-gray-600 mb-8">{error || 'The article you\'re looking for doesn\'t exist.'}</p>
         <Link to="/" className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-2">
-          <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+              <Icon icon="tabler:arrow-left" className="w-5 h-5" />
           <span className="btn-text inline-block">Back to Home</span>
         </Link>
       </div>
@@ -356,11 +356,8 @@ const BlogPost = () => {
                 href={getFormUrl(currency)}
                 className="primary-cta text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100"
               >
-                <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                <Icon icon="stash:check-solid" className="w-5 h-5" />
                 <span className="btn-text inline-block">{post.cta || t('nav.notarizeNow')}</span>
-                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
               </a>
             </div>
           </div>
@@ -439,9 +436,7 @@ const BlogPost = () => {
                       </span>
                       <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
                         {t('blog.readMore') || 'Read more'}
-                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
+                        <Icon icon="lsicon:open-new-filled" className="w-4 h-4" />
                       </div>
                     </div>
                   </div>
@@ -460,9 +455,7 @@ const BlogPost = () => {
       <section className="px-[30px] pb-20">
         <div className="max-w-[1400px] mx-auto text-center">
           <Link to={getLocalizedPath('/blog')} className="inline-flex items-center gap-3 text-gray-900 hover:text-black transition-colors font-medium">
-            <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            <Icon icon="tabler:arrow-left" className="w-5 h-5" />
             <span className="inline-block">{t('blog.backToBlog') || 'Back to Blog'}</span>
           </Link>
         </div>

@@ -159,7 +159,7 @@ const CTAPopup = () => {
                 onClick={handleCTAClick}
                 className="flex-1 min-w-0 px-6 py-3 bg-black text-white font-medium rounded-lg cursor-pointer hover:bg-gray-900 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 flex-shrink-0"
               >
-                <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+                <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white" />
                 <span className="inline-block">
                   {isServicePage && service?.cta ? service.cta : t('nav.notarizeNow')}
                 </span>

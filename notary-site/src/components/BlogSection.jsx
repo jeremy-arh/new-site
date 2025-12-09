@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -136,9 +137,7 @@ const BlogSection = () => {
                     </span>
                     <div className="flex items-center gap-2 text-black font-medium text-sm group-hover:gap-3 transition-all">
                       {t('blog.readMore')}
-                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
+                        <Icon icon="lsicon:open-new-filled" className="w-4 h-4" />
                     </div>
                   </div>
                 </div>
@@ -152,9 +151,7 @@ const BlogSection = () => {
           <div className="text-center mt-12 scroll-fade-in">
             <Link to={getLocalizedPath('/blog')} className="inline-flex items-center gap-3 text-gray-900 hover:text-black font-semibold text-lg">
               <span className="inline-block">{t('blog.viewAll')}</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
             </Link>
           </div>
         )}

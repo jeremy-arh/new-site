@@ -33,7 +33,7 @@ const NotFound = () => {
             to={getLocalizedPath('/')}
             className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-3"
           >
-            <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white" />
+            <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white" />
             <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
           </Link>
 
@@ -42,9 +42,7 @@ const NotFound = () => {
             className="inline-flex items-center gap-2 text-gray-900 font-semibold hover:underline text-lg"
           >
             <span>{t('notFound.viewServices')}</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            <Icon icon="stash:check-solid" className="w-5 h-5" />
           </Link>
         </div>
 

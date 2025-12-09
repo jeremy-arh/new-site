@@ -237,7 +237,7 @@ const ServiceDetail = () => {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">{t('common.notFound')}</h1>
         <p className="text-gray-600 mb-8">{error || t('common.error')}</p>
         <Link to={getLocalizedPath('/')} className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-2">
-          <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+          <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
           <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
         </Link>
       </div>
@@ -310,7 +310,7 @@ const ServiceDetail = () => {
                     trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
                   }}
                 >
-                  <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
                   <span className="btn-text inline-block">
                     {service.cta || t('nav.notarizeNow')}
                   </span>
@@ -534,7 +534,7 @@ const ServiceDetail = () => {
                   ></div>
                   
                   <span className="inline-block flex items-center justify-center gap-2 relative z-10">
-                    <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+                  <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
                     {service.cta || t('nav.notarizeNow')}
                   </span>
                 </a>
@@ -643,9 +643,7 @@ const ServiceDetail = () => {
       <section className="px-[30px] py-12">
         <div className="max-w-[1100px] mx-auto text-center">
           <Link to={getLocalizedPath('/#services')} className="inline-flex items-center gap-3 text-black font-semibold hover:underline">
-            <svg className="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            <Icon icon="tabler:arrow-left" className="w-5 h-5" />
             <span>{t('serviceDetail.backToServices')}</span>
           </Link>
         </div>

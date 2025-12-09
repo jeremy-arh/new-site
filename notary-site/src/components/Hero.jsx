@@ -56,7 +56,7 @@ const Hero = memo(() => {
                 trackCTAClick('hero', null, window.location.pathname);
               }}
             >
-              <Icon icon="f7:doc-checkmark" className="w-5 h-5" />
+              <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
               <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
             </a>
 

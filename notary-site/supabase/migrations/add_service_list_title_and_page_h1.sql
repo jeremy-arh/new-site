@@ -47,3 +47,7 @@ COMMENT ON COLUMN services.page_h1_pt IS 'H1 title for service detail page in Po
 COMMENT ON COLUMN services.show_in_list IS 'Boolean to show or hide service from service lists (default: true)';
 
 
+
+
+
+

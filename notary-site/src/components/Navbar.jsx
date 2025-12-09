@@ -378,7 +378,7 @@ const Navbar = memo(() => {
                 }}
               >
                 <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="f7:doc-checkmark" className="w-4 h-4 text-white flex-shrink-0" />
+                  <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
                   <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                 </span>
               </a>
@@ -625,7 +625,7 @@ const Navbar = memo(() => {
                 className="block w-full text-center glassy-cta primary-cta text-lg py-4"
               >
                 <span className="btn-text inline-flex items-center justify-center gap-2 whitespace-nowrap">
-                  <Icon icon="f7:doc-checkmark" className="w-5 h-5 text-white flex-shrink-0" />
+                  <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white flex-shrink-0" />
                   <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                 </span>
               </a>
