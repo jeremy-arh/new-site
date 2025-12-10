@@ -19,6 +19,7 @@ const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasHeadings, setHasHeadings] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const contentRef = useRef(null);
@@ -28,6 +29,7 @@ const BlogPost = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
+    setIsLoading(true);
     fetchPost();
   }, [slug, language]);
 
@@ -72,13 +74,17 @@ const BlogPost = () => {
 
 
   const fetchPost = async () => {
-    // Check cache first (mais toujours formater selon la langue actuelle)
+    setError(null);
+    setPost(null);
+    setIsLoading(true);
+
     const cachedPost = cache.get('blog_post', slug);
+    // Check cache first (mais toujours formater selon la langue actuelle)
     let postData = cachedPost;
 
     // Si pas en cache, charger depuis la DB
-    if (!postData) {
-      try {
+    try {
+      if (!postData) {
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
@@ -97,27 +103,28 @@ const BlogPost = () => {
         
         // Mettre en cache les données originales (pas formatées)
         cache.set('blog_post', slug, postData, 5 * 60 * 1000);
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
-        setError('Failed to load article');
-        return;
       }
-    }
 
-    // Toujours formater l'article selon la langue actuelle (même s'il vient du cache)
-    const formattedPost = formatBlogPostForLanguage(postData, language);
-    setPost(formattedPost);
+      // Toujours formater l'article selon la langue actuelle (même s'il vient du cache)
+      const formattedPost = formatBlogPostForLanguage(postData, language);
+      setPost(formattedPost);
 
-    // Track blog post view seulement si c'est un nouveau chargement (pas depuis le cache)
-    if (!cachedPost) {
-      trackBlogPostView(slug, formattedPost.title);
-      // Increment view count
-      supabase
-        .from('blog_posts')
-        .update({ views_count: (postData.views_count || 0) + 1 })
-        .eq('id', postData.id)
-      .then(() => {})
-      .catch((err) => console.error('Error updating view count:', err));
+      // Track blog post view seulement si c'est un nouveau chargement (pas depuis le cache)
+      if (!cachedPost) {
+        trackBlogPostView(slug, formattedPost.title);
+        // Increment view count
+        supabase
+          .from('blog_posts')
+          .update({ views_count: (postData.views_count || 0) + 1 })
+          .eq('id', postData.id)
+        .then(() => {})
+        .catch((err) => console.error('Error updating view count:', err));
+      }
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+      setError('Failed to load article');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -175,6 +182,11 @@ const BlogPost = () => {
       day: 'numeric'
     });
   };
+
+  if (isLoading) {
+    // Masquer tout le contenu (y compris header/footer) pendant le chargement pour éviter le flash
+    return <div className="fixed inset-0 bg-white z-50" aria-busy="true" />;
+  }
 
   if (error || !post) {
     return (

@@ -59,7 +59,7 @@ const LanguageRouter = () => {
   }
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className="fixed inset-0 bg-white z-50" aria-busy="true" />}>
       <Routes>
         {/* Routes sans langue (pour 'en' ou langue par défaut) */}
         <Route path="/" element={<Home />} />

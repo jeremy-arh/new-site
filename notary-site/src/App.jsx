@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter as Router, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { CurrencyProvider, useCurrency } from './contexts/CurrencyContext'
-import { LanguageProvider } from './contexts/LanguageContext'
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -113,15 +113,7 @@ function App() {
       <CurrencyProvider>
         <Router>
           <LanguageProvider>
-            <ScrollToTop />
-            <PageViewTracker />
-            <FormPrefetcher />
-            <div className="min-h-screen">
-              <Navbar />
-              <LanguageRouter />
-              <Footer />
-              <CTAPopup />
-            </div>
+            <AppContent />
           </LanguageProvider>
         </Router>
       </CurrencyProvider>
@@ -130,3 +122,26 @@ function App() {
 }
 
 export default App
+
+// Render gated on language readiness to avoid any flash/404
+const AppContent = () => {
+  const { isReady } = useLanguage();
+
+  if (!isReady) {
+    return null;
+  }
+
+  return (
+    <>
+      <ScrollToTop />
+      <PageViewTracker />
+      <FormPrefetcher />
+      <div className="min-h-screen">
+        <Navbar />
+        <LanguageRouter />
+        <Footer />
+        <CTAPopup />
+      </div>
+    </>
+  );
+};

@@ -116,6 +116,7 @@ const ServiceDetail = () => {
   const location = useLocation();
   const [service, setService] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
@@ -128,6 +129,10 @@ const ServiceDetail = () => {
   useEffect(() => {
     if (serviceId) {
       fetchService();
+    } else {
+      setError(t('common.error'));
+      setService(null);
+      setIsLoading(false);
     }
   }, [serviceId, language]);
 
@@ -146,12 +151,15 @@ const ServiceDetail = () => {
   }, []);
 
   const fetchService = async () => {
+    setIsLoading(true);
+    setError(null);
+    setService(null);
+
     if (!serviceId) {
       setError(t('common.error'));
+      setIsLoading(false);
       return;
     }
-
-    setError(null);
 
     try {
       // Toujours charger depuis la DB pour avoir les dernières traductions
@@ -197,8 +205,15 @@ const ServiceDetail = () => {
     } catch (error) {
       console.error('Error fetching service:', error);
       setError(t('serviceDetail.loadServiceError'));
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    // Masquer tout le contenu (y compris header/footer) pendant le chargement pour éviter le flash
+    return <div className="fixed inset-0 bg-white z-50" aria-busy="true" />;
+  }
 
   if (error || !service) {
     return (
