@@ -11,17 +11,18 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
   const defaultCtaText = ctaText || t('nav.notarizeNow');
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
+  const [hasHero, setHasHero] = useState(false);
+  const [scrolledEnough, setScrolledEnough] = useState(false);
   const { formatPrice, currency } = useCurrency();
   const [formattedPrice, setFormattedPrice] = useState('');
 
   const handleScroll = useCallback(() => {
-    // Show CTA after scrolling 200px
-    if (window.scrollY > 200) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
+    // Fallback when aucun hero n'est identifié
+    if (!hasHero) {
+      setScrolledEnough(window.scrollY > 200);
     }
-  }, []);
+  }, [hasHero]);
 
   const checkMenuState = useCallback(() => {
     setIsMenuOpen(document.body.classList.contains('mobile-menu-open'));
@@ -31,6 +32,35 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  useEffect(() => {
+    const heroElement =
+      document.querySelector('[data-hero]') ||
+      document.getElementById('hero-section');
+
+    if (heroElement) {
+      setHasHero(true);
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          // CTA visible uniquement quand le hero est complètement sorti
+          setHeroInView(entry.isIntersecting);
+        },
+        {
+          threshold: 0,
+        }
+      );
+
+      observer.observe(heroElement);
+      return () => observer.disconnect();
+    } else {
+      setHasHero(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const shouldShow = hasHero ? !heroInView : scrolledEnough;
+    setIsVisible(shouldShow && !isMenuOpen);
+  }, [hasHero, heroInView, scrolledEnough, isMenuOpen]);
 
   useEffect(() => {
     // Check initial state

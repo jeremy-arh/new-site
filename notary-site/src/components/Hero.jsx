@@ -22,7 +22,7 @@ const Hero = memo(() => {
   }, [handleResize]);
 
   return (
-    <section className={isMobile ? '' : 'px-5 pt-[90px]'}>
+    <section className={isMobile ? '' : 'px-5 pt-[90px]'} data-hero>
       {/* Hero Block with Background Image - LCP Element */}
       <div
         className={`relative ${isMobile ? '' : 'rounded-3xl'} overflow-hidden ${isMobile ? 'min-h-screen' : 'min-h-0 h-[calc(100vh-110px)]'} flex items-center`}

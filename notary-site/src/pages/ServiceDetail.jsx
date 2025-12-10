@@ -91,7 +91,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
               <p className="text-gray-600 mb-6 min-h-[60px] leading-relaxed flex-1">{serviceItem.short_description || serviceItem.description}</p>
 
               <div className="flex flex-col gap-3 mt-auto items-center">
-                <div className="primary-cta text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center">
+                <div className="inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center text-sm font-semibold text-black underline underline-offset-4 decoration-2">
                   <span className="btn-text inline-block">{t('services.learnMore')}</span>
                   <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -263,7 +263,7 @@ const ServiceDetail = () => {
         ]}
       />
       {/* Hero Section - Similar to Home Hero */}
-      <section>
+      <section data-hero>
         <div
           className="relative overflow-hidden min-h-screen flex items-center"
           style={{
@@ -492,34 +492,17 @@ const ServiceDetail = () => {
                   </div>
                 </div>
 
-                {/* CTA Button - Ultra Glassy with Blue Gradient */}
+                {/* CTA Button - White variant for contrast on dark background */}
                 <a
                   href={getFormUrl(currency, service?.service_id || serviceId)}
                   onClick={() => {
                     trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
                   }}
-                  className="block w-full text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center relative overflow-hidden group cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(51, 31, 226, 0.8) 0%, rgba(42, 26, 199, 0.9) 50%, rgba(51, 31, 226, 0.8) 100%)',
-                    backdropFilter: 'blur(40px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-                    boxShadow: '0 8px 32px 0 rgba(51, 31, 226, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.1)'
-                  }}
+                  className="block w-full text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 text-black font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center bg-white hover:bg-gray-100 shadow-lg cursor-pointer"
                 >
-                  {/* Glass reflection effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                  
-                  {/* Blue gradient overlay */}
-                  <div 
-                    className="absolute inset-0 opacity-80"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(51, 31, 226, 0.6) 0%, rgba(42, 26, 199, 0.8) 50%, rgba(51, 31, 226, 0.6) 100%)'
-                    }}
-                  ></div>
-                  
-                  <span className="inline-block flex items-center justify-center gap-2 relative z-10">
+                  <span className="inline-flex items-center justify-center gap-2">
                   <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
-                    {service.cta || t('nav.notarizeNow')}
+                    Upload my document
                   </span>
                 </a>
               </div>

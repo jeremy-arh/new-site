@@ -66,13 +66,8 @@ const Testimonial = memo(() => {
                     key={index}
                     className="w-full flex-shrink-0 px-1 sm:px-4"
                   >
-                    <div className="relative mb-5 sm:mb-6 pt-2 sm:pt-4 pl-1 sm:pl-2">
-                      <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center shadow-md">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" d="M7 12h4m-4 0c0-3.866 3.134-7 7-7v2c-2.761 0-5 2.239-5 5h2c0 2.761-2.239 5-5 5v-2c1.657 0 3-1.343 3-3H7Zm8 0h4m-4 0c0-3.866 3.134-7 7-7v2c-2.761 0-5 2.239-5 5h2c0 2.761-2.239 5-5 5v-2c1.657 0 3-1.343 3-3h-2Z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 leading-snug pl-14 sm:pl-16">
+                    <div className="mb-5 sm:mb-6 pt-2 sm:pt-4">
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 leading-snug">
                         {testimonial.quote}
                       </h3>
                     </div>
