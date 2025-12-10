@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { extractLanguageFromPath, removeLanguageFromPath, addLanguageToPath, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '../utils/language';
@@ -55,27 +55,29 @@ const LanguageRouter = () => {
   // Routes avec support de langue dans l'URL
   // Format: /:lang?/route ou /route (pour 'en')
   return (
-    <Routes>
-      {/* Routes sans langue (pour 'en' ou langue par défaut) */}
-      <Route path="/" element={<Home />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path="/services" element={<ServicesList />} />
-      <Route path="/services/:serviceId" element={<ServiceDetail />} />
-      <Route path="/terms-conditions" element={<TermsConditions />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-      
-      {/* Routes avec langue dans l'URL */}
-      <Route path="/:lang" element={<ValidatedLanguageRoute element={<Home />} />} />
-      <Route path="/:lang/blog" element={<ValidatedLanguageRoute element={<Blog />} />} />
-      <Route path="/:lang/blog/:slug" element={<ValidatedLanguageRoute element={<BlogPost />} />} />
-      <Route path="/:lang/services" element={<ValidatedLanguageRoute element={<ServicesList />} />} />
-      <Route path="/:lang/services/:serviceId" element={<ValidatedLanguageRoute element={<ServiceDetail />} />} />
-      <Route path="/:lang/terms-conditions" element={<ValidatedLanguageRoute element={<TermsConditions />} />} />
-      <Route path="/:lang/privacy-policy" element={<ValidatedLanguageRoute element={<PrivacyPolicy />} />} />
-      
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        {/* Routes sans langue (pour 'en' ou langue par défaut) */}
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/services" element={<ServicesList />} />
+        <Route path="/services/:serviceId" element={<ServiceDetail />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        
+        {/* Routes avec langue dans l'URL */}
+        <Route path="/:lang" element={<ValidatedLanguageRoute element={<Home />} />} />
+        <Route path="/:lang/blog" element={<ValidatedLanguageRoute element={<Blog />} />} />
+        <Route path="/:lang/blog/:slug" element={<ValidatedLanguageRoute element={<BlogPost />} />} />
+        <Route path="/:lang/services" element={<ValidatedLanguageRoute element={<ServicesList />} />} />
+        <Route path="/:lang/services/:serviceId" element={<ValidatedLanguageRoute element={<ServiceDetail />} />} />
+        <Route path="/:lang/terms-conditions" element={<ValidatedLanguageRoute element={<TermsConditions />} />} />
+        <Route path="/:lang/privacy-policy" element={<ValidatedLanguageRoute element={<PrivacyPolicy />} />} />
+        
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 

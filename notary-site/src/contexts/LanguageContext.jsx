@@ -33,17 +33,17 @@ export const LanguageProvider = ({ children }) => {
 
   // Initialise la langue au chargement (sans bloquer le rendu)
   useEffect(() => {
-    // 1) Langue dans l'URL prioritaire
+    // 1) Langue dans l'URL prioritaire (inclut 'en' si présent)
     const urlLanguage = extractLanguageFromPath(location.pathname);
-    if (urlLanguage && urlLanguage !== DEFAULT_LANGUAGE) {
+    if (urlLanguage) {
       setLanguageState(urlLanguage);
       saveLanguageToStorage(urlLanguage);
       return;
     }
 
-    // 2) Langue sauvegardée
+    // 2) Langue sauvegardée (respecter même si 'en' pour ne pas écraser le choix utilisateur)
     const savedLanguage = getLanguageFromStorage();
-    if (savedLanguage && savedLanguage !== DEFAULT_LANGUAGE) {
+    if (savedLanguage) {
       setLanguageState(savedLanguage);
       const newPath = getLocalizedPath(location.pathname, savedLanguage);
       if (newPath !== location.pathname) {
@@ -52,7 +52,7 @@ export const LanguageProvider = ({ children }) => {
       return;
     }
 
-    // 3) Langue par défaut immédiate, détection IP différée
+    // 3) Langue par défaut immédiate, détection IP différée uniquement si rien en cache
     const applyDetectedLanguage = async () => {
       try {
         const detectedLanguage = await detectLanguageFromIP();
