@@ -1,9 +1,15 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 
 const Testimonial = memo(() => {
   const { t, language } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const isSwiping = useRef(false);
+  const mouseStartX = useRef(0);
+  const mouseEndX = useRef(0);
+  const isMouseDown = useRef(false);
 
   // Helper pour fallback si la traduction manque (évite d'afficher la clé)
   const tt = (key, fallback) => {
@@ -39,10 +45,83 @@ const Testimonial = memo(() => {
     },
   ];
 
-  // Auto-rotation toutes les 5 secondes
+  // Fonction pour changer d'avis
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Gestion du swipe tactile
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    isSwiping.current = true;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isSwiping.current) return;
+    
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50; // Distance minimale pour déclencher un swipe
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swipe vers la gauche = avancer
+        goToNext();
+      } else {
+        // Swipe vers la droite = reculer
+        goToPrevious();
+      }
+    }
+
+    isSwiping.current = false;
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  // Gestion du swipe avec la souris (pour trackpad)
+  const handleMouseDown = (e) => {
+    mouseStartX.current = e.clientX;
+    isMouseDown.current = true;
+  };
+
+  const handleMouseMove = (e) => {
+    if (isMouseDown.current) {
+      mouseEndX.current = e.clientX;
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (!isMouseDown.current) return;
+    
+    const swipeDistance = mouseStartX.current - mouseEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        goToNext();
+      } else {
+        goToPrevious();
+      }
+    }
+
+    isMouseDown.current = false;
+    mouseStartX.current = 0;
+    mouseEndX.current = 0;
+  };
+
+  // Auto-rotation toutes les 5 secondes (seulement si pas de swipe en cours)
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+      if (!isSwiping.current && !isMouseDown.current) {
+        goToNext();
+      }
     }, 5000);
 
     return () => clearInterval(interval);
@@ -56,7 +135,16 @@ const Testimonial = memo(() => {
         <div className="relative rounded-3xl overflow-hidden">
           {/* Carousel */}
           <div className="p-6 sm:p-8 lg:p-12 flex flex-col justify-center space-y-6 relative min-h-[360px] sm:min-h-[420px]">
-            <div className="relative overflow-hidden">
+            <div 
+              className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
               <div
                 className="flex transition-transform duration-700 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}

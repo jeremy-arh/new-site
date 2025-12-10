@@ -12,6 +12,8 @@ export default {
       fontFamily: {
         'sans': ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'geist': ['Geist', 'sans-serif'],
+        'playfair': ['Playfair Display', 'serif'],
+        'serif': ['Playfair Display', 'serif'],
       },
       colors: {
         'primary': '#1a1a1a',

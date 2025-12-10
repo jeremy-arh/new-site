@@ -36,7 +36,7 @@ const CURRENCIES = [
   { code: 'VND', symbol: '₫', name: 'Vietnamese Dong' },
 ];
 
-const CurrencySelector = () => {
+const CurrencySelector = ({ isWhite = false }) => {
   const { currency, setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -68,7 +68,11 @@ const CurrencySelector = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-50 whitespace-nowrap flex-shrink-0"
+        className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors rounded-lg whitespace-nowrap flex-shrink-0 ${
+          isWhite 
+            ? 'text-white hover:text-white/80 hover:bg-white/10' 
+            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+        }`}
         aria-label="Select currency"
         aria-expanded={isOpen}
       >

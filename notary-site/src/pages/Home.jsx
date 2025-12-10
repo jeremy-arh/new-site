@@ -8,6 +8,7 @@ import Testimonial from '../components/Testimonial'
 import FAQ from '../components/FAQ'
 import BlogSection from '../components/BlogSection'
 import MobileCTA from '../components/MobileCTA'
+import ChatCTA from '../components/ChatCTA'
 
 function Home() {
   const { t, language } = useTranslation();
@@ -60,6 +61,7 @@ function Home() {
       />
       <Hero />
       <Services />
+      <ChatCTA />
       <Testimonial />
       <HowItWorks />
       <FAQ />

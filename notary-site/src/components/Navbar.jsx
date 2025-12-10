@@ -19,6 +19,7 @@ const Navbar = memo(() => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isAtTop, setIsAtTop] = useState(window.scrollY === 0);
   const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
   const [formattedPrice, setFormattedPrice] = useState('');
@@ -34,11 +35,15 @@ const Navbar = memo(() => {
     const pathWithoutLang = removeLanguageFromPath(location.pathname);
     return pathWithoutLang.startsWith('/services/') && pathWithoutLang !== '/services';
   }, [location.pathname]);
+  
+  // Vérifier si on est sur une page service
+  const isOnServicePage = isServicePage();
 
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
 
     setIsScrolled(currentScrollY > 50);
+    setIsAtTop(currentScrollY === 0);
 
     // Only apply hide/show logic on mobile
     if (window.innerWidth < 1150) {
@@ -69,6 +74,9 @@ const Navbar = memo(() => {
   }, []);
 
   useEffect(() => {
+    // Vérifier l'état initial au chargement
+    setIsAtTop(window.scrollY === 0);
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
@@ -172,11 +180,11 @@ const Navbar = memo(() => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 z-50 ${isMobile ? 'transition-transform duration-300 px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
+      <nav className={`fixed w-full top-0 z-50 ${!isMobile && isAtTop && isOnServicePage ? '' : 'shadow-sm'} ${isMobile ? 'transition-transform duration-300 px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
         !isHeaderVisible && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div
-          className={`${isMobile ? 'transition-all duration-300' : ''} ${isMobile ? 'rounded-2xl' : 'rounded-none bg-[#FEFEFE]'}`}
+          className={`${isMobile ? 'transition-all duration-300' : 'transition-all duration-300'} ${isMobile ? 'rounded-2xl' : 'rounded-none'}`}
           style={isMobile ? (isMenuOpen ? {
             background: 'transparent',
             borderRadius: '16px',
@@ -189,9 +197,11 @@ const Navbar = memo(() => {
             boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             backdropFilter: 'blur(15.6px)',
             WebkitBackdropFilter: 'blur(15.6px)',
-          }) : {
+          }) : (!isMobile && isAtTop && isOnServicePage ? {
+            background: 'transparent',
+          } : {
             background: '#FEFEFE',
-          }}
+          })}
         >
           <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
             <div 
@@ -200,7 +210,13 @@ const Navbar = memo(() => {
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
               <img
-                src={isMobile && !isMenuOpen ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public' : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/public'}
+                src={
+                  isMobile && !isMenuOpen 
+                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public' 
+                    : (!isMobile && isAtTop && isOnServicePage)
+                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public'
+                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/public'
+                }
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
                 width="130"
@@ -214,7 +230,7 @@ const Navbar = memo(() => {
             >
               <a 
                 href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')} 
-                className="nav-link text-base whitespace-nowrap"
+                className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -260,7 +276,7 @@ const Navbar = memo(() => {
               </a>
               <a 
                 href={isServicePage() ? '#how-it-works' : getLocalizedPath('/#how-it-works')} 
-                className="nav-link text-base whitespace-nowrap"
+                className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -305,7 +321,7 @@ const Navbar = memo(() => {
               </a>
               <a 
                 href={isServicePage() ? '#faq' : getLocalizedPath('/#faq')} 
-                className="nav-link text-base whitespace-nowrap"
+                className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   if (isServicePage()) {
@@ -348,16 +364,16 @@ const Navbar = memo(() => {
                 {t('nav.faq')}
               </a>
 
-              <div className="w-px h-6 bg-gray-300 flex-shrink-0"></div>
+              <div className={`w-px h-6 flex-shrink-0 ${!isMobile && isAtTop && isOnServicePage ? 'bg-white/30' : 'bg-gray-300'}`}></div>
 
               <div className="flex items-center gap-4 flex-shrink-0">
-                <LanguageSelector />
-                <CurrencySelector />
+                <LanguageSelector isWhite={!isMobile && isAtTop && isOnServicePage} />
+                <CurrencySelector isWhite={!isMobile && isAtTop && isOnServicePage} />
               </div>
 
               <a 
                 href="https://app.mynotary.io/login" 
-                className="nav-link text-base font-semibold whitespace-nowrap flex-shrink-0"
+                className={`nav-link text-base font-semibold whitespace-nowrap flex-shrink-0 ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={() => {
                   trackPlausibleLoginClick('navbar_desktop');
                   trackLoginClick('navbar_desktop', location.pathname);
@@ -367,19 +383,21 @@ const Navbar = memo(() => {
               </a>
 
               {/* CTA Button */}
-              <a 
-                href={getFormUrl(currency, currentServiceId)} 
-                className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
-                onClick={() => {
-                  trackPlausibleCTAClick('navbar_desktop');
-                  trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
-                }}
-              >
-                <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
-                  <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
-                </span>
-              </a>
+              {(!isMobile && isAtTop && isOnServicePage) ? null : (
+                <a 
+                  href={getFormUrl(currency, currentServiceId)} 
+                  className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
+                  onClick={() => {
+                    trackPlausibleCTAClick('navbar_desktop');
+                    trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
+                  }}
+                >
+                  <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
+                    <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
+                    <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
+                  </span>
+                </a>
+              )}
             </div>
 
             {/* Animated Hamburger Menu Button */}

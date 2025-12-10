@@ -17,6 +17,7 @@ import Testimonial from '../components/Testimonial';
 import FAQ from '../components/FAQ';
 import MobileCTA from '../components/MobileCTA';
 import PriceDisplay from '../components/PriceDisplay';
+import ChatCTA from '../components/ChatCTA';
 
 // Other Services Section Component
 const OtherServicesSection = ({ currentServiceId }) => {
@@ -267,9 +268,9 @@ const ServiceDetail = () => {
         <div
           className="relative overflow-hidden min-h-screen flex items-center"
           style={{
-            backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/91775e7d-05e2-40fc-1ba0-717d004a1900/public)`,
+            backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public)`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundPosition: 'center top'
           }}
         >
           {/* Dark Overlay */}
@@ -329,182 +330,136 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Pricing Section - Full Height Glassy Design */}
-      <section className="min-h-screen flex items-center justify-center bg-black px-4 sm:px-[30px] py-8 sm:py-16 relative">
+      {/* Pricing Section - Two Column Layout */}
+      <section
+        className="min-h-screen flex items-center justify-center px-4 sm:px-[30px] py-8 sm:py-16 relative"
+        style={{ backgroundColor: '#F7F5F2' }}
+      >
         <div className="max-w-[1300px] w-full mx-auto">
-          {/* Glassy Pricing Card */}
-          <div 
-            className="rounded-2xl sm:rounded-3xl overflow-hidden relative"
-            style={{
-              background: 'rgba(20, 20, 20, 0.6)',
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-            }}
-          >
-            <div className="flex flex-col lg:flex-row">
-              {/* Left Side - Price */}
-              <div className="lg:w-2/5 relative overflow-hidden p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center items-center lg:items-start border-b lg:border-b-0 lg:border-r border-white/10">
-                {/* Badge - Top Left Corner */}
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Left Side - Image */}
+            <div className="lg:w-2/5 flex items-center justify-center">
+              <img
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/public"
+                alt={service.name}
+                className="w-full h-auto rounded-2xl object-cover"
+                style={{ maxHeight: '800px' }}
+              />
+            </div>
+
+            {/* Right Side - Pricing Block */}
+            <div className="lg:w-3/5 flex flex-col">
+              <div 
+                className="rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full"
+                style={{
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                {/* Top Section - Black Background */}
                 <div 
-                  className="absolute top-0 left-0 z-20 inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3"
+                  className="p-6 sm:p-8 lg:p-10 xl:p-12"
                   style={{
-                    background: 'white',
-                    color: '#047857',
-                    fontWeight: '600',
-                    fontSize: '0.75rem',
-                    letterSpacing: '0.05em',
-                    textTransform: 'uppercase',
-                    borderTopLeftRadius: '16px',
-                    borderTopRightRadius: '0',
-                    borderBottomLeftRadius: '0',
-                    borderBottomRightRadius: '16px'
+                    background: '#000000'
                   }}
                 >
-                  <span 
-                    className="relative inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0"
-                    style={{
-                      backgroundColor: '#047857',
-                      animation: 'pulseDot 2s ease-in-out infinite'
+                  {/* Price Section */}
+                  <div>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-white">{service.name}</h2>
+                    
+                    {service.base_price ? (
+                      <>
+                        <div className="mb-4 sm:mb-6">
+                          <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
+                            <PriceDisplay 
+                              price={service.base_price} 
+                              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white"
+                            />
+                          </div>
+                          <p className="text-xs sm:text-sm text-gray-400">{t('services.perDocument')}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <p className="text-base sm:text-lg text-gray-300">{t('serviceDetail.pricing.contactForPricing')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Bottom Section - White Background */}
+                <div 
+                  className="p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col flex-1"
+                  style={{
+                    background: '#ffffff'
+                  }}
+                >
+                  {/* Benefits List */}
+                  <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4 flex-1">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.legallyValid.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.legallyValid.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.sameDay.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.sameDay.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.officialNotarization.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.officialNotarization.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.available247.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.available247.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.transparentFee.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.transparentFee.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.bankGradeSecurity.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.bankGradeSecurity.description')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.globalCompliance.title')}</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.globalCompliance.description')}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA Button - Black for contrast on white background */}
+                  <a
+                    href={getFormUrl(currency, service?.service_id || serviceId)}
+                    onClick={() => {
+                      trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
                     }}
+                    className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"
                   >
-                    <span 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        backgroundColor: '#047857',
-                        animation: 'pingDot 2s cubic-bezier(0, 0, 0.2, 1) infinite'
-                      }}
-                    ></span>
-                  </span>
-                  <span className="whitespace-nowrap text-xs sm:text-sm">{t('serviceDetail.pricing.availableNow')}</span>
+                    <span className="inline-flex items-center justify-center gap-2">
+                      <Icon icon="line-md:uploading-loop" className="w-5 h-5" />
+                      Upload my document
+                    </span>
+                  </a>
                 </div>
-
-                {/* Ultra glassy background with BLACK gradient */}
-                <div 
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%)',
-                    backdropFilter: 'blur(120px) saturate(200%)',
-                    WebkitBackdropFilter: 'blur(120px) saturate(200%)'
-                  }}
-                ></div>
-                
-                {/* Glass reflection effect */}
-                <div 
-                  className="absolute top-0 left-0 right-0 h-1/3 opacity-20"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%)',
-                    pointerEvents: 'none'
-                  }}
-                ></div>
-                
-                {/* Content */}
-                <div className="relative z-10 text-white w-full mt-8 sm:mt-0">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center lg:text-left">{service.name}</h2>
-                  
-                  {service.base_price ? (
-                    <>
-                      <div className="text-center lg:text-left w-full mb-4 sm:mb-6">
-                        <div className="flex items-baseline justify-center lg:justify-start gap-2 mb-2 sm:mb-3">
-                          <PriceDisplay 
-                            price={service.base_price} 
-                            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white"
-                          />
-                        </div>
-                        <p className="text-xs sm:text-sm text-gray-400">{t('services.perDocument')}</p>
-                      </div>
-                      <div className="flex flex-col gap-3 sm:gap-4 w-full">
-                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
-                          <Icon icon="iconoir:check-circle" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
-                          <span>{t('serviceDetail.pricing.noHiddenFee')}</span>
-                        </div>
-                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
-                          <Icon icon="iconoir:clock" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
-                          <span>{t('serviceDetail.pricing.sameDayDelivery')}</span>
-                        </div>
-                        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
-                          <Icon icon="iconoir:shield-check" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
-                          <span>{t('serviceDetail.pricing.secure')}</span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center lg:text-left">
-                      <p className="text-base sm:text-lg text-gray-300">{t('serviceDetail.pricing.contactForPricing')}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Side - Benefits and CTA */}
-              <div className="lg:w-3/5 flex flex-col p-6 sm:p-8 lg:p-10 xl:p-12 bg-white/5">
-                {/* Benefits List */}
-                <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4 flex-1">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.legallyValid.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.legallyValid.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.sameDay.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.sameDay.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.officialNotarization.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.officialNotarization.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.available247.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.available247.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.transparentFee.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.transparentFee.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.bankGradeSecurity.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.bankGradeSecurity.description')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.globalCompliance.title')}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.globalCompliance.description')}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CTA Button - White variant for contrast on dark background */}
-                <a
-                  href={getFormUrl(currency, service?.service_id || serviceId)}
-                  onClick={() => {
-                    trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
-                  }}
-                  className="block w-full text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 text-black font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center bg-white hover:bg-gray-100 shadow-lg cursor-pointer"
-                >
-                  <span className="inline-flex items-center justify-center gap-2">
-                  <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
-                    Upload my document
-                  </span>
-                </a>
               </div>
             </div>
           </div>
@@ -593,6 +548,9 @@ const ServiceDetail = () => {
           })()}
         </div>
       </section>
+
+      {/* Chat CTA Section */}
+      <ChatCTA />
 
       {/* Testimonial Section */}
       <Testimonial />
