@@ -117,6 +117,7 @@
   /* Glassy style for header and floating CTA buttons */
   .glassy-cta {
     background: #000000 !important;
+    color: #ffffff !important;
     backdrop-filter: blur(40px) saturate(200%);
     -webkit-backdrop-filter: blur(40px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -161,6 +162,7 @@
   .glassy-cta .btn-text {
     position: relative;
     z-index: 2;
+    color: #ffffff !important;
   }
 
   .glassy-cta:hover {
@@ -169,6 +171,108 @@
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 
       0 12px 40px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    transform: translateY(-1px);
+    animation: none; /* Stop animation on hover */
+  }
+
+  /* Animation for blue glassy effect enhancement during flash */
+  @keyframes glassy-enhance-blue {
+    0%, 100% {
+      background: #2F6AEC;
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 
+        0 8px 32px rgba(47, 106, 236, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 255, 255, 0.05);
+    }
+    2%, 10% {
+      background: #2F6AEC;
+      backdrop-filter: blur(50px) saturate(250%);
+      -webkit-backdrop-filter: blur(50px) saturate(250%);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 8px 32px rgba(47, 106, 236, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.15);
+    }
+    5% {
+      background: #2F6AEC;
+      backdrop-filter: blur(60px) saturate(300%);
+      -webkit-backdrop-filter: blur(60px) saturate(300%);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 
+        0 8px 32px rgba(47, 106, 236, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  /* Glassy style for blue CTA buttons */
+  .glassy-cta-blue {
+    background: #2F6AEC !important;
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 8px 32px rgba(47, 106, 236, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    animation: glassy-enhance-blue 5s ease-out infinite;
+    color: white !important;
+  }
+
+  .glassy-cta-blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.2) 70%,
+      transparent 100%
+    );
+    filter: blur(8px);
+    opacity: 0.4;
+    transform: skewX(-20deg);
+    animation: glassy-flash 5s ease-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .glassy-cta-blue:hover::before {
+    animation-play-state: paused;
+  }
+
+  .glassy-cta-blue .btn-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .glassy-cta-blue:hover {
+    background: #2563eb !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 
+      0 12px 40px rgba(47, 106, 236, 0.45),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
       0 4px 8px rgba(0, 0, 0, 0.3) !important;
     transform: translateY(-1px);

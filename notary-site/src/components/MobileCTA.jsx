@@ -92,7 +92,7 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
           <div className="flex flex-col items-center gap-2">
             <a
               href={getFormUrl(currency, serviceId)}
-              className="w-full text-center px-6 py-4 glassy-cta text-white font-bold rounded-lg transition-all duration-300"
+              className="w-full text-center px-6 py-4 glassy-cta-blue font-bold rounded-lg transition-all duration-300"
               onClick={() => {
                 trackPlausibleCTAClick('mobile_cta');
                 trackCTAClick('mobile_cta', serviceId, window.location.pathname);

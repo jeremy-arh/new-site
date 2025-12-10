@@ -49,7 +49,17 @@ const Hero = memo(() => {
 
             <a 
               href={getFormUrl(currency)} 
-              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 ${isMobile ? 'mb-8' : 'mb-12'} bg-white text-black hover:bg-gray-100 animate-fade-in animation-delay-400`}
+              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 ${isMobile ? 'mb-8' : 'mb-12'} text-white animate-fade-in animation-delay-400`}
+              style={{
+                backgroundColor: '#2F6AEC',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#2563eb';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#2F6AEC';
+              }}
               onClick={() => {
                 trackPlausibleCTAClick('hero');
                 trackCTAClick('hero', null, window.location.pathname);

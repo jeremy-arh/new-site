@@ -20,6 +20,7 @@ const Navbar = memo(() => {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAtTop, setIsAtTop] = useState(window.scrollY === 0);
+  const [isHeroOutOfView, setIsHeroOutOfView] = useState(false);
   const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
   const [formattedPrice, setFormattedPrice] = useState('');
@@ -80,6 +81,55 @@ const Navbar = memo(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  // Observer pour détecter quand le hero sort complètement de l'écran
+  useEffect(() => {
+    setIsHeroOutOfView(false);
+
+    let observer = null;
+    let retryTimeout = null;
+    const maxAttempts = 15;
+    let attempts = 0;
+
+    const attachObserver = () => {
+      const heroElement = document.querySelector('[data-hero]');
+
+      if (heroElement) {
+        observer = new IntersectionObserver(
+          ([entry]) => {
+            setIsHeroOutOfView(!entry.isIntersecting);
+          },
+          {
+            threshold: 0,
+            rootMargin: '0px'
+          }
+        );
+
+        observer.observe(heroElement);
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        retryTimeout = setTimeout(attachObserver, 150);
+      } else {
+        // Si après plusieurs tentatives aucun hero n'existe, on force le CTA en bleu
+        setIsHeroOutOfView(true);
+      }
+    };
+
+    const initialTimeout = setTimeout(attachObserver, 100);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+      }
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [location.pathname]); // Re-observer quand on change de page
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -384,19 +434,19 @@ const Navbar = memo(() => {
 
               {/* CTA Button */}
               {(!isMobile && isAtTop && isOnServicePage) ? null : (
-                <a 
-                  href={getFormUrl(currency, currentServiceId)} 
-                  className="glassy-cta primary-cta text-sm relative z-10 flex-shrink-0 whitespace-nowrap"
-                  onClick={() => {
-                    trackPlausibleCTAClick('navbar_desktop');
-                    trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
-                  }}
-                >
-                  <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
-                    <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
-                    <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
-                  </span>
-                </a>
+              <a 
+                href={getFormUrl(currency, currentServiceId)} 
+                className={`${isHeroOutOfView ? 'glassy-cta-blue' : 'glassy-cta'} text-sm relative z-10 flex-shrink-0 whitespace-nowrap px-6 py-3 font-semibold rounded-lg transition-all duration-300`}
+                onClick={() => {
+                  trackPlausibleCTAClick('navbar_desktop');
+                  trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
+                }}
+              >
+                <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
+                  <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
+                  <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
+                </span>
+              </a>
               )}
             </div>
 
