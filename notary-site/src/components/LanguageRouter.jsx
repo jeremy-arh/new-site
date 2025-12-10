@@ -47,13 +47,17 @@ const ValidatedLanguageRoute = ({ element }) => {
 const LanguageRouter = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, isReady } = useLanguage();
 
   // Ne pas rediriger automatiquement - laisser LanguageContext gérer la synchronisation
   // Cela évite les boucles de redirection sur les pages de blog
 
   // Routes avec support de langue dans l'URL
   // Format: /:lang?/route ou /route (pour 'en')
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <Suspense fallback={null}>
       <Routes>

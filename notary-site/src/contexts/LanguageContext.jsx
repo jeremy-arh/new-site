@@ -6,6 +6,7 @@ const LanguageContext = createContext({
   language: DEFAULT_LANGUAGE,
   setLanguage: () => {},
   getLocalizedPath: () => {},
+  isReady: false,
 });
 
 export const useLanguage = () => {
@@ -18,6 +19,7 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguageState] = useState(DEFAULT_LANGUAGE);
+  const [isReady, setIsReady] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,6 +40,7 @@ export const LanguageProvider = ({ children }) => {
     if (urlLanguage) {
       setLanguageState(urlLanguage);
       saveLanguageToStorage(urlLanguage);
+      setIsReady(true);
       return;
     }
 
@@ -49,10 +52,12 @@ export const LanguageProvider = ({ children }) => {
       if (newPath !== location.pathname) {
         navigate(newPath, { replace: true });
       }
+      setIsReady(true);
       return;
     }
 
     // 3) Langue par défaut immédiate, détection IP différée uniquement si rien en cache
+    setIsReady(true);
     const applyDetectedLanguage = async () => {
       try {
         const detectedLanguage = await detectLanguageFromIP();
@@ -109,6 +114,7 @@ export const LanguageProvider = ({ children }) => {
       setLanguage,
       getLocalizedPath,
       supportedLanguages: SUPPORTED_LANGUAGES,
+      isReady,
     }}>
       {children}
     </LanguageContext.Provider>
