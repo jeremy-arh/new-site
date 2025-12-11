@@ -94,7 +94,11 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
               href={getFormUrl(currency, serviceId)}
               className="w-full text-center px-6 py-4 glassy-cta-blue font-bold rounded-lg transition-all duration-300"
               onClick={() => {
-                trackPlausibleCTAClick('mobile_cta');
+                trackPlausibleCTAClick('mobile_cta', serviceId, window.location.pathname, {
+                  ctaText: defaultCtaText,
+                  destination: getFormUrl(currency, serviceId),
+                  elementId: 'mobile_bottom_cta'
+                });
                 trackCTAClick('mobile_cta', serviceId, window.location.pathname);
               }}
             >

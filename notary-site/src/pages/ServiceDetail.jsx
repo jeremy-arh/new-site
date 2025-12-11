@@ -4,7 +4,7 @@ import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
 import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
-import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
+import { trackServiceClick as trackPlausibleServiceClick, trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
@@ -302,6 +302,14 @@ const ServiceDetail = () => {
                     e.currentTarget.style.backgroundColor = '#2F6AEC';
                   }}
                   onClick={() => {
+                    const ctaCopy = service.cta || t('nav.notarizeNow');
+                    const destination = getFormUrl(currency, service?.service_id || serviceId);
+
+                    trackPlausibleCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname, {
+                      ctaText: ctaCopy,
+                      destination,
+                      elementId: 'service_detail_hero'
+                    });
                     trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
                   }}
                 >
@@ -460,6 +468,12 @@ const ServiceDetail = () => {
                 <a
                   href={getFormUrl(currency, service?.service_id || serviceId)}
                   onClick={() => {
+                    const destination = getFormUrl(currency, service?.service_id || serviceId);
+                    trackPlausibleCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname, {
+                      ctaText: 'Upload my document',
+                      destination,
+                      elementId: 'service_detail_pricing'
+                    });
                     trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
                   }}
                     className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"

@@ -298,7 +298,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('Our services', destination);
+                    trackPlausibleNavigationClick(t('nav.services'), destination, {
+                      label: t('nav.services'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('Our services', destination, location.pathname);
                   } else {
                     // Mettre à jour l'URL sans recharger la page
@@ -317,7 +321,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('Our services', localizedPath);
+                    trackPlausibleNavigationClick(t('nav.services'), localizedPath, {
+                      label: t('nav.services'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('Our services', localizedPath, location.pathname);
                   }
                 }}
@@ -343,7 +351,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('How it work', '#how-it-works');
+                    trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                      label: t('nav.howItWorks'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('How it work', '#how-it-works', location.pathname);
                   } else {
                     // Mettre à jour l'URL sans recharger la page
@@ -362,7 +374,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('How it work', localizedPath);
+                    trackPlausibleNavigationClick(t('nav.howItWorks'), localizedPath, {
+                      label: t('nav.howItWorks'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('How it work', localizedPath, location.pathname);
                   }
                 }}
@@ -387,7 +403,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('FAQ', '#faq');
+                    trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                      label: t('nav.faq'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('FAQ', '#faq', location.pathname);
                   } else {
                     // Mettre à jour l'URL sans recharger la page
@@ -406,7 +426,11 @@ const Navbar = memo(() => {
                         });
                       }
                     }, 100);
-                    trackPlausibleNavigationClick('FAQ', localizedPath);
+                    trackPlausibleNavigationClick(t('nav.faq'), localizedPath, {
+                      label: t('nav.faq'),
+                      pagePath: location.pathname,
+                      section: 'navbar_desktop'
+                    });
                     trackNavigationClick('FAQ', localizedPath, location.pathname);
                   }
                 }}
@@ -425,7 +449,11 @@ const Navbar = memo(() => {
                 href="https://app.mynotary.io/login" 
                 className={`nav-link text-base font-semibold whitespace-nowrap flex-shrink-0 ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={() => {
-                  trackPlausibleLoginClick('navbar_desktop');
+                  trackPlausibleLoginClick('navbar_desktop', {
+                    linkText: t('nav.login'),
+                    pagePath: location.pathname,
+                    destination: 'https://app.mynotary.io/login'
+                  });
                   trackLoginClick('navbar_desktop', location.pathname);
                 }}
               >
@@ -438,7 +466,11 @@ const Navbar = memo(() => {
                 href={getFormUrl(currency, currentServiceId)} 
                 className={`${isHeroOutOfView ? 'glassy-cta-blue' : 'glassy-cta'} text-sm relative z-10 flex-shrink-0 whitespace-nowrap px-6 py-3 font-semibold rounded-lg transition-all duration-300`}
                 onClick={() => {
-                  trackPlausibleCTAClick('navbar_desktop');
+                  trackPlausibleCTAClick('navbar_desktop', currentServiceId, location.pathname, {
+                    ctaText: ctaText || t('nav.notarizeNow'),
+                    destination: getFormUrl(currency, currentServiceId),
+                    elementId: 'navbar_desktop_cta'
+                  });
                   trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
                 }}
               >
@@ -508,7 +540,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('Our services', '#other-services');
+                  trackPlausibleNavigationClick(t('nav.services'), '#other-services', {
+                    label: t('nav.services'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('Our services', '#other-services', location.pathname);
                 } else {
                   e.preventDefault();
@@ -529,7 +565,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('Our services', localizedPath);
+                  trackPlausibleNavigationClick(t('nav.services'), localizedPath, {
+                    label: t('nav.services'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('Our services', localizedPath, location.pathname);
                 }
               }}
@@ -556,7 +596,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('How it work', '#how-it-works');
+                  trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                    label: t('nav.howItWorks'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('How it work', '#how-it-works', location.pathname);
                 } else {
                   e.preventDefault();
@@ -577,7 +621,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('How it work', localizedPath);
+                  trackPlausibleNavigationClick(t('nav.howItWorks'), localizedPath, {
+                    label: t('nav.howItWorks'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('How it work', localizedPath, location.pathname);
                 }
               }}
@@ -604,7 +652,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('FAQ', '#faq');
+                  trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                    label: t('nav.faq'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('FAQ', '#faq', location.pathname);
                 } else {
                   e.preventDefault();
@@ -625,7 +677,11 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick('FAQ', localizedPath);
+                  trackPlausibleNavigationClick(t('nav.faq'), localizedPath, {
+                    label: t('nav.faq'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
                   trackNavigationClick('FAQ', localizedPath, location.pathname);
                 }
               }}
@@ -662,6 +718,12 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
+                  trackPlausibleNavigationClick(t('common.contactUs'), localizedPath, {
+                    label: t('common.contactUs'),
+                    pagePath: location.pathname,
+                    section: 'navbar_mobile'
+                  });
+                  trackNavigationClick('contact', localizedPath, location.pathname);
                 }}
                 className="nav-link text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 whitespace-nowrap"
               >
@@ -671,7 +733,11 @@ const Navbar = memo(() => {
               <a
                 href="https://app.mynotary.io/login"
                 onClick={() => {
-                  trackPlausibleLoginClick('navbar_mobile');
+                  trackPlausibleLoginClick('navbar_mobile', {
+                    linkText: t('nav.login'),
+                    pagePath: location.pathname,
+                    destination: 'https://app.mynotary.io/login'
+                  });
                   trackLoginClick('navbar_mobile', location.pathname);
                   closeMenu();
                 }}
@@ -684,7 +750,11 @@ const Navbar = memo(() => {
               <a
                 href={getFormUrl(currency, currentServiceId)}
                 onClick={() => {
-                  trackPlausibleCTAClick('navbar_mobile');
+                  trackPlausibleCTAClick('navbar_mobile', currentServiceId, location.pathname, {
+                    ctaText: ctaText || t('nav.notarizeNow'),
+                    destination: getFormUrl(currency, currentServiceId),
+                    elementId: 'navbar_mobile_cta'
+                  });
                   trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
                   closeMenu();
                 }}

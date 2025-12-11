@@ -77,6 +77,13 @@ const CTAPopup = () => {
   };
 
   const handleContactClick = () => {
+    trackPlausibleCTAClick('popup_contact', serviceId, location.pathname, {
+      ctaText: t('ctaPopup.contact'),
+      destination: 'crisp_chat',
+      ctaType: 'contact',
+      elementId: 'popup_contact'
+    });
+
     handleClose();
     // Open Crisp chat
     if (window.$crisp) {
@@ -92,9 +99,15 @@ const CTAPopup = () => {
   };
 
   const handleCTAClick = () => {
-    trackPlausibleCTAClick('popup_cta', location.pathname);
-    trackCTAClick('popup_cta', serviceId, location.pathname);
+    const label = isServicePage && service?.cta ? service.cta : t('nav.notarizeNow');
     const formUrl = getFormUrl(currency, serviceId);
+
+    trackPlausibleCTAClick('popup_cta', serviceId, location.pathname, {
+      ctaText: label,
+      destination: formUrl,
+      elementId: 'popup_primary'
+    });
+    trackCTAClick('popup_cta', serviceId, location.pathname);
     window.location.href = formUrl;
   };
 

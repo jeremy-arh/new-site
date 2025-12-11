@@ -786,7 +786,11 @@ const HowItWorks = memo(() => {
                   href={getFormUrl(currency, currentServiceId)}
                   className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap flex-shrink-0 justify-center"
                   onClick={() => {
-                    trackPlausibleCTAClick('how_it_works');
+                    trackPlausibleCTAClick('how_it_works', currentServiceId, location.pathname, {
+                      ctaText: t('nav.notarizeNow'),
+                      destination: getFormUrl(currency, currentServiceId),
+                      elementId: 'how_it_works_cta'
+                    });
                     trackCTAClick('how_it_works', currentServiceId, location.pathname);
                   }}
                 >

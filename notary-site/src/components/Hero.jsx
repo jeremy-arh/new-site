@@ -61,7 +61,11 @@ const Hero = memo(() => {
                 e.currentTarget.style.backgroundColor = '#2F6AEC';
               }}
               onClick={() => {
-                trackPlausibleCTAClick('hero');
+                trackPlausibleCTAClick('hero', null, window.location.pathname, {
+                  ctaText: t('nav.notarizeNow'),
+                  destination: getFormUrl(currency),
+                  elementId: 'hero_primary'
+                });
                 trackCTAClick('hero', null, window.location.pathname);
               }}
             >

@@ -11,6 +11,13 @@ const isPlausibleLoaded = () => {
   return typeof window !== 'undefined' && typeof window.plausible === 'function';
 };
 
+// Small helper to avoid sending empty strings
+const sanitizeText = (text) => {
+  if (!text || typeof text !== 'string') return undefined;
+  const trimmed = text.trim();
+  return trimmed.length ? trimmed : undefined;
+};
+
 /**
  * Wait for Plausible to be ready
  * @returns {Promise} Promise that resolves when Plausible is ready
@@ -102,10 +109,22 @@ export const trackEvent = async (eventName, props = {}) => {
  * @param {string} serviceId - Service ID (optional)
  * @param {string} pagePath - Page path (optional)
  */
-export const trackCTAClick = (location, serviceId = null, pagePath = null) => {
+export const trackCTAClick = (location, serviceId = null, pagePath = null, metadata = {}) => {
+  const {
+    ctaText,
+    destination,
+    label,
+    elementId,
+    ctaType = 'book_appointment',
+  } = metadata || {};
+
   trackEvent('cta_click', {
-    cta_type: 'book_appointment',
+    cta_type: ctaType,
     cta_location: location,
+    cta_label: sanitizeText(label) || sanitizeText(ctaText) || location,
+    cta_text: sanitizeText(ctaText),
+    cta_destination: destination || 'form',
+    element_id: elementId || undefined,
     service_id: serviceId || undefined,
     page_path: pagePath || undefined
   }).catch(err => {
@@ -137,9 +156,14 @@ export const trackServiceClick = (serviceId, serviceName, location) => {
  * Track login click
  * @param {string} location - Where the login link was clicked
  */
-export const trackLoginClick = (location) => {
+export const trackLoginClick = (location, metadata = {}) => {
+  const { linkText, destination, pagePath } = metadata || {};
+
   trackEvent('login_click', {
-    click_location: location
+    click_location: location,
+    link_text: sanitizeText(linkText),
+    destination: destination || 'https://app.mynotary.io/login',
+    page_path: pagePath || undefined
   }).catch(err => {
     if (process.env.NODE_ENV === 'development') {
       console.error('Plausible trackLoginClick error:', err);
@@ -152,10 +176,15 @@ export const trackLoginClick = (location) => {
  * @param {string} linkText - Text of the navigation link
  * @param {string} destination - Destination URL or anchor
  */
-export const trackNavigationClick = (linkText, destination) => {
+export const trackNavigationClick = (linkText, destination, metadata = {}) => {
+  const { label, pagePath, section } = metadata || {};
+
   trackEvent('navigation_click', {
-    link_text: linkText,
-    destination: destination
+    link_text: sanitizeText(linkText),
+    link_label: sanitizeText(label) || sanitizeText(linkText),
+    destination: destination,
+    page_path: pagePath || undefined,
+    nav_section: section || undefined,
   }).catch(err => {
     if (process.env.NODE_ENV === 'development') {
       console.error('Plausible trackNavigationClick error:', err);
