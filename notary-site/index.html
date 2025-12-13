@@ -29,9 +29,8 @@
     <link rel="dns-prefetch" href="https://plausible.io" />
     <link rel="dns-prefetch" href="https://client.crisp.chat" />
 
-    <!-- Google Fonts - chargé de manière non-bloquante -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <!-- Google Fonts avec display=swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Preload LCP image - Chargée dans le skeleton HTML -->
     <link rel="preload" as="image" href="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public" fetchpriority="high">
@@ -119,11 +118,6 @@
           border-radius: 0.5rem;
           margin-top: 2rem;
         }
-        /* Placeholder pour le reste de la page - évite que le footer monte */
-        .skeleton-page-content {
-          min-height: 200vh;
-          background: transparent;
-        }
       </style>
       <div class="skeleton-hero">
         <img src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public" alt="" width="1920" height="1080" fetchpriority="high" style="aspect-ratio:16/9">
@@ -137,8 +131,6 @@
           </div>
         </div>
       </div>
-      <!-- Placeholder qui réserve l'espace de la page complète -->
-      <div class="skeleton-page-content"></div>
     </div>
     <script type="module" src="/src/main.jsx"></script>
 

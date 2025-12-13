@@ -136,9 +136,11 @@ const AppContent = () => {
       <ScrollToTop />
       <PageViewTracker />
       <FormPrefetcher />
-      <div className="min-h-screen">
+      <div className="min-h-screen flex flex-col">
         <Navbar />
-        <LanguageRouter />
+        <main className="flex-1">
+          <LanguageRouter />
+        </main>
         <Footer />
         <CTAPopup />
       </div>

@@ -5,12 +5,11 @@ import { useTranslation } from '../hooks/useTranslation';
 
 const Footer = memo(() => {
   const { t } = useTranslation();
-  // Retarder l'affichage du footer pour éviter le CLS
-  const [isVisible, setIsVisible] = useState(false);
+  // Posts statiques par défaut - jamais de changement de hauteur
   const [recentPosts, setRecentPosts] = useState([
-    { slug: '', title: 'Loading...' },
-    { slug: '', title: 'Loading...' },
-    { slug: '', title: 'Loading...' }
+    { slug: 'placeholder-1', title: '—' },
+    { slug: 'placeholder-2', title: '—' },
+    { slug: 'placeholder-3', title: '—' }
   ]);
 
   const fetchRecentPosts = useCallback(async () => {
@@ -33,16 +32,7 @@ const Footer = memo(() => {
 
   useEffect(() => {
     fetchRecentPosts();
-    // Attendre que le contenu principal soit rendu avant d'afficher le footer
-    // Cela évite le CLS car le footer ne pousse plus le contenu
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
   }, [fetchRecentPosts]);
-
-  // Ne pas rendre le footer tant que le contenu n'est pas prêt
-  if (!isVisible) {
-    return null;
-  }
 
   return (
     <footer className="bg-gray-900 text-white">
