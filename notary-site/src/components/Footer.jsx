@@ -5,7 +5,12 @@ import { useTranslation } from '../hooks/useTranslation';
 
 const Footer = memo(() => {
   const { t } = useTranslation();
-  const [recentPosts, setRecentPosts] = useState([]);
+  // Initialiser avec des placeholders pour éviter le CLS
+  const [recentPosts, setRecentPosts] = useState([
+    { slug: '', title: 'Loading...' },
+    { slug: '', title: 'Loading...' },
+    { slug: '', title: 'Loading...' }
+  ]);
 
   const fetchRecentPosts = useCallback(async () => {
     try {
@@ -17,7 +22,9 @@ const Footer = memo(() => {
         .limit(3);
 
       if (error) throw error;
-      setRecentPosts(data || []);
+      if (data && data.length > 0) {
+        setRecentPosts(data);
+      }
     } catch (error) {
       console.error('Error fetching recent posts:', error);
     }
@@ -28,7 +35,8 @@ const Footer = memo(() => {
   }, [fetchRecentPosts]);
 
   return (
-    <footer className="bg-gray-900 text-white">
+    // Hauteur minimale fixe pour éviter le CLS
+    <footer className="bg-gray-900 text-white" style={{ minHeight: '320px', contain: 'layout' }}>
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Logo */}
@@ -38,7 +46,9 @@ const Footer = memo(() => {
                 src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public"
                 alt="Logo"
                 width="120"
+                height="32"
                 className="h-8 w-auto"
+                style={{ aspectRatio: '120/32' }}
               />
             </a>
           </div>

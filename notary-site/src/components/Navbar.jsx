@@ -282,6 +282,7 @@ const Navbar = memo(() => {
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
                 width="130"
                 height="32"
+                style={{ aspectRatio: '130/32' }}
               />
             </a>
 
