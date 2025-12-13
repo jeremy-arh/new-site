@@ -34,19 +34,23 @@ function PageViewTracker() {
   // Track scroll depth
   useEffect(() => {
     let ticking = false;
+    // Cache les valeurs de layout pour éviter les forced reflows
+    let cachedWindowHeight = 0;
+    let cachedDocumentHeight = 0;
     
     const handleScroll = () => {
       if (!ticking) {
+        ticking = true;
         window.requestAnimationFrame(() => {
-          const windowHeight = window.innerHeight;
-          const documentHeight = document.documentElement.scrollHeight;
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const scrollPercentage = Math.round(((scrollTop + windowHeight) / documentHeight) * 100);
+          // Lire toutes les propriétés de layout en une seule fois
+          cachedWindowHeight = window.innerHeight;
+          cachedDocumentHeight = document.documentElement.scrollHeight;
+          const scrollTop = window.pageYOffset;
+          const scrollPercentage = Math.round(((scrollTop + cachedWindowHeight) / cachedDocumentHeight) * 100);
           
           trackScrollDepth(scrollPercentage);
           ticking = false;
         });
-        ticking = true;
       }
     };
 

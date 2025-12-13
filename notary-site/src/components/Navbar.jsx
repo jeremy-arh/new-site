@@ -27,10 +27,12 @@ const IconOpenNewLarge = memo(() => (
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
+  // Éviter window.innerWidth au rendu initial pour prévenir forced reflow
+  const [isMobile, setIsMobile] = useState(true); // Default mobile-first
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isAtTop, setIsAtTop] = useState(window.scrollY === 0);
+  // Éviter window.scrollY au rendu initial pour prévenir forced reflow
+  const [isAtTop, setIsAtTop] = useState(true); // Default at top
   const [isHeroOutOfView, setIsHeroOutOfView] = useState(false);
   const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
@@ -52,26 +54,27 @@ const Navbar = memo(() => {
   const isOnServicePage = isServicePage();
 
   const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY;
+    // Utiliser requestAnimationFrame pour battre les lectures de layout
+    requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY;
 
-    setIsScrolled(currentScrollY > 50);
-    setIsAtTop(currentScrollY === 0);
+      setIsScrolled(currentScrollY > 50);
+      setIsAtTop(currentScrollY === 0);
 
-    // Only apply hide/show logic on mobile
-    if (window.innerWidth < 1150) {
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down
-        setIsHeaderVisible(false);
+      // Utiliser isMobile du state au lieu de window.innerWidth
+      if (isMobile) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsHeaderVisible(false);
+        } else {
+          setIsHeaderVisible(true);
+        }
       } else {
-        // Scrolling up
         setIsHeaderVisible(true);
       }
-    } else {
-      setIsHeaderVisible(true);
-    }
 
-    setLastScrollY(currentScrollY);
-  }, [lastScrollY]);
+      setLastScrollY(currentScrollY);
+    });
+  }, [lastScrollY, isMobile]);
 
   const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth < 1150);
@@ -85,13 +88,22 @@ const Navbar = memo(() => {
     setIsMenuOpen(false);
   }, []);
 
+  // Initialiser les valeurs après le montage pour éviter forced reflow
   useEffect(() => {
-    // Vérifier l'état initial au chargement
-    setIsAtTop(window.scrollY === 0);
+    // Utiliser requestAnimationFrame pour éviter le forced reflow
+    requestAnimationFrame(() => {
+      setIsMobile(window.innerWidth < 1150);
+      setIsAtTop(window.scrollY === 0);
+      setIsScrolled(window.scrollY > 50);
+    });
     
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [handleScroll, handleResize]);
 
   // Observer pour détecter quand le hero sort complètement de l'écran
   useEffect(() => {
