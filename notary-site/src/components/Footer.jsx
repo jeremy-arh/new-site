@@ -5,7 +5,8 @@ import { useTranslation } from '../hooks/useTranslation';
 
 const Footer = memo(() => {
   const { t } = useTranslation();
-  // Initialiser avec des placeholders pour éviter le CLS
+  // Retarder l'affichage du footer pour éviter le CLS
+  const [isVisible, setIsVisible] = useState(false);
   const [recentPosts, setRecentPosts] = useState([
     { slug: '', title: 'Loading...' },
     { slug: '', title: 'Loading...' },
@@ -32,11 +33,19 @@ const Footer = memo(() => {
 
   useEffect(() => {
     fetchRecentPosts();
+    // Attendre que le contenu principal soit rendu avant d'afficher le footer
+    // Cela évite le CLS car le footer ne pousse plus le contenu
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
   }, [fetchRecentPosts]);
 
+  // Ne pas rendre le footer tant que le contenu n'est pas prêt
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    // Hauteur minimale fixe pour éviter le CLS
-    <footer className="bg-gray-900 text-white" style={{ minHeight: '320px', contain: 'layout' }}>
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Logo */}
