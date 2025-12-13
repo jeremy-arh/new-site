@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense, useMemo, useCallback, memo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
 import { supabase } from '../lib/supabase';
-import { Icon } from '@iconify/react';
 import { trackServiceClick as trackPlausibleServiceClick, trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -13,8 +12,56 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
 import PriceDisplay from '../components/PriceDisplay';
-const HERO_IMG =
-  'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public?w=1800&fit=cover&format=auto&quality=80';
+
+// Image Hero - URL simple sans transformations pour compatibilité maximale
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public';
+
+// SVG Icons inline pour éviter les requêtes réseau d'@iconify
+const IconWorld = memo(() => (
+  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </svg>
+));
+const IconFlash = memo(() => (
+  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+  </svg>
+));
+const IconLock = memo(() => (
+  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+));
+const IconCheckCircle = memo(() => (
+  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+  </svg>
+));
+const IconUpload = memo(() => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+  </svg>
+));
+const IconArrowLeft = memo(() => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+));
+const IconOpenNew = memo(() => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
+  </svg>
+));
+const IconBadgeCheck = memo(() => (
+  <svg className="w-10 h-10 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+  </svg>
+));
+const IconArrowRight = memo(() => (
+  <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+  </svg>
+));
 
 const HowItWorks = lazy(() => import('../components/HowItWorks'));
 const Testimonial = lazy(() => import('../components/Testimonial'));
@@ -22,50 +69,48 @@ const FAQ = lazy(() => import('../components/FAQ'));
 const MobileCTA = lazy(() => import('../components/MobileCTA'));
 const ChatCTA = lazy(() => import('../components/ChatCTA'));
 
-// Other Services Section Component
-const OtherServicesSection = ({ currentServiceId }) => {
+// Other Services Section Component - memoized pour éviter re-renders
+const OtherServicesSection = memo(({ currentServiceId }) => {
   const [services, setServices] = useState([]);
   const { t } = useTranslation();
   const { language, getLocalizedPath } = useLanguage();
   const location = useLocation();
 
   useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select(getServiceFields())
+          .eq('is_active', true)
+          .eq('show_in_list', true)
+          .neq('service_id', currentServiceId)
+          .order('created_at', { ascending: true })
+          .limit(6);
+
+        if (error) throw error;
+        
+        const formattedServices = formatServicesForLanguage(data || [], language);
+        setServices(formattedServices);
+      } catch (error) {
+        console.error('Error fetching other services:', error);
+      }
+    };
     fetchServices();
   }, [currentServiceId, language]);
-
-  const fetchServices = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('services')
-        .select(getServiceFields())
-        .eq('is_active', true)
-        .eq('show_in_list', true)
-        .neq('service_id', currentServiceId)
-        .order('created_at', { ascending: true })
-        .limit(6);
-
-      if (error) throw error;
-      
-      // Formater les services selon la langue
-      const formattedServices = formatServicesForLanguage(data || [], language);
-      setServices(formattedServices);
-    } catch (error) {
-      console.error('Error fetching other services:', error);
-    }
-  };
 
   if (services.length === 0) {
     return null;
   }
 
   return (
-    <section id="other-services" className="py-20 px-4 sm:px-[30px] bg-white overflow-hidden">
+    <section id="other-services" className="py-20 px-4 sm:px-[30px] bg-white overflow-hidden content-visibility-auto">
       <div className="max-w-[1300px] mx-auto">
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4 scroll-fade-in">
+          <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold mb-4">
             {t('services.otherServices')}
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 scroll-slide-up">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             {t('services.otherServicesHeading').split(' ').slice(0, -2).join(' ')} <span>{t('services.otherServicesHeading').split(' ').slice(-2).join(' ')}</span>
           </h2>
         </div>
@@ -75,19 +120,15 @@ const OtherServicesSection = ({ currentServiceId }) => {
             <Link
               key={serviceItem.id}
               to={getLocalizedPath(`/services/${serviceItem.service_id}`)}
-              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up flex flex-col"
+              className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-gray-200 flex flex-col"
               onClick={() => {
                 trackPlausibleServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
                 trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
-                  {serviceItem.icon ? (
-                    <Icon icon={serviceItem.icon} className="w-10 h-10 text-black" />
-                  ) : (
-                    <Icon icon="iconoir:badge-check" className="w-10 h-10 text-black" />
-                  )}
+                <div className="w-12 h-12 flex items-center justify-center">
+                  <IconBadgeCheck />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{serviceItem.list_title || serviceItem.name}</h3>
               </div>
@@ -97,9 +138,7 @@ const OtherServicesSection = ({ currentServiceId }) => {
               <div className="flex flex-col gap-3 mt-auto items-center">
                 <div className="inline-flex items-center gap-2 group-hover:gap-3 transition-all justify-center text-sm font-semibold text-black underline underline-offset-4 decoration-2">
                   <span className="btn-text inline-block">{t('services.learnMore')}</span>
-                  <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+                  <IconArrowRight />
                 </div>
                 {serviceItem.base_price && (
                   <div className="flex items-center gap-2 justify-center">
@@ -113,10 +152,11 @@ const OtherServicesSection = ({ currentServiceId }) => {
       </div>
     </section>
   );
-};
+});
 
 // Rend les sections non critiques uniquement lorsqu'elles approchent du viewport
-const LazySection = ({ children, minHeight = 200, rootMargin = '200px 0px' }) => {
+// Optimisé avec content-visibility pour le rendering
+const LazySection = memo(({ children, minHeight = 200, rootMargin = '200px 0px' }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -132,14 +172,12 @@ const LazySection = ({ children, minHeight = 200, rootMargin = '200px 0px' }) =>
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.disconnect();
-          }
-        });
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
       },
-      { rootMargin, threshold: 0.1 }
+      { rootMargin, threshold: 0 }
     );
 
     observer.observe(target);
@@ -147,10 +185,88 @@ const LazySection = ({ children, minHeight = 200, rootMargin = '200px 0px' }) =>
   }, [isVisible, rootMargin]);
 
   return (
-    <div ref={sectionRef} style={!isVisible ? { minHeight } : undefined}>
+    <div 
+      ref={sectionRef} 
+      style={{ 
+        minHeight: !isVisible ? minHeight : undefined,
+        contentVisibility: !isVisible ? 'auto' : undefined,
+        containIntrinsicSize: !isVisible ? `0 ${minHeight}px` : undefined
+      }}
+    >
       {isVisible ? children : null}
     </div>
   );
+});
+
+// Composant mémorisé pour le contenu "What is" - extrait la logique lourde
+const WhatIsContent = memo(({ service, t }) => {
+  const { firstH2Content, contentWithoutFirstH2 } = useMemo(() => {
+    const detailedDesc = service.detailed_description || '';
+    const desc = service.description || '';
+    
+    const h2Regex = /<h2(?:\s+[^>]*)?>([\s\S]*?)<\/h2>/i;
+    let h2Match = detailedDesc ? detailedDesc.match(h2Regex) : null;
+    if (!h2Match && desc) h2Match = desc.match(h2Regex);
+    
+    let firstH2 = null;
+    let contentWithout = detailedDesc || desc;
+    
+    if (h2Match && h2Match[1]) {
+      firstH2 = h2Match[1]
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;|&#x27;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      if (detailedDesc && detailedDesc.includes(h2Match[0])) {
+        contentWithout = detailedDesc.replace(h2Match[0], '').trim();
+      } else if (desc && desc.includes(h2Match[0])) {
+        contentWithout = desc.replace(h2Match[0], '').trim();
+      }
+    }
+    
+    return { firstH2Content: firstH2, contentWithoutFirstH2: contentWithout };
+  }, [service.detailed_description, service.description]);
+
+  return (
+    <>
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center">
+        {firstH2Content || `${t('serviceDetail.whatIs')} ${service.name}?`}
+      </h2>
+      <div className="max-w-6xl mx-auto">
+        <div className="blog-content" dangerouslySetInnerHTML={{ __html: contentWithoutFirstH2 }} />
+      </div>
+    </>
+  );
+});
+
+// Hook optimisé pour détecter mobile avec matchMedia (pas de resize listener)
+const useIsMobile = (breakpoint = 1150) => {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(`(max-width: ${breakpoint}px)`).matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    
+    // Modern API
+    if (mq.addEventListener) {
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
+    // Fallback for older browsers
+    mq.addListener(handler);
+    return () => mq.removeListener(handler);
+  }, [breakpoint]);
+
+  return isMobile;
 };
 
 const ServiceDetail = () => {
@@ -159,14 +275,14 @@ const ServiceDetail = () => {
   const [service, setService] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
+  const isMobile = useIsMobile(1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
   const { t } = useTranslation();
   const { language, getLocalizedPath } = useLanguage();
 
   // Décoder le serviceId depuis l'URL (au cas où il contiendrait des caractères encodés)
-  const serviceId = rawServiceId ? decodeURIComponent(rawServiceId) : null;
+  const serviceId = useMemo(() => rawServiceId ? decodeURIComponent(rawServiceId) : null, [rawServiceId]);
 
   useEffect(() => {
     if (serviceId) {
@@ -183,14 +299,6 @@ const ServiceDetail = () => {
       formatPrice(service.base_price).then(setCtaPrice);
     }
   }, [service?.base_price, formatPrice]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1150);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const fetchService = async () => {
     setIsLoading(true);
@@ -252,9 +360,35 @@ const ServiceDetail = () => {
     }
   };
 
+  // Afficher le Hero immédiatement pendant le chargement (skeleton)
+  // IMPORTANT: Doit avoir exactement les mêmes dimensions que le contenu final pour éviter CLS
   if (isLoading) {
-    // Masquer tout le contenu (y compris header/footer) pendant le chargement pour éviter le flash
-    return <div className="fixed inset-0 bg-white z-50" aria-busy="true" />;
+    return (
+      <div className="min-h-screen">
+        {/* Hero Skeleton - mêmes dimensions que le Hero final */}
+        <section data-hero className="relative overflow-hidden h-screen flex items-center">
+          <img
+            src={HERO_IMG}
+            alt=""
+            width="1920"
+            height="1080"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+            style={{ aspectRatio: '16/9' }}
+            fetchpriority="high"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
+            <div className="max-w-3xl">
+              {/* Skeleton avec hauteurs fixes identiques au contenu */}
+              <div className="h-[3.5rem] sm:h-[4rem] lg:h-[4.5rem] bg-white/20 rounded-lg w-3/4 mb-6"></div>
+              <div className="h-6 bg-white/15 rounded w-full mb-2"></div>
+              <div className="h-6 bg-white/15 rounded w-2/3 mb-8"></div>
+              <div className="h-12 bg-blue-600 rounded-lg w-48"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   if (error || !service) {
@@ -263,7 +397,7 @@ const ServiceDetail = () => {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 mb-4 md:mb-6 leading-tight">{t('common.notFound')}</h1>
         <p className="text-gray-600 mb-8">{error || t('common.error')}</p>
         <Link to={getLocalizedPath('/')} className="primary-cta text-lg px-8 py-4 inline-flex items-center gap-2">
-          <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
+          <IconOpenNew />
           <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
         </Link>
       </div>
@@ -304,86 +438,77 @@ const ServiceDetail = () => {
           },
         ]}
       />
-      {/* Hero Section - Similar to Home Hero */}
-      <section data-hero>
-        <div
-          className="relative overflow-hidden min-h-screen flex items-center"
-          style={{
-            backgroundImage: `url(${HERO_IMG})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/60"></div>
+      {/* Hero Section - hauteur fixe pour éviter CLS */}
+      <section data-hero className="relative overflow-hidden h-screen flex items-center">
+        {/* Image Hero avec dimensions fixes pour éviter CLS */}
+        <img
+          src={HERO_IMG}
+          alt=""
+          width="1920"
+          height="1080"
+          className="absolute inset-0 w-full h-full object-cover object-top"
+          style={{ aspectRatio: '16/9' }}
+          fetchpriority="high"
+        />
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/60"></div>
 
-          {/* Content Container */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
-            <div className="max-w-3xl">
-              <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight animate-fade-in`}>
-                {service.page_h1 || service.name}
-              </h1>
+        {/* Content Container */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
+          <div className="max-w-3xl">
+            <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight`}>
+              {service.page_h1 || service.name}
+            </h1>
 
-              <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl animate-fade-in animation-delay-200`}>
-                {service.short_description || service.description}
-              </p>
+            <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl`}>
+              {service.short_description || service.description}
+            </p>
 
-              <div className={`flex flex-row flex-wrap ${isMobile ? 'items-center' : 'items-center'} gap-3 ${isMobile ? 'mb-8' : 'mb-12'} animate-fade-in animation-delay-400`}>
-                <a 
-                  href={getFormUrl(currency, service?.service_id || serviceId)} 
-                  className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 text-white flex-shrink-0`}
-                  style={{
-                    backgroundColor: '#2F6AEC',
-                    color: 'white'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#2563eb';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#2F6AEC';
-                  }}
-                  onClick={() => {
-                    const ctaCopy = service.cta || t('nav.notarizeNow');
-                    const destination = getFormUrl(currency, service?.service_id || serviceId);
+            <div className={`flex flex-row flex-wrap items-center gap-3 ${isMobile ? 'mb-8' : 'mb-12'}`}>
+              <a 
+                href={getFormUrl(currency, service?.service_id || serviceId)} 
+                className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 text-white flex-shrink-0 bg-blue-600 hover:bg-blue-700`}
+                onClick={() => {
+                  const ctaCopy = service.cta || t('nav.notarizeNow');
+                  const destination = getFormUrl(currency, service?.service_id || serviceId);
 
-                    trackPlausibleCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname, {
-                      ctaText: ctaCopy,
-                      destination,
-                      elementId: 'service_detail_hero'
-                    });
-                    trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
-                  }}
-                >
-                <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
-                  <span className="btn-text inline-block">
-                    {service.cta || t('nav.notarizeNow')}
-                  </span>
-                </a>
-                {ctaPrice && (
-                  <div className="text-white flex items-center gap-1">
-                    <span className="text-base font-semibold">{ctaPrice}</span>
-                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')} - no hidden fee</span>
-                  </div>
-                )}
+                  trackPlausibleCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname, {
+                    ctaText: ctaCopy,
+                    destination,
+                    elementId: 'service_detail_hero'
+                  });
+                  trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
+                }}
+              >
+                <IconOpenNew />
+                <span className="btn-text inline-block">
+                  {service.cta || t('nav.notarizeNow')}
+                </span>
+              </a>
+              {ctaPrice && (
+                <div className="text-white flex items-center gap-1">
+                  <span className="text-base font-semibold">{ctaPrice}</span>
+                  <span className="text-xs font-normal text-white/70">{t('services.perDocument')} - no hidden fee</span>
+                </div>
+              )}
+            </div>
+
+            {/* Features */}
+            <div className={`flex ${isMobile ? 'flex-col items-start gap-3 mt-6' : 'flex-row items-center gap-8 mt-8'}`}>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <IconWorld />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
               </div>
 
-              {/* Features */}
-              <div className={`flex ${isMobile ? 'flex-col items-start' : 'flex-row items-center'} ${isMobile ? 'gap-3' : 'gap-8'} ${isMobile ? 'mt-6' : 'mt-8'} animate-fade-in animation-delay-600`}>
-                <div className="flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="lets-icons:world-2-light" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
-                </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <IconFlash />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
+              </div>
 
-                <div className="flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="fluent:flash-32-regular" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
-                </div>
-
-                <div className="flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="si:lock-line" className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-white flex-shrink-0`} />
-                  <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
-                </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <IconLock />
+                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
               </div>
             </div>
           </div>
@@ -404,9 +529,8 @@ const ServiceDetail = () => {
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
                 loading="lazy"
-                decoding="async"
-                fetchPriority="low"
-                sizes="(min-width: 1024px) 40vw, 90vw"
+                width="520"
+                height="650"
                 style={{ maxHeight: '800px', aspectRatio: '4 / 5' }}
               />
             </div>
@@ -457,60 +581,60 @@ const ServiceDetail = () => {
                     background: '#ffffff'
                   }}
                 >
-                {/* Benefits List */}
+                {/* Benefits List - Optimisé sans animations coûteuses */}
                 <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4 flex-1">
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.legallyValid.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.legallyValid.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.legallyValid.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.legallyValid.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.sameDay.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.sameDay.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.sameDay.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.sameDay.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.officialNotarization.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.officialNotarization.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.officialNotarization.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.officialNotarization.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.available247.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.available247.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.available247.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.available247.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.transparentFee.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.transparentFee.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.transparentFee.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.transparentFee.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.bankGradeSecurity.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.bankGradeSecurity.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.bankGradeSecurity.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.bankGradeSecurity.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
-                      <Icon icon="iconoir:check-circle" className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <IconCheckCircle />
                     <div>
-                        <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.globalCompliance.title')}</h3>
-                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.globalCompliance.description')}</p>
+                      <h3 className="text-gray-900 text-sm sm:text-base font-semibold mb-1">{t('serviceDetail.pricing.benefits.globalCompliance.title')}</h3>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{t('serviceDetail.pricing.benefits.globalCompliance.description')}</p>
                     </div>
                   </div>
                 </div>
 
-                  {/* CTA Button - Black for contrast on white background */}
+                {/* CTA Button - Simplifié sans animations coûteuses */}
                 <a
                   href={getFormUrl(currency, service?.service_id || serviceId)}
                   onClick={() => {
@@ -522,11 +646,11 @@ const ServiceDetail = () => {
                     });
                     trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
                   }}
-                    className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"
-                  >
-                    <span className="inline-flex items-center justify-center gap-2">
-                      <Icon icon="line-md:uploading-loop" className="w-5 h-5" />
-                      Upload my document
+                  className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-colors duration-200 text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"
+                >
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <IconUpload />
+                    Upload my document
                   </span>
                 </a>
                 </div>
@@ -536,86 +660,10 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* What is Section */}
-      <section className="py-20 px-[30px] bg-gray-50">
+      {/* What is Section - content-visibility pour optimisation */}
+      <section className="py-20 px-[30px] bg-gray-50 content-visibility-auto">
         <div className="max-w-[1300px] mx-auto">
-          {(() => {
-            // Chercher le h2 dans detailed_description d'abord, puis dans description
-            const detailedDesc = service.detailed_description || '';
-            const desc = service.description || '';
-            const descriptionHtml = detailedDesc || desc;
-            
-            // Extraire le premier h2 du HTML de manière très robuste
-            // Gère les cas avec ou sans attributs, sur une ou plusieurs lignes
-            // Utilise une regex non-greedy pour capturer le premier h2
-            const h2Regex = /<h2(?:\s+[^>]*)?>([\s\S]*?)<\/h2>/i;
-            let h2Match = null;
-            let firstH2Content = null;
-            let contentWithoutFirstH2 = descriptionHtml;
-            
-            // Chercher dans detailed_description d'abord
-            if (detailedDesc) {
-              h2Match = detailedDesc.match(h2Regex);
-            }
-            
-            // Si pas trouvé dans detailed_description, chercher dans description
-            if (!h2Match && desc) {
-              h2Match = desc.match(h2Regex);
-            }
-            
-            if (h2Match && h2Match[1]) {
-              // Extraire le contenu du h2 et nettoyer les balises HTML internes
-              firstH2Content = h2Match[1]
-                .replace(/<[^>]+>/g, '') // Supprimer toutes les balises HTML internes
-                .replace(/&nbsp;/g, ' ') // Remplacer &nbsp; par des espaces
-                .replace(/&amp;/g, '&') // Remplacer &amp; par &
-                .replace(/&lt;/g, '<') // Remplacer &lt; par <
-                .replace(/&gt;/g, '>') // Remplacer &gt; par >
-                .replace(/&quot;/g, '"') // Remplacer &quot; par "
-                .replace(/&#39;/g, "'") // Remplacer &#39; par '
-                .replace(/&#x27;/g, "'") // Remplacer &#x27; par '
-                .replace(/\s+/g, ' ') // Normaliser les espaces multiples
-                .trim();
-              
-              // Retirer le h2 du contenu pour éviter la duplication
-              // Retirer dans le champ où il a été trouvé
-              if (detailedDesc && detailedDesc.includes(h2Match[0])) {
-                contentWithoutFirstH2 = detailedDesc.replace(h2Match[0], '').trim();
-              } else if (desc && desc.includes(h2Match[0])) {
-                contentWithoutFirstH2 = desc.replace(h2Match[0], '').trim();
-              }
-              
-              // Debug en développement
-              if (process.env.NODE_ENV === 'development') {
-                console.log('[ServiceDetail] H2 found:', firstH2Content);
-                console.log('[ServiceDetail] Found in:', detailedDesc ? 'detailed_description' : 'description');
-              }
-            } else {
-              // Debug en développement
-              if (process.env.NODE_ENV === 'development') {
-                console.log('[ServiceDetail] No H2 found in description');
-                console.log('[ServiceDetail] Detailed description preview:', detailedDesc.substring(0, 200));
-                console.log('[ServiceDetail] Description preview:', desc.substring(0, 200));
-              }
-            }
-            
-            // Toujours utiliser le h2 s'il existe, sinon utiliser le titre par défaut
-            return (
-              <>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-12 text-center animate-fade-in">
-                  {firstH2Content || `${t('serviceDetail.whatIs')} ${service.name}?`}
-                </h2>
-                <div className="max-w-6xl mx-auto">
-                  <div className="relative animate-fade-in animation-delay-200">
-                    <div
-                      className="blog-content"
-                      dangerouslySetInnerHTML={{ __html: contentWithoutFirstH2 }}
-                    />
-                  </div>
-                </div>
-              </>
-            );
-          })()}
+          <WhatIsContent service={service} t={t} />
         </div>
       </section>
 
@@ -656,7 +704,7 @@ const ServiceDetail = () => {
       <section className="px-[30px] py-12">
         <div className="max-w-[1100px] mx-auto text-center">
           <Link to={getLocalizedPath('/#services')} className="inline-flex items-center gap-3 text-black font-semibold hover:underline">
-            <Icon icon="tabler:arrow-left" className="w-5 h-5" />
+            <IconArrowLeft />
             <span>{t('serviceDetail.backToServices')}</span>
           </Link>
         </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { supabase } from '../lib/supabase';
 import { trackCTAClick as trackPlausibleCTAClick, trackLoginClick as trackPlausibleLoginClick, trackNavigationClick as trackPlausibleNavigationClick } from '../utils/plausible';
 import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/analytics';
@@ -12,6 +11,18 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 import { removeLanguageFromPath, SUPPORTED_LANGUAGES } from '../utils/language';
+
+// SVG inline pour éviter @iconify (performance)
+const IconOpenNew = memo(() => (
+  <svg className="w-4 h-4 text-white flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
+  </svg>
+));
+const IconOpenNewLarge = memo(() => (
+  <svg className="w-5 h-5 text-white flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
+  </svg>
+));
 
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -270,6 +281,7 @@ const Navbar = memo(() => {
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
                 width="130"
+                height="32"
               />
             </a>
 
@@ -475,7 +487,7 @@ const Navbar = memo(() => {
                 }}
               >
                 <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
-                  <Icon icon="lsicon:open-new-filled" className="w-4 h-4 text-white flex-shrink-0" />
+                  <IconOpenNew />
                   <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                 </span>
               </a>
@@ -761,7 +773,7 @@ const Navbar = memo(() => {
                 className="block w-full text-center glassy-cta primary-cta text-lg py-4"
               >
                 <span className="btn-text inline-flex items-center justify-center gap-2 whitespace-nowrap">
-                  <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white flex-shrink-0" />
+                  <IconOpenNewLarge />
                   <span className="whitespace-nowrap">{ctaText || t('nav.notarizeNow')}</span>
                 </span>
               </a>

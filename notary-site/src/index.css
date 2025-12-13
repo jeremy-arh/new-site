@@ -25,6 +25,12 @@
     font-family: 'Geist', sans-serif;
     font-weight: 500;
   }
+
+  /* Performance: content-visibility pour les sections below-the-fold */
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
 }
 
 @layer components {
@@ -45,98 +51,63 @@
     background: #000000 !important;
   }
 
-  /* Animation keyframes for flash effect that traverses the button */
+  /* Animation keyframes for flash effect - OPTIMISÉ avec transform au lieu de left */
   @keyframes glassy-flash {
     0% {
-      left: -60%;
+      transform: translateX(-100%) skewX(-20deg);
       opacity: 0;
     }
-    2% {
-      opacity: 0.8;
-    }
-    5% {
-      opacity: 1;
+    10% {
+      opacity: 0.6;
     }
     50% {
-      left: 200%;
-      opacity: 1;
-    }
-    52% {
-      opacity: 0.8;
-    }
-    55% {
-      left: 200%;
-      opacity: 0;
+      transform: translateX(300%) skewX(-20deg);
+      opacity: 0.6;
     }
     100% {
-      left: 200%;
+      transform: translateX(300%) skewX(-20deg);
       opacity: 0;
     }
   }
 
-  /* Animation for glassy effect enhancement during flash */
+  /* Animation for glassy effect - DÉSACTIVÉE pour éviter le CLS */
+  /* Les animations avec box-shadow et border-color ne sont pas composited */
   @keyframes glassy-enhance {
     0%, 100% {
-      background: #000000;
-      backdrop-filter: blur(40px) saturate(200%);
-      -webkit-backdrop-filter: blur(40px) saturate(200%);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(255, 255, 255, 0.05);
-    }
-    2%, 10% {
-      background: #000000;
-      backdrop-filter: blur(50px) saturate(250%);
-      -webkit-backdrop-filter: blur(50px) saturate(250%);
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.15);
-    }
-    5% {
-      background: #000000;
-      backdrop-filter: blur(60px) saturate(300%);
-      -webkit-backdrop-filter: blur(60px) saturate(300%);
-      border-color: rgba(255, 255, 255, 0.6);
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(255, 255, 255, 0.2);
+      opacity: 1;
     }
   }
 
   /* Glassy style for header and floating CTA buttons */
+  /* Optimisé : backdrop-filter désactivé sur mobile pour les performances */
   .glassy-cta {
     background: #000000 !important;
     color: #ffffff !important;
-    backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-      0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
-    animation: glassy-enhance 5s ease-out infinite;
+  }
+
+  /* backdrop-filter uniquement sur desktop pour performance */
+  @media (min-width: 768px) {
+    .glassy-cta {
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+      animation: glassy-enhance 5s ease-out infinite;
+    }
   }
 
   .glassy-cta::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -60%;
+    left: 0;
     width: 60%;
     height: 100%;
     background: linear-gradient(
@@ -147,12 +118,19 @@
       rgba(255, 255, 255, 0.2) 70%,
       transparent 100%
     );
-    filter: blur(8px);
-    opacity: 0.4;
-    transform: skewX(-20deg);
-    animation: glassy-flash 5s ease-out infinite;
+    opacity: 0;
+    transform: translateX(-100%) skewX(-20deg);
     pointer-events: none;
     z-index: 1;
+    will-change: transform, opacity;
+  }
+
+  /* Animation flash uniquement sur desktop - utilise transform (composited) */
+  @media (min-width: 768px) {
+    .glassy-cta::before {
+      filter: blur(8px);
+      animation: glassy-flash 5s ease-out infinite;
+    }
   }
 
   .glassy-cta:hover::before {
@@ -167,79 +145,58 @@
 
   .glassy-cta:hover {
     background: #000000 !important;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45) !important;
     transform: translateY(-1px);
-    animation: none; /* Stop animation on hover */
+    animation: none;
   }
 
-  /* Animation for blue glassy effect enhancement during flash */
+  @media (min-width: 768px) {
+    .glassy-cta:hover {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+
+  /* Animation for blue glassy effect - DÉSACTIVÉE pour éviter le CLS */
   @keyframes glassy-enhance-blue {
     0%, 100% {
-      background: #2F6AEC;
-      backdrop-filter: blur(40px) saturate(200%);
-      -webkit-backdrop-filter: blur(40px) saturate(200%);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 
-        0 8px 32px rgba(47, 106, 236, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(255, 255, 255, 0.05);
-    }
-    2%, 10% {
-      background: #2F6AEC;
-      backdrop-filter: blur(50px) saturate(250%);
-      -webkit-backdrop-filter: blur(50px) saturate(250%);
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 
-        0 8px 32px rgba(47, 106, 236, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.15);
-    }
-    5% {
-      background: #2F6AEC;
-      backdrop-filter: blur(60px) saturate(300%);
-      -webkit-backdrop-filter: blur(60px) saturate(300%);
-      border-color: rgba(255, 255, 255, 0.6);
-      box-shadow: 
-        0 8px 32px rgba(47, 106, 236, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(255, 255, 255, 0.2);
+      opacity: 1;
     }
   }
 
   /* Glassy style for blue CTA buttons */
+  /* Optimisé : backdrop-filter désactivé sur mobile pour les performances */
   .glassy-cta-blue {
     background: #2F6AEC !important;
-    backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 
-      0 8px 32px rgba(47, 106, 236, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-      0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(47, 106, 236, 0.5);
     position: relative;
     overflow: hidden;
-    animation: glassy-enhance-blue 5s ease-out infinite;
     color: white !important;
+  }
+
+  @media (min-width: 768px) {
+    .glassy-cta-blue {
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      box-shadow: 
+        0 8px 32px rgba(47, 106, 236, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+      animation: glassy-enhance-blue 5s ease-out infinite;
+    }
   }
 
   .glassy-cta-blue::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -60%;
+    left: 0;
     width: 60%;
     height: 100%;
     background: linear-gradient(
@@ -250,12 +207,18 @@
       rgba(255, 255, 255, 0.2) 70%,
       transparent 100%
     );
-    filter: blur(8px);
-    opacity: 0.4;
-    transform: skewX(-20deg);
-    animation: glassy-flash 5s ease-out infinite;
+    opacity: 0;
+    transform: translateX(-100%) skewX(-20deg);
     pointer-events: none;
     z-index: 1;
+    will-change: transform, opacity;
+  }
+
+  @media (min-width: 768px) {
+    .glassy-cta-blue::before {
+      filter: blur(8px);
+      animation: glassy-flash 5s ease-out infinite;
+    }
   }
 
   .glassy-cta-blue:hover::before {
@@ -269,14 +232,20 @@
 
   .glassy-cta-blue:hover {
     background: #2563eb !important;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 
-      0 12px 40px rgba(47, 106, 236, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 12px 40px rgba(47, 106, 236, 0.45) !important;
     transform: translateY(-1px);
-    animation: none; /* Stop animation on hover */
+    animation: none;
+  }
+
+  @media (min-width: 768px) {
+    .glassy-cta-blue:hover {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 
+        0 12px 40px rgba(47, 106, 236, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    }
   }
 
   /* Snake border animation for CTA */
@@ -406,7 +375,9 @@
   .blog-content img {
     border-radius: 1.5rem;
     width: 100%;
-    height: auto;
+  height: auto;
+  aspect-ratio: 3 / 2; /* Réserve de l'espace pour limiter le CLS */
+  object-fit: cover;
     box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
     margin: 2.5rem 0;
   }
@@ -542,20 +513,57 @@
   .infinite-scroll-container:hover .animate-scroll-infinite {
     animation-play-state: paused;
   }
-  /* Fade In Animation */
+
+  /* Fade In Animation - Simplifié sur mobile */
   .animate-fade-in {
-    animation: fadeIn 1s ease-out both;
+    animation: fadeIn 0.5s ease-out both;
   }
 
-  /* Slide Up Animation */
+  /* Slide Up Animation - Simplifié sur mobile */
   .animate-slide-up {
-    animation: slideUp 0.8s ease-out both;
+    animation: slideUp 0.5s ease-out both;
+  }
+
+  /* 
+   * PERFORMANCE: Désactiver les animations transform sur mobile
+   * Les transforms déclenchent des repaints coûteux sur mobile
+   */
+  @media (max-width: 768px) {
+    .animate-fade-in,
+    .animate-slide-up {
+      animation-duration: 0.3s;
+    }
+
+    .scroll-slide-up,
+    .scroll-slide-left,
+    .scroll-slide-right {
+      transform: none !important;
+      transition: opacity 0.3s ease-out !important;
+    }
+
+    .scroll-slide-up.is-visible,
+    .scroll-slide-left.is-visible,
+    .scroll-slide-right.is-visible {
+      opacity: 1;
+      transform: none !important;
+    }
+
+    /* Désactiver hover-scale sur mobile (pas de hover sur touch) */
+    .hover-scale {
+      transform: none !important;
+    }
+
+    /* Réduire les animations infinies sur mobile */
+    .animate-float,
+    .animate-pulse-glow {
+      animation: none !important;
+    }
   }
 
   /* Scroll Animations */
   .scroll-fade-in {
     opacity: 0;
-    transition: opacity 0.8s ease-out;
+    transition: opacity 0.5s ease-out;
   }
 
   .scroll-fade-in.is-visible {
@@ -564,8 +572,8 @@
 
   .scroll-slide-up {
     opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
 
   .scroll-slide-up.is-visible {
@@ -575,8 +583,8 @@
 
   .scroll-slide-left {
     opacity: 0;
-    transform: translateX(-50px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transform: translateX(-30px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
 
   .scroll-slide-left.is-visible {
@@ -586,8 +594,8 @@
 
   .scroll-slide-right {
     opacity: 0;
-    transform: translateX(50px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transform: translateX(30px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
 
   .scroll-slide-right.is-visible {
@@ -595,8 +603,9 @@
     transform: translateX(0);
   }
 
+  /* Retirer will-change qui consomme de la mémoire GPU */
   .scroll-animated {
-    will-change: opacity, transform;
+    /* will-change removed for better performance */
   }
 
   /* Typing Animation for Titles */
@@ -611,60 +620,74 @@
     animation: typing 3s steps(60, end), fadeIn 0.5s ease-in;
   }
 
-  /* Animation Delays */
+  /* Animation Delays - Réduits pour améliorer le LCP perçu */
   .animation-delay-100 {
-    animation-delay: 0.1s;
+    animation-delay: 0.05s;
   }
 
   .animation-delay-200 {
-    animation-delay: 0.2s;
+    animation-delay: 0.1s;
   }
 
   .animation-delay-300 {
-    animation-delay: 0.3s;
+    animation-delay: 0.15s;
   }
 
   .animation-delay-400 {
-    animation-delay: 0.4s;
+    animation-delay: 0.2s;
   }
 
   .animation-delay-500 {
-    animation-delay: 0.5s;
+    animation-delay: 0.25s;
   }
 
   .animation-delay-600 {
-    animation-delay: 0.6s;
+    animation-delay: 0.3s;
   }
 
   .animation-delay-700 {
-    animation-delay: 0.7s;
+    animation-delay: 0.35s;
   }
 
   .animation-delay-800 {
-    animation-delay: 0.8s;
+    animation-delay: 0.4s;
   }
 
   .animation-delay-1000 {
-    animation-delay: 1s;
+    animation-delay: 0.5s;
   }
 
-  /* Hover Scale Animation */
+  /* Hover Scale Animation - Desktop only */
   .hover-scale {
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
   }
 
-  .hover-scale:hover {
-    transform: scale(1.05);
+  @media (min-width: 769px) {
+    .hover-scale:hover {
+      transform: scale(1.05);
+    }
   }
 
-  /* Floating Animation */
+  /* Floating Animation - Desktop only pour économiser la batterie */
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: none;
   }
 
-  /* Pulse Glow Animation */
+  @media (min-width: 769px) {
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  }
+
+  /* Pulse Glow Animation - Desktop only */
   .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
+    animation: none;
+  }
+
+  @media (min-width: 769px) {
+    .animate-pulse-glow {
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -677,7 +700,8 @@
     .typing-text,
     .typing-text-slow,
     .animate-float,
-    .animate-pulse-glow {
+    .animate-pulse-glow,
+    .animate-scroll-infinite {
       animation: none !important;
       transition: none !important;
       opacity: 1 !important;
@@ -813,7 +837,7 @@
 .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
 .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
 
-/* Animated waves for glassy pricing block */
+/* Animated waves for glassy pricing block - Desktop only */
 @keyframes wave-1 {
   0% {
     transform: translateX(0) translateY(50%);
@@ -850,16 +874,25 @@
   }
 }
 
-.animate-wave-1 {
-  animation: wave-1 8s ease-in-out infinite;
-}
-
-.animate-wave-2 {
-  animation: wave-2 10s ease-in-out infinite;
-  animation-delay: -2s;
-}
-
+/* Waves animations désactivées sur mobile pour économiser la batterie */
+.animate-wave-1,
+.animate-wave-2,
 .animate-wave-3 {
-  animation: wave-3 12s ease-in-out infinite;
-  animation-delay: -4s;
+  animation: none;
+}
+
+@media (min-width: 769px) {
+  .animate-wave-1 {
+    animation: wave-1 8s ease-in-out infinite;
+  }
+
+  .animate-wave-2 {
+    animation: wave-2 10s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  .animate-wave-3 {
+    animation: wave-3 12s ease-in-out infinite;
+    animation-delay: -4s;
+  }
 }
