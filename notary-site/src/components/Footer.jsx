@@ -35,7 +35,7 @@ const Footer = memo(() => {
   }, [fetchRecentPosts]);
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 text-white" style={{ contain: 'layout' }}>
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Logo */}
@@ -79,19 +79,19 @@ const Footer = memo(() => {
             <h3 className="text-sm font-bold text-white mb-4">Resources</h3>
             <ul className="space-y-2">
               {recentPosts.map((post) => (
-                <li key={post.slug}>
+                <li key={post.slug} className="h-5">
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm line-clamp-1"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm line-clamp-1 block h-5 overflow-hidden"
                   >
                     {post.title}
                   </Link>
                 </li>
               ))}
-              <li>
+              <li className="h-5">
                 <Link
                   to="/blog"
-                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm block h-5"
                 >
                   See all resources &gt;
                 </Link>
@@ -120,8 +120,8 @@ const Footer = memo(() => {
         {/* Divider */}
         <div className="border-t border-gray-800 my-8"></div>
 
-        {/* Disclaimer */}
-        <div className="mb-6">
+        {/* Disclaimer - hauteur fixe pour éviter CLS */}
+        <div className="mb-6 min-h-[60px]">
           <p className="text-xs text-gray-500 leading-relaxed max-w-4xl mx-auto text-center">
             {t('footer.disclaimer')}
           </p>
