@@ -13,8 +13,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
 import PriceDisplay from '../components/PriceDisplay';
 
-// Image Hero - hébergée localement pour cache 1 an
-const HERO_IMG = '/hero-bg.jpg';
+// Image Hero
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -525,7 +525,7 @@ const ServiceDetail = () => {
             {/* Left Side - Image */}
             <div className="lg:w-2/5 flex items-center justify-center">
               <img
-                src="/service-hero.jpg"
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/public"
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
                 loading="lazy"
