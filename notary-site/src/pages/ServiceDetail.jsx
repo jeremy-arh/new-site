@@ -13,8 +13,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
 import PriceDisplay from '../components/PriceDisplay';
 
-// Image Hero - DÉSACTIVÉE POUR TEST PERFORMANCE
-const HERO_IMG = null; // 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public';
+// Image Hero
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -365,9 +365,17 @@ const ServiceDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen">
-        {/* Hero Skeleton - TEST SANS IMAGE */}
-        <section data-hero className="relative overflow-hidden h-screen flex items-center bg-gray-800">
-          {/* IMAGE DÉSACTIVÉE POUR TEST */}
+        {/* Hero Skeleton - mêmes dimensions que le Hero final */}
+        <section data-hero className="relative overflow-hidden h-screen flex items-center">
+          <img
+            src={HERO_IMG}
+            alt=""
+            width="1920"
+            height="1080"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+            style={{ aspectRatio: '16/9' }}
+            fetchpriority="high"
+          />
           <div className="absolute inset-0 bg-black/60"></div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
             <div className="max-w-3xl">
@@ -432,10 +440,19 @@ const ServiceDetail = () => {
       />
       {/* Hero Section - hauteur fixe pour éviter CLS */}
       <section data-hero className="relative overflow-hidden h-screen flex items-center">
-        {/* IMAGE HERO DÉSACTIVÉE POUR TEST */}
+        {/* Image Hero avec dimensions fixes pour éviter CLS */}
+        <img
+          src={HERO_IMG}
+          alt=""
+          width="1920"
+          height="1080"
+          className="absolute inset-0 w-full h-full object-cover object-top"
+          style={{ aspectRatio: '16/9' }}
+          fetchpriority="high"
+        />
         
         {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gray-800"></div>
+        <div className="absolute inset-0 bg-black/60"></div>
 
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
@@ -507,10 +524,14 @@ const ServiceDetail = () => {
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Left Side - Image */}
             <div className="lg:w-2/5 flex items-center justify-center">
-              {/* IMAGE DÉSACTIVÉE POUR TEST */}
-              <div 
-                className="w-full rounded-2xl bg-gray-300"
-                style={{ height: '650px', maxHeight: '800px', aspectRatio: '4 / 5' }}
+              <img
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/public"
+                alt={service.name}
+                className="w-full h-auto rounded-2xl object-cover"
+                loading="lazy"
+                width="520"
+                height="650"
+                style={{ maxHeight: '800px', aspectRatio: '4 / 5' }}
               />
             </div>
 
