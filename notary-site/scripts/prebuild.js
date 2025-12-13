@@ -11,13 +11,17 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Charger les variables d'environnement depuis .env
-dotenv.config({ path: path.join(__dirname, '../.env') });
+// Charger dotenv seulement en local (optionnel en production)
+try {
+  const dotenv = await import('dotenv');
+  dotenv.config({ path: path.join(__dirname, '../.env') });
+} catch {
+  // dotenv non disponible en production - les variables sont déjà dans l'environnement
+}
 
 // Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
