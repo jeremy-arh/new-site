@@ -22,14 +22,27 @@ const ServicesList = () => {
 
   const fetchServices = async () => {
     try {
-      const { data, error } = await supabase
-        .from('services')
-        .select(getServiceFields())
-        .eq('is_active', true)
-        .eq('show_in_list', true)
-        .order('created_at', { ascending: true });
+      let data;
 
-      if (error) throw error;
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/services.json');
+        if (response.ok) {
+          const allServices = await response.json();
+          data = allServices.filter(s => s.show_in_list);
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('services')
+          .select(getServiceFields())
+          .eq('is_active', true)
+          .eq('show_in_list', true)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        data = supabaseData;
+      }
       
       // Formater les services selon la langue
       const formattedServices = formatServicesForLanguage(data || [], language);

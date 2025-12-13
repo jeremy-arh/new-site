@@ -17,14 +17,27 @@ const BlogSection = () => {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-        .limit(3);
+      let data;
 
-      if (error) throw error;
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/blog-posts.json');
+        if (response.ok) {
+          const posts = await response.json();
+          data = posts.slice(0, 3);
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('published_at', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+        data = supabaseData;
+      }
       
       // Formater les posts selon la langue actuelle
       const formattedPosts = formatBlogPostsForLanguage(data || [], language);

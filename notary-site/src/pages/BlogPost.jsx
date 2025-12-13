@@ -82,24 +82,33 @@ const BlogPost = () => {
     // Check cache first (mais toujours formater selon la langue actuelle)
     let postData = cachedPost;
 
-    // Si pas en cache, charger depuis la DB
+    // Si pas en cache, charger depuis la DB ou JSON
     try {
       if (!postData) {
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('slug', slug)
-          .eq('status', 'published')
-          .single();
+        if (import.meta.env.PROD) {
+          // Production: JSON pré-généré
+          const response = await fetch('/data/blog-posts.json');
+          if (response.ok) {
+            const allPosts = await response.json();
+            postData = allPosts.find(p => p.slug === slug);
+          }
+        } else {
+          // Développement: Supabase direct
+          const { data, error } = await supabase
+            .from('blog_posts')
+            .select('*')
+            .eq('slug', slug)
+            .eq('status', 'published')
+            .single();
 
-        if (error) throw error;
+          if (error) throw error;
+          postData = data;
+        }
 
-        if (!data) {
+        if (!postData) {
           setError('Article not found');
           return;
         }
-
-        postData = data;
         
         // Mettre en cache les données originales (pas formatées)
         cache.set('blog_post', slug, postData, 5 * 60 * 1000);
@@ -112,7 +121,7 @@ const BlogPost = () => {
       // Track blog post view seulement si c'est un nouveau chargement (pas depuis le cache)
       if (!cachedPost) {
         trackBlogPostView(slug, formattedPost.title);
-        // Increment view count
+        // Increment view count (toujours via Supabase, pas critique pour la perf)
         supabase
           .from('blog_posts')
           .update({ views_count: (postData.views_count || 0) + 1 })
@@ -132,18 +141,31 @@ const BlogPost = () => {
     if (!slug) return;
     
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .neq('slug', slug) // Exclude current post
-        .order('published_at', { ascending: false })
-        .limit(3); // Get 3 latest articles
+      let data;
 
-      if (error) {
-        console.error('Error fetching related posts:', error);
-        setRelatedPosts([]);
-        return;
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/blog-posts.json');
+        if (response.ok) {
+          const allPosts = await response.json();
+          data = allPosts.filter(p => p.slug !== slug).slice(0, 3);
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .neq('slug', slug)
+          .order('published_at', { ascending: false })
+          .limit(3);
+
+        if (error) {
+          console.error('Error fetching related posts:', error);
+          setRelatedPosts([]);
+          return;
+        }
+        data = supabaseData;
       }
       
       // Formater les articles selon la langue

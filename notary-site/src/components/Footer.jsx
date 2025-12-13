@@ -14,14 +14,28 @@ const Footer = memo(() => {
 
   const fetchRecentPosts = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('slug, title')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-        .limit(3);
+      let data;
 
-      if (error) throw error;
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/blog-index.json');
+        if (response.ok) {
+          const posts = await response.json();
+          data = posts.slice(0, 3).map(p => ({ slug: p.slug, title: p.title }));
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('blog_posts')
+          .select('slug, title')
+          .eq('status', 'published')
+          .order('published_at', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+        data = supabaseData;
+      }
+
       if (data && data.length > 0) {
         setRecentPosts(data);
       }

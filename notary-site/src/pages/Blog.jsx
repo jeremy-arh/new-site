@@ -23,18 +23,25 @@ const Blog = () => {
 
   const fetchPosts = async () => {
     try {
-      let query = supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
+      let data;
 
-      // Note: Le filtrage par catégorie se fait après le formatage car les catégories peuvent être localisées
-      // On filtre d'abord par la catégorie anglaise (colonne de base), puis on formate
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/blog-posts.json');
+        if (response.ok) {
+          data = await response.json();
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('published_at', { ascending: false });
 
-      const { data, error } = await query;
-
-      if (error) throw error;
+        if (error) throw error;
+        data = supabaseData;
+      }
       
       // Formater les posts selon la langue actuelle
       let formattedPosts = formatBlogPostsForLanguage(data || [], language);
@@ -52,12 +59,24 @@ const Blog = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published');
+      let data;
 
-      if (error) throw error;
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré
+        const response = await fetch('/data/blog-posts.json');
+        if (response.ok) {
+          data = await response.json();
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data: supabaseData, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published');
+
+        if (error) throw error;
+        data = supabaseData;
+      }
 
       // Formater les posts pour obtenir les catégories localisées
       const formattedPosts = formatBlogPostsForLanguage(data || [], language);

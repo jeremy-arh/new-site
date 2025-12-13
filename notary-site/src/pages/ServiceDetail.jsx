@@ -79,16 +79,31 @@ const OtherServicesSection = memo(({ currentServiceId }) => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data, error } = await supabase
-          .from('services')
-          .select(getServiceFields())
-          .eq('is_active', true)
-          .eq('show_in_list', true)
-          .neq('service_id', currentServiceId)
-          .order('created_at', { ascending: true })
-          .limit(6);
+        let data;
 
-        if (error) throw error;
+        if (import.meta.env.PROD) {
+          // Production: JSON pré-généré
+          const response = await fetch('/data/services.json');
+          if (response.ok) {
+            const allServices = await response.json();
+            data = allServices
+              .filter(s => s.show_in_list && s.service_id !== currentServiceId)
+              .slice(0, 6);
+          }
+        } else {
+          // Développement: Supabase direct
+          const { data: supabaseData, error } = await supabase
+            .from('services')
+            .select(getServiceFields())
+            .eq('is_active', true)
+            .eq('show_in_list', true)
+            .neq('service_id', currentServiceId)
+            .order('created_at', { ascending: true })
+            .limit(6);
+
+          if (error) throw error;
+          data = supabaseData;
+        }
         
         const formattedServices = formatServicesForLanguage(data || [], language);
         setServices(formattedServices);
@@ -312,39 +327,49 @@ const ServiceDetail = () => {
     }
 
     try {
-      // Toujours charger depuis la DB pour avoir les dernières traductions
-      // Le cache peut contenir des données obsolètes sans les traductions
-      // Utiliser getServiceFields() pour s'assurer que tous les champs multilingues sont chargés
-      const { data, error } = await supabase
-        .from('services')
-        .select(getServiceFields())
-        .eq('service_id', serviceId)
-        .eq('is_active', true)
-        .single();
+      let serviceData;
 
-      if (error) throw error;
+      // En production: charger depuis JSON statique (instantané, pas d'appel réseau)
+      // En développement: charger depuis Supabase (données fraîches)
+      if (import.meta.env.PROD) {
+        // Production: JSON pré-généré au build
+        const response = await fetch(`/data/service-${serviceId}.json`);
+        if (!response.ok) {
+          // Fallback: essayer le fichier complet
+          const allResponse = await fetch('/data/services.json');
+          if (allResponse.ok) {
+            const allServices = await allResponse.json();
+            serviceData = allServices.find(s => s.service_id === serviceId);
+          }
+        } else {
+          serviceData = await response.json();
+        }
+      } else {
+        // Développement: Supabase direct
+        const { data, error } = await supabase
+          .from('services')
+          .select(getServiceFields())
+          .eq('service_id', serviceId)
+          .eq('is_active', true)
+          .single();
 
-      if (!data) {
+        if (error) throw error;
+        serviceData = data;
+      }
+
+      if (!serviceData) {
         setError(t('common.error'));
         return;
       }
 
-      const serviceData = data;
-
-      // Toujours formater le service selon la langue actuelle (même s'il vient du cache)
+      // Formater le service selon la langue actuelle
       const formattedService = formatServiceForLanguage(serviceData, language);
       
-      // Debug: vérifier la langue et les données
-      if (process.env.NODE_ENV === 'development') {
+      // Debug en développement
+      if (import.meta.env.DEV) {
         console.log('[ServiceDetail] Language:', language);
-        console.log('[ServiceDetail] Service data keys:', Object.keys(serviceData));
+        console.log('[ServiceDetail] Mode:', import.meta.env.PROD ? 'PROD (JSON)' : 'DEV (Supabase)');
         console.log('[ServiceDetail] Formatted service name:', formattedService.name);
-        console.log('[ServiceDetail] French name available:', serviceData.name_fr);
-        console.log('[ServiceDetail] All multilingual fields:', {
-          name_fr: serviceData.name_fr,
-          description_fr: serviceData.description_fr,
-          short_description_fr: serviceData.short_description_fr
-        });
       }
       
       setService(formattedService);
