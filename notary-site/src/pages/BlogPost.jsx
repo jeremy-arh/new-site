@@ -331,7 +331,7 @@ const BlogPost = () => {
           <div 
             className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
             style={{
-              backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d84aca7a-998a-4ff6-1862-7676557ab400/public)`,
+              backgroundImage: `url(/cta-bg.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'

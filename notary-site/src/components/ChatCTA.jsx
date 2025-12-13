@@ -59,7 +59,7 @@ const ChatCTA = () => {
         <div className="flex flex-col items-center justify-center text-center rounded-2xl bg-gray-50 border border-gray-200 py-8 px-6">
           <div className="relative mb-6">
             <img
-              src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/36b5466f-9dee-4b88-ac69-83859843f900/public"
+              src="/agent-support.jpg"
               alt="Agent support"
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white shadow-md"
             />
