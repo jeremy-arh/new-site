@@ -667,38 +667,48 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Chat CTA Section */}
-      <LazySection minHeight={220}>
-        <Suspense fallback={<div className="py-16" aria-busy="true" />}>
-          <ChatCTA />
-        </Suspense>
-      </LazySection>
+      {/* Chat CTA Section - hauteur fixe pour éviter CLS */}
+      <div style={{ minHeight: '200px', contain: 'layout' }}>
+        <LazySection minHeight={200}>
+          <Suspense fallback={<div style={{ height: '200px' }} />}>
+            <ChatCTA />
+          </Suspense>
+        </LazySection>
+      </div>
 
       {/* Testimonial Section */}
-      <LazySection minHeight={320}>
-        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
-          <Testimonial />
-        </Suspense>
-      </LazySection>
+      <div style={{ minHeight: '400px', contain: 'layout' }}>
+        <LazySection minHeight={400}>
+          <Suspense fallback={<div style={{ height: '400px' }} />}>
+            <Testimonial />
+          </Suspense>
+        </LazySection>
+      </div>
 
       {/* How It Works Section */}
-      <LazySection minHeight={480}>
-        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
-          <HowItWorks />
-        </Suspense>
-      </LazySection>
+      <div style={{ minHeight: '600px', contain: 'layout' }}>
+        <LazySection minHeight={600}>
+          <Suspense fallback={<div style={{ height: '600px' }} />}>
+            <HowItWorks />
+          </Suspense>
+        </LazySection>
+      </div>
 
       {/* Other Services Section */}
-      <LazySection minHeight={420}>
-        <OtherServicesSection currentServiceId={service.service_id} />
-      </LazySection>
+      <div style={{ minHeight: '500px', contain: 'layout' }}>
+        <LazySection minHeight={500}>
+          <OtherServicesSection currentServiceId={service.service_id} />
+        </LazySection>
+      </div>
 
       {/* FAQ Section */}
-      <LazySection minHeight={420}>
-        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
-          <FAQ />
-        </Suspense>
-      </LazySection>
+      <div style={{ minHeight: '500px', contain: 'layout' }}>
+        <LazySection minHeight={500}>
+          <Suspense fallback={<div style={{ height: '500px' }} />}>
+            <FAQ />
+          </Suspense>
+        </LazySection>
+      </div>
 
       {/* Back to Services */}
       <section className="px-[30px] py-12">
@@ -710,12 +720,10 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Mobile CTA with service-specific text */}
-      <LazySection minHeight={180}>
-        <Suspense fallback={<div className="py-10" aria-busy="true" />}>
-          <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
-        </Suspense>
-      </LazySection>
+      {/* Mobile CTA - PAS dans LazySection car c'est fixed (ne prend pas d'espace) */}
+      <Suspense fallback={null}>
+        <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
+      </Suspense>
     </div>
   );
 };

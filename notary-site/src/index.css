@@ -31,6 +31,30 @@
     content-visibility: auto;
     contain-intrinsic-size: 0 500px;
   }
+
+  /* ANTI-CLS: Empêcher tout layout shift */
+  /* Réserver l'espace pour le contenu dynamique */
+  [data-hero] {
+    contain: layout style;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+
+  /* Empêcher les images de causer des shifts */
+  img {
+    content-visibility: auto;
+  }
+
+  /* Stabiliser la navbar */
+  nav {
+    contain: layout;
+  }
+
+  /* Éléments fixed ne doivent pas causer de CLS */
+  .fixed {
+    contain: layout style paint;
+  }
 }
 
 @layer components {
