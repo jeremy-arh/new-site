@@ -257,6 +257,22 @@ const NotaryForm = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
+      {/* Mobile Header - Only visible when sidebar is hidden */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center">
+            <Logo width={80} height={80} />
+          </div>
+          <a
+            href="mailto:contact@example.com"
+            className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors"
+          >
+            <Icon icon="heroicons:envelope" className="w-5 h-5" />
+            <span>Contact us</span>
+          </a>
+        </div>
+      </header>
+
       {/* Left Sidebar - Fixed and 100vh */}
       <aside className="hidden lg:block w-80 bg-[#F3F4F6] border-r border-gray-200 fixed left-0 top-0 h-screen overflow-y-auto">
         <div className="p-8">
@@ -339,7 +355,7 @@ const NotaryForm = () => {
       </aside>
 
       {/* Main Content - Full width with left margin for sidebar */}
-      <main className="flex-1 lg:ml-80 min-h-screen flex items-center justify-center lg:p-5">
+      <main className="flex-1 lg:ml-80 min-h-screen flex items-center justify-center lg:p-5 pt-16 lg:pt-0">
         {/* Form Content - 95vh centered with full width and side margins */}
         <div className="w-full h-screen lg:h-[95vh] bg-[#F3F4F6] lg:rounded-3xl shadow-sm animate-fade-in-up flex flex-col overflow-hidden relative">
           <Routes>

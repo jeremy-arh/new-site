@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
@@ -12,12 +12,15 @@ import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
-import HowItWorks from '../components/HowItWorks';
-import Testimonial from '../components/Testimonial';
-import FAQ from '../components/FAQ';
-import MobileCTA from '../components/MobileCTA';
 import PriceDisplay from '../components/PriceDisplay';
-import ChatCTA from '../components/ChatCTA';
+const HERO_IMG =
+  'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public?w=1800&fit=cover&format=auto&quality=80';
+
+const HowItWorks = lazy(() => import('../components/HowItWorks'));
+const Testimonial = lazy(() => import('../components/Testimonial'));
+const FAQ = lazy(() => import('../components/FAQ'));
+const MobileCTA = lazy(() => import('../components/MobileCTA'));
+const ChatCTA = lazy(() => import('../components/ChatCTA'));
 
 // Other Services Section Component
 const OtherServicesSection = ({ currentServiceId }) => {
@@ -109,6 +112,44 @@ const OtherServicesSection = ({ currentServiceId }) => {
         </div>
       </div>
     </section>
+  );
+};
+
+// Rend les sections non critiques uniquement lorsqu'elles approchent du viewport
+const LazySection = ({ children, minHeight = 200, rootMargin = '200px 0px' }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    if (isVisible) return;
+    const target = sectionRef.current;
+    if (!target) return;
+
+    if (!('IntersectionObserver' in window)) {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin, threshold: 0.1 }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [isVisible, rootMargin]);
+
+  return (
+    <div ref={sectionRef} style={!isVisible ? { minHeight } : undefined}>
+      {isVisible ? children : null}
+    </div>
   );
 };
 
@@ -268,9 +309,10 @@ const ServiceDetail = () => {
         <div
           className="relative overflow-hidden min-h-screen flex items-center"
           style={{
-            backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public)`,
+            backgroundImage: `url(${HERO_IMG})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center top'
+            backgroundPosition: 'center top',
+            backgroundRepeat: 'no-repeat'
           }}
         >
           {/* Dark Overlay */}
@@ -361,7 +403,11 @@ const ServiceDetail = () => {
                 src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/public"
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
-                style={{ maxHeight: '800px' }}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                style={{ maxHeight: '800px', aspectRatio: '4 / 5' }}
               />
             </div>
 
@@ -574,19 +620,37 @@ const ServiceDetail = () => {
       </section>
 
       {/* Chat CTA Section */}
-      <ChatCTA />
+      <LazySection minHeight={220}>
+        <Suspense fallback={<div className="py-16" aria-busy="true" />}>
+          <ChatCTA />
+        </Suspense>
+      </LazySection>
 
       {/* Testimonial Section */}
-      <Testimonial />
+      <LazySection minHeight={320}>
+        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
+          <Testimonial />
+        </Suspense>
+      </LazySection>
 
       {/* How It Works Section */}
-      <HowItWorks />
+      <LazySection minHeight={480}>
+        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
+          <HowItWorks />
+        </Suspense>
+      </LazySection>
 
       {/* Other Services Section */}
-      <OtherServicesSection currentServiceId={service.service_id} />
+      <LazySection minHeight={420}>
+        <OtherServicesSection currentServiceId={service.service_id} />
+      </LazySection>
 
       {/* FAQ Section */}
-      <FAQ />
+      <LazySection minHeight={420}>
+        <Suspense fallback={<div className="py-20" aria-busy="true" />}>
+          <FAQ />
+        </Suspense>
+      </LazySection>
 
       {/* Back to Services */}
       <section className="px-[30px] py-12">
@@ -599,7 +663,11 @@ const ServiceDetail = () => {
       </section>
 
       {/* Mobile CTA with service-specific text */}
-      <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
+      <LazySection minHeight={180}>
+        <Suspense fallback={<div className="py-10" aria-busy="true" />}>
+          <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
+        </Suspense>
+      </LazySection>
     </div>
   );
 };
