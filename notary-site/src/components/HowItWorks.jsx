@@ -2,7 +2,6 @@ import { Icon } from '@iconify/react';
 import { useState, useEffect, useCallback, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { getImageUrl } from '../utils/imageLoader';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -415,13 +414,11 @@ const STEP_ANIMATION_STYLES = `
 function StepAnimation({ step, isMobile }) {
   const [shouldLoad, setShouldLoad] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [useLocalPoster, setUseLocalPoster] = useState(false);
   const containerRef = useRef(null);
   const assetVersion = import.meta.env.VITE_ASSETS_VERSION || '1';
   const baseUrl = 'https://jlizwheftlnhoifbqeex.supabase.co/storage/v1/object/public/assets/how-it-work';
   const videoSrc = `${baseUrl}/step-${step}.mp4?v=${assetVersion}`;
-  const remoteSvg = `${baseUrl}/step-${step}.svg?v=${assetVersion}`;
-  const localPoster = getImageUrl(`step-${step}`);
+  const posterSvg = `${baseUrl}/step-${step}.svg?v=${assetVersion}`;
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -465,7 +462,7 @@ function StepAnimation({ step, isMobile }) {
           <video
             key={videoSrc}
             src={videoSrc}
-            poster={useLocalPoster ? localPoster : remoteSvg}
+            poster={posterSvg}
             autoPlay
             loop
             muted
@@ -477,24 +474,12 @@ function StepAnimation({ step, isMobile }) {
           />
         ) : (
           <div className="w-full h-full bg-white flex items-center justify-center">
-            {remoteSvg || localPoster ? (
-              <img
-                src={useLocalPoster ? localPoster : remoteSvg}
-                alt={`Illustration de l'étape ${step}`}
-                className="w-full h-full object-contain"
-                loading="lazy"
-                onError={(e) => {
-                  if (!useLocalPoster && localPoster) {
-                    setUseLocalPoster(true);
-                    e.target.src = localPoster;
-                  }
-                }}
-              />
-            ) : (
-              <div className="text-xs text-gray-500 px-3 text-center">
-                Aperçu indisponible
-              </div>
-            )}
+            <img
+              src={posterSvg}
+              alt={`Illustration de l'étape ${step}`}
+              className="w-full h-full object-contain"
+              loading="lazy"
+            />
           </div>
         )}
       </div>
@@ -514,7 +499,7 @@ function StepAnimation({ step, isMobile }) {
             <video
               key={videoSrc}
               src={videoSrc}
-              poster={useLocalPoster ? localPoster : remoteSvg}
+              poster={posterSvg}
               autoPlay
               loop
               muted
@@ -526,24 +511,12 @@ function StepAnimation({ step, isMobile }) {
             />
           ) : (
             <div className="w-full h-full bg-white flex items-center justify-center">
-              {remoteSvg || localPoster ? (
-                <img
-                  src={useLocalPoster ? localPoster : remoteSvg}
-                  alt={`Illustration de l'étape ${step}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    if (!useLocalPoster && localPoster) {
-                      setUseLocalPoster(true);
-                      e.target.src = localPoster;
-                    }
-                  }}
-                />
-              ) : (
-                <div className="text-xs text-gray-500 px-3 text-center">
-                  Aperçu indisponible
-                </div>
-              )}
+              <img
+                src={posterSvg}
+                alt={`Illustration de l'étape ${step}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           )}
         </div>
