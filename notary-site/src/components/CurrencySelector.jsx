@@ -42,12 +42,16 @@ const CurrencySelector = ({ isWhite = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const buttonRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const selectedCurrency = CURRENCIES.find(c => c.code === currency) || CURRENCIES[0];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+      const isClickOnButton = buttonRef.current && buttonRef.current.contains(event.target);
+      const isClickOnDropdown = dropdownRef.current && dropdownRef.current.contains(event.target);
+      
+      if (!isClickOnButton && !isClickOnDropdown) {
         setIsOpen(false);
       }
     };
@@ -103,6 +107,7 @@ const CurrencySelector = ({ isWhite = false }) => {
 
       {isOpen && createPortal(
         <div 
+          ref={dropdownRef}
           className="fixed w-48 bg-white rounded-lg shadow-xl py-1 max-h-96 overflow-y-auto border border-gray-200"
           style={{ 
             top: position.top,
