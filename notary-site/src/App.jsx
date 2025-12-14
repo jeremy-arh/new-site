@@ -13,8 +13,7 @@ import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchSer
 import { trackPageView as trackPlausiblePageView } from './utils/plausible'
 import { trackPageView, trackScrollDepth } from './utils/analytics'
 
-// Component to track page views and scroll depth
-// ULTRA DIFFÉRÉ pour ne pas bloquer le rendu initial
+// Component to track page views - 100% tracking, non-bloquant
 function PageViewTracker() {
   const location = useLocation();
 
@@ -22,39 +21,45 @@ function PageViewTracker() {
     // Reset scroll milestones for new page
     sessionStorage.removeItem('analytics_scroll_milestones');
     
-    // DIFFÉRER le tracking de 3 secondes pour ne pas bloquer le LCP
-    const timer = setTimeout(() => {
+    // Tracker dès que le navigateur est idle (après le rendu initial)
+    const track = () => {
       const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
       trackPlausiblePageView(pageName, location.pathname).catch(() => {});
       trackPageView(location.pathname);
-    }, 3000);
+    };
     
-    return () => clearTimeout(timer);
+    // requestIdleCallback pour ne pas bloquer le rendu, mais tracker ASAP
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(track, { timeout: 1000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      // Fallback: setTimeout court pour les navigateurs sans requestIdleCallback
+      const timer = setTimeout(track, 100);
+      return () => clearTimeout(timer);
+    }
   }, [location]);
 
-  // Track scroll depth - ULTRA DIFFÉRÉ pour ne pas causer de forced layout
-  // Désactivé pendant les 5 premières secondes pour garantir un chargement rapide
+  // Track scroll depth - Activé dès que idle, non-bloquant
   useEffect(() => {
     let scrollTrackingEnabled = false;
     let ticking = false;
     let cachedWindowHeight = 0;
     let cachedDocumentHeight = 0;
     let lastTrackedMilestone = 0;
+    let idleId = null;
     
-    // Activer le tracking après 5 secondes seulement
-    const enableTimer = setTimeout(() => {
+    // Activer le tracking dès que le navigateur est idle
+    const enableTracking = () => {
       scrollTrackingEnabled = true;
-      // Lire les dimensions une seule fois, de manière non-bloquante
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          cachedWindowHeight = window.innerHeight;
-          cachedDocumentHeight = document.documentElement.scrollHeight;
-        }, { timeout: 2000 });
-      } else {
-        cachedWindowHeight = window.innerHeight;
-        cachedDocumentHeight = document.documentElement.scrollHeight;
-      }
-    }, 5000);
+      cachedWindowHeight = window.innerHeight;
+      cachedDocumentHeight = document.documentElement.scrollHeight;
+    };
+    
+    if ('requestIdleCallback' in window) {
+      idleId = requestIdleCallback(enableTracking, { timeout: 2000 });
+    } else {
+      setTimeout(enableTracking, 500);
+    }
     
     const handleScroll = () => {
       // Ne rien faire pendant les 5 premières secondes
@@ -86,7 +91,7 @@ function PageViewTracker() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
-      clearTimeout(enableTimer);
+      if (idleId && 'cancelIdleCallback' in window) cancelIdleCallback(idleId);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [location]);

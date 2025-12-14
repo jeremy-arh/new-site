@@ -140,24 +140,8 @@
     </div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Plausible Analytics - ULTRA différé (5s minimum) pour ne JAMAIS bloquer le LCP -->
-    <script>
-      function loadPlausible() {
-        var s = document.createElement('script');
-        s.defer = true;
-        s.dataset.domain = 'mynotary.io';
-        s.src = 'https://plausible.io/js/script.js';
-        document.head.appendChild(s);
-      }
-      // Attendre 5 secondes MINIMUM avant de charger Plausible
-      setTimeout(function() {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(loadPlausible, { timeout: 10000 });
-        } else {
-          loadPlausible();
-        }
-      }, 5000);
-    </script>
+    <!-- Plausible Analytics - Chargé immédiatement mais async (non-bloquant) -->
+    <script defer data-domain="mynotary.io" src="https://plausible.io/js/script.js"></script>
 
     <!-- Crisp Chat - différé après rendu -->
     <script type="text/javascript">

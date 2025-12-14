@@ -16,28 +16,26 @@ let trackPlausibleCTAClick = null;
 let trackServiceClick = null;
 let trackCTAClick = null;
 
-// Charger les analytics de manière ultra-différée (après 3 secondes)
+// Charger les analytics après 2 secondes (après le LCP)
 const loadAnalytics = () => {
   if (trackPlausibleServiceClick) return Promise.resolve();
   
   return new Promise((resolve) => {
     const load = () => {
-      import('../utils/plausible').then((plausible) => {
+      Promise.all([
+        import('../utils/plausible'),
+        import('../utils/analytics')
+      ]).then(([plausible, analytics]) => {
         trackPlausibleServiceClick = plausible.trackServiceClick;
         trackPlausibleCTAClick = plausible.trackCTAClick;
-      });
-      import('../utils/analytics').then((analytics) => {
         trackServiceClick = analytics.trackServiceClick;
         trackCTAClick = analytics.trackCTAClick;
-      });
-      resolve();
+        resolve();
+      }).catch(() => resolve());
     };
     
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(load, { timeout: 5000 });
-    } else {
-      setTimeout(load, 3000);
-    }
+    // Charger immédiatement si appelé (le délai est géré ailleurs)
+    load();
   });
 };
 
@@ -253,17 +251,24 @@ const ServiceDetail = () => {
     }
   }, [service?.base_price, formatPrice]);
 
-  // Track service view - ULTRA DIFFÉRÉ pour ne pas bloquer du tout
+  // Track service view - 100% tracking, non-bloquant via requestIdleCallback
   useEffect(() => {
     if (service && serviceId) {
-      // Charger analytics après 3s et tracker après 4s
-      const timer = setTimeout(() => {
+      const track = () => {
         loadAnalytics().then(() => {
           safeTrack(trackPlausibleServiceClick, serviceId, service.name, 'service_detail_page');
           safeTrack(trackServiceClick, serviceId, service.name, 'service_detail_page', location.pathname);
         });
-      }, 4000);
-      return () => clearTimeout(timer);
+      };
+      
+      // Tracker dès que le navigateur est idle
+      if ('requestIdleCallback' in window) {
+        const id = requestIdleCallback(track, { timeout: 1000 });
+        return () => cancelIdleCallback(id);
+      } else {
+        const timer = setTimeout(track, 100);
+        return () => clearTimeout(timer);
+      }
     }
   }, [service, serviceId, location.pathname]);
 
