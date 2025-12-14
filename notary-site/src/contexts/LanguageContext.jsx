@@ -18,10 +18,27 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguageState] = useState(DEFAULT_LANGUAGE);
-  const [isReady, setIsReady] = useState(false);
+  // Initialiser la langue depuis l'URL ou le storage SYNCHRONEMENT pour éviter le flash
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Fonction d'initialisation synchrone
+  const getInitialLanguage = () => {
+    // 1) Langue dans l'URL (synchrone)
+    const urlLanguage = extractLanguageFromPath(location.pathname);
+    if (urlLanguage) return urlLanguage;
+    
+    // 2) Langue sauvegardée (synchrone - localStorage)
+    const savedLanguage = getLanguageFromStorage();
+    if (savedLanguage) return savedLanguage;
+    
+    // 3) Langue par défaut
+    return DEFAULT_LANGUAGE;
+  };
+  
+  const [language, setLanguageState] = useState(getInitialLanguage);
+  // isReady est TRUE par défaut pour ne pas bloquer le rendu
+  const [isReady, setIsReady] = useState(true);
 
   // Fonction pour obtenir le path localisé
   const getLocalizedPath = (path, lang) => {
@@ -33,31 +50,19 @@ export const LanguageProvider = ({ children }) => {
     return addLanguageToPath(cleanPath, targetLang);
   };
 
-  // Initialise la langue au chargement (sans bloquer le rendu)
+  // Sauvegarder la langue initiale et détecter par IP si nécessaire
   useEffect(() => {
-    // 1) Langue dans l'URL prioritaire (inclut 'en' si présent)
+    // Sauvegarder la langue actuelle
+    saveLanguageToStorage(language);
+    
+    // Si on a déjà une langue sauvegardée ou dans l'URL, ne pas détecter par IP
     const urlLanguage = extractLanguageFromPath(location.pathname);
-    if (urlLanguage) {
-      setLanguageState(urlLanguage);
-      saveLanguageToStorage(urlLanguage);
-      setIsReady(true);
-      return;
-    }
-
-    // 2) Langue sauvegardée (respecter même si 'en' pour ne pas écraser le choix utilisateur)
     const savedLanguage = getLanguageFromStorage();
-    if (savedLanguage) {
-      setLanguageState(savedLanguage);
-      const newPath = getLocalizedPath(location.pathname, savedLanguage);
-      if (newPath !== location.pathname) {
-        navigate(newPath, { replace: true });
-      }
-      setIsReady(true);
+    if (urlLanguage || savedLanguage) {
       return;
     }
 
-    // 3) Langue par défaut immédiate, détection IP différée uniquement si rien en cache
-    setIsReady(true);
+    // Détection IP différée uniquement si rien en cache
     const applyDetectedLanguage = async () => {
       try {
         const detectedLanguage = await detectLanguageFromIP();

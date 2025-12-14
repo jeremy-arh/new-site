@@ -166,14 +166,8 @@ function App() {
 
 export default App
 
-// Render gated on language readiness to avoid any flash/404
+// Render immédiat - ne pas bloquer sur la langue
 const AppContent = () => {
-  const { isReady } = useLanguage();
-
-  if (!isReady) {
-    return null;
-  }
-
   return (
     <>
       <ScrollToTop />

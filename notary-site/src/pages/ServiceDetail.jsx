@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, lazy, Suspense, useMemo, useCallback, memo } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense, useMemo, memo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
@@ -278,8 +278,8 @@ const ServiceDetail = () => {
   // Décoder le serviceId depuis l'URL (au cas où il contiendrait des caractères encodés)
   const serviceId = useMemo(() => rawServiceId ? decodeURIComponent(rawServiceId) : null, [rawServiceId]);
 
-  // Utiliser le hook prebuild au lieu de requêtes Supabase
-  const { service, isLoading, error: serviceError } = useService(serviceId);
+  // Utiliser le hook prebuild - données synchrones, pas de chargement async
+  const { service, error: serviceError } = useService(serviceId);
   const error = serviceError ? t('serviceDetail.loadServiceError') : null;
 
   useEffect(() => {
@@ -296,36 +296,7 @@ const ServiceDetail = () => {
     }
   }, [service, serviceId, location.pathname]);
 
-  // Afficher le Hero immédiatement pendant le chargement (skeleton)
-  // IMPORTANT: Doit avoir exactement les mêmes dimensions que le contenu final pour éviter CLS
-  if (isLoading) {
-    return (
-      <div className="min-h-screen">
-        {/* Hero Skeleton - mêmes dimensions que le Hero final */}
-        <section data-hero className="relative overflow-hidden h-screen flex items-center">
-          <img
-            src={HERO_IMG}
-            alt=""
-            width="1920"
-            height="1080"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            style={{ aspectRatio: '16/9' }}
-            fetchpriority="high"
-          />
-          <div className="absolute inset-0 bg-black/60"></div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
-            <div className="max-w-3xl">
-              {/* Skeleton avec hauteurs fixes identiques au contenu */}
-              <div className="h-[3.5rem] sm:h-[4rem] lg:h-[4.5rem] bg-white/20 rounded-lg w-3/4 mb-6"></div>
-              <div className="h-6 bg-white/15 rounded w-full mb-2"></div>
-              <div className="h-6 bg-white/15 rounded w-2/3 mb-8"></div>
-              <div className="h-12 bg-blue-600 rounded-lg w-48"></div>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  }
+  // Les données sont chargées de manière synchrone (prebuild), pas besoin de skeleton
 
   if (error || !service) {
     return (
