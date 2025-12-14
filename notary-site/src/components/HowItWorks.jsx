@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useState, useEffect, useCallback, memo, useMemo, useRef } from 'react';
+import { useState, useEffect, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
@@ -411,7 +411,7 @@ const STEP_ANIMATION_STYLES = `
 }
 `;
 
-function StepAnimation({ step, isMobile }) {
+function StepAnimation({ step }) {
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
   const baseUrl = 'https://jlizwheftlnhoifbqeex.supabase.co/storage/v1/object/public/assets/how-it-work';
@@ -435,28 +435,6 @@ function StepAnimation({ step, isMobile }) {
 
     return () => observer.disconnect();
   }, []);
-
-  if (isMobile) {
-    return (
-      <div
-        ref={containerRef}
-        className="w-full overflow-hidden rounded-xl border border-gray-200 bg-white"
-        style={{ aspectRatio: '16 / 10' }}
-      >
-        {isVisible && (
-          <video
-            src={videoSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
-            className="w-full h-full object-contain pointer-events-none"
-          />
-        )}
-      </div>
-    );
-  }
 
   return (
     <div ref={containerRef} className="hiw-anim-screen" data-step={step}>
@@ -485,21 +463,11 @@ function StepAnimation({ step, isMobile }) {
 }
 
 const HowItWorks = memo(() => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [servicePrice, setServicePrice] = useState(null);
   const [formattedPrice, setFormattedPrice] = useState('');
   const location = useLocation();
   const { formatPrice, currency } = useCurrency();
   const { t } = useTranslation();
-
-  const handleResize = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [handleResize]);
 
   // Fetch service price and serviceId if on a service detail page
   const [currentServiceId, setCurrentServiceId] = useState(null);
@@ -663,7 +631,7 @@ const HowItWorks = memo(() => {
                 }}
               >
                 <div className="mb-[10px]">
-                  <StepAnimation step={index + 1} isMobile={isMobile} />
+                  <StepAnimation step={index + 1} />
                 </div>
                 <div className="grid grid-cols-[auto,1fr] gap-3 items-center">
                   <Icon icon={step.icon} className="w-6 h-6 text-black flex-shrink-0 mt-0.5" />
