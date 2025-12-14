@@ -1,54 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
-import { supabase } from '../lib/supabase';
+import { useService } from '../hooks/useServices';
 import { useTranslation } from '../hooks/useTranslation';
-import { useLanguage } from '../contexts/LanguageContext';
-import { formatServiceForLanguage, getServiceFields } from '../utils/services';
+
+// SVG Icon inline pour éviter @iconify/react
+const IconOpenNew = () => (
+  <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
+  </svg>
+);
 
 const CTAPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [service, setService] = useState(null);
   const [ctaPrice, setCtaPrice] = useState('');
   const location = useLocation();
   const { currency, formatPrice } = useCurrency();
   const { t } = useTranslation();
-  const { language } = useLanguage();
 
   // Detect serviceId from URL if on a service page
-  const serviceMatch = location.pathname.match(/^\/services\/([^/]+)/);
-  const serviceId = serviceMatch ? serviceMatch[1] : null;
+  const serviceId = useMemo(() => {
+    const serviceMatch = location.pathname.match(/^\/services\/([^/]+)/);
+    return serviceMatch ? decodeURIComponent(serviceMatch[1]) : null;
+  }, [location.pathname]);
+  
   const isServicePage = !!serviceId;
 
-  // Fetch service data if on a service page
-  useEffect(() => {
-    if (serviceId) {
-      const fetchService = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('services')
-            .select(getServiceFields())
-            .eq('service_id', serviceId)
-            .eq('is_active', true)
-            .single();
-
-          if (!error && data) {
-            // Formater le service selon la langue actuelle
-            const formattedService = formatServiceForLanguage(data, language);
-            setService(formattedService);
-          }
-        } catch (error) {
-          console.error('Error fetching service for popup:', error);
-        }
-      };
-
-      fetchService();
-    }
-  }, [serviceId, language]);
+  // Utiliser le hook prebuild au lieu de requêtes Supabase - ZERO latence !
+  const { service } = useService(serviceId);
 
   // Update price when service or currency changes
   useEffect(() => {
@@ -58,7 +40,6 @@ const CTAPopup = () => {
       setCtaPrice('');
     }
   }, [service?.base_price, formatPrice, currency]);
-
 
   // Prevent body scroll when popup is visible
   useEffect(() => {
@@ -89,7 +70,6 @@ const CTAPopup = () => {
     if (window.$crisp) {
       window.$crisp.push(['do', 'chat:open']);
     } else {
-      // If Crisp is not loaded yet, wait a bit
       setTimeout(() => {
         if (window.$crisp) {
           window.$crisp.push(['do', 'chat:open']);
@@ -112,7 +92,6 @@ const CTAPopup = () => {
   };
 
   const handleOverlayClick = (e) => {
-    // Close only if clicking on overlay, not on popup content
     if (e.target === e.currentTarget) {
       handleClose();
     }
@@ -132,18 +111,8 @@ const CTAPopup = () => {
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="Close"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
@@ -156,9 +125,8 @@ const CTAPopup = () => {
             {t('ctaPopup.description')}
           </p>
 
-          {/* CTA buttons - Side by side */}
+          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            {/* Contact button */}
             <button
               onClick={handleContactClick}
               className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all whitespace-nowrap"
@@ -166,13 +134,12 @@ const CTAPopup = () => {
               {t('ctaPopup.contact')}
             </button>
             
-            {/* Primary CTA button - Always black background */}
             <div className="flex-1 flex flex-row flex-wrap items-center gap-2 sm:flex-col sm:items-center sm:gap-1">
               <button
                 onClick={handleCTAClick}
                 className="flex-1 min-w-0 px-6 py-3 bg-black text-white font-medium rounded-lg cursor-pointer hover:bg-gray-900 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 flex-shrink-0"
               >
-                <Icon icon="lsicon:open-new-filled" className="w-5 h-5 text-white" />
+                <IconOpenNew />
                 <span className="inline-block">
                   {isServicePage && service?.cta ? service.cta : t('nav.notarizeNow')}
                 </span>
@@ -192,4 +159,3 @@ const CTAPopup = () => {
 };
 
 export default CTAPopup;
-
