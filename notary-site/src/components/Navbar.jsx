@@ -11,7 +11,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 import { removeLanguageFromPath, SUPPORTED_LANGUAGES } from '../utils/language';
-import { CF_IMAGES } from '../utils/cloudflareImage';
+import { IMAGES } from '../utils/imageProxy';
 
 // SVG inline pour éviter @iconify (performance)
 const IconOpenNew = memo(() => (
@@ -274,10 +274,10 @@ const Navbar = memo(() => {
               <img
                 src={
                   isMobile && !isMenuOpen 
-                    ? CF_IMAGES.LOGO_WHITE
+                    ? IMAGES.LOGO_WHITE
                     : (!isMobile && isAtTop && isOnServicePage)
-                      ? CF_IMAGES.LOGO_WHITE
-                      : CF_IMAGES.LOGO_BLACK
+                      ? IMAGES.LOGO_WHITE
+                      : IMAGES.LOGO_BLACK
                 }
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}

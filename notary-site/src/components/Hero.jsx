@@ -27,10 +27,10 @@ const IconOpenNew = memo(() => (
   </svg>
 ));
 
-import { CF_IMAGES } from '../utils/cloudflareImage';
+import { IMAGES } from '../utils/imageProxy';
 
 // Image Hero - via proxy avec cache 1 an
-const HERO_IMG = CF_IMAGES.HERO_HOME;
+const HERO_IMG = IMAGES.HERO_HOME;
 
 // Hook optimisé avec matchMedia
 const useIsMobile = (breakpoint = 1150) => {

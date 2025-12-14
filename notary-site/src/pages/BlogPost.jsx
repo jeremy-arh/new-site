@@ -14,7 +14,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { formatBlogPostForLanguage, formatBlogPostsForLanguage } from '../utils/blog';
 import TableOfContents from '../components/TableOfContents';
 import MobileCTA from '../components/MobileCTA';
-import { CF_IMAGES } from '../utils/cloudflareImage';
+import { IMAGES } from '../utils/imageProxy';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -332,7 +332,7 @@ const BlogPost = () => {
           <div 
             className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
             style={{
-              backgroundImage: `url(${CF_IMAGES.PATTERN_BG})`,
+              backgroundImage: `url(${IMAGES.CTA_BG})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'

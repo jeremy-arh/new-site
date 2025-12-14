@@ -11,10 +11,11 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useService, useServicesList } from '../hooks/useServices';
 import PriceDisplay from '../components/PriceDisplay';
-import { CF_IMAGES } from '../utils/cloudflareImage';
+
+import { IMAGES } from '../utils/imageProxy';
 
 // Image Hero - via proxy avec cache 1 an
-const HERO_IMG = CF_IMAGES.HERO_SERVICE;
+const HERO_IMG = IMAGES.HERO_SERVICE;
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -447,7 +448,7 @@ const ServiceDetail = () => {
             {/* Left Side - Image */}
             <div className="lg:w-2/5 flex items-center justify-center">
               <img
-                src={CF_IMAGES.PRICING_IMAGE}
+                src={IMAGES.PRICING_IMAGE}
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
                 loading="lazy"

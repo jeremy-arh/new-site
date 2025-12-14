@@ -8,7 +8,7 @@ import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
-import { CF_IMAGES } from '../utils/cloudflareImage';
+import { IMAGES } from '../utils/imageProxy';
 
 const STEP_ANIMATION_STYLES = `
 .hiw-anim-screen {
@@ -763,7 +763,7 @@ const HowItWorks = memo(() => {
           <div 
             className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
             style={{
-              backgroundImage: `url(${CF_IMAGES.PATTERN_BG})`,
+              backgroundImage: `url(${IMAGES.CTA_BG})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'

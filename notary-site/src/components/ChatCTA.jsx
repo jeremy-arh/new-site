@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useTranslation } from '../hooks/useTranslation';
-import { CF_IMAGES } from '../utils/cloudflareImage';
+import { IMAGES } from '../utils/imageProxy';
 
 const ChatCTA = () => {
   const { t, language } = useTranslation();
@@ -60,7 +60,7 @@ const ChatCTA = () => {
         <div className="flex flex-col items-center justify-center text-center rounded-2xl bg-gray-50 border border-gray-200 py-8 px-6">
           <div className="relative mb-6">
             <img
-              src={CF_IMAGES.CHAT_AVATAR}
+              src={IMAGES.CHAT_AVATAR}
               alt="Agent support"
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white shadow-md"
             />
