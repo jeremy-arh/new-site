@@ -611,12 +611,8 @@ const ServiceDetail = () => {
         <HowItWorks />
       </Suspense>
 
-      {/* Other Services Section */}
-      <div style={{ minHeight: '500px', contain: 'layout' }}>
-        <LazySection minHeight={500}>
-          <OtherServicesSection currentServiceId={service.service_id} />
-        </LazySection>
-      </div>
+      {/* Other Services Section - PAS dans LazySection car c'est une cible de navigation */}
+      <OtherServicesSection currentServiceId={service.service_id} />
 
       {/* FAQ Section - PAS dans LazySection car c'est une cible de navigation */}
       <Suspense fallback={<div style={{ height: '500px' }} />}>

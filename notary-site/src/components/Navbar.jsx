@@ -24,6 +24,19 @@ const IconOpenNewLarge = memo(() => (
   </svg>
 ));
 
+// Helper function pour scroll vers une section
+const scrollToSection = (sectionId) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const navbarHeight = window.innerWidth < 768 ? 70 : 90;
+    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: elementPosition - navbarHeight,
+      behavior: 'smooth'
+    });
+  }
+};
+
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -296,51 +309,14 @@ const Navbar = memo(() => {
                 className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isServicePage()) {
-                    const destination = '#other-services';
-                    // Attendre un peu pour s'assurer que le DOM est prêt
-                    setTimeout(() => {
-                      const element = document.getElementById('other-services');
-                      if (element) {
-                        const offset = 100; // Offset pour la navbar fixe
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.services'), destination, {
-                      label: t('nav.services'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('Our services', destination, location.pathname);
-                  } else {
-                    // Mettre à jour l'URL sans recharger la page
-                    const localizedPath = getLocalizedPath('/#services');
-                    window.history.pushState(null, '', localizedPath);
-                    // Scroller vers la section
-                    setTimeout(() => {
-                      const element = document.getElementById('services');
-                      if (element) {
-                        const offset = 100;
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.services'), localizedPath, {
-                      label: t('nav.services'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('Our services', localizedPath, location.pathname);
-                  }
+                  const sectionId = isServicePage() ? 'other-services' : 'services';
+                  scrollToSection(sectionId);
+                  trackPlausibleNavigationClick(t('nav.services'), `#${sectionId}`, {
+                    label: t('nav.services'),
+                    pagePath: location.pathname,
+                    section: 'navbar_desktop'
+                  });
+                  trackNavigationClick('Our services', `#${sectionId}`, location.pathname);
                 }}
               >
                 {t('nav.services')}
@@ -350,50 +326,13 @@ const Navbar = memo(() => {
                 className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isServicePage()) {
-                    // Attendre un peu pour s'assurer que le DOM est prêt
-                    setTimeout(() => {
-                      const element = document.getElementById('how-it-works');
-                      if (element) {
-                        const offset = 100; // Offset pour la navbar fixe
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
-                      label: t('nav.howItWorks'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('How it work', '#how-it-works', location.pathname);
-                  } else {
-                    // Mettre à jour l'URL sans recharger la page
-                    const localizedPath = getLocalizedPath('/#how-it-works');
-                    window.history.pushState(null, '', localizedPath);
-                    // Scroller vers la section
-                    setTimeout(() => {
-                      const element = document.getElementById('how-it-works');
-                      if (element) {
-                        const offset = 100;
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.howItWorks'), localizedPath, {
-                      label: t('nav.howItWorks'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('How it work', localizedPath, location.pathname);
-                  }
+                  scrollToSection('how-it-works');
+                  trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                    label: t('nav.howItWorks'),
+                    pagePath: location.pathname,
+                    section: 'navbar_desktop'
+                  });
+                  trackNavigationClick('How it work', '#how-it-works', location.pathname);
                 }}
               >
                 {t('nav.howItWorks')}
@@ -403,49 +342,13 @@ const Navbar = memo(() => {
                 className={`nav-link text-base whitespace-nowrap ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isServicePage()) {
-                    setTimeout(() => {
-                      const element = document.getElementById('faq');
-                      if (element) {
-                        const offset = 100; // Offset pour la navbar fixe
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
-                      label: t('nav.faq'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('FAQ', '#faq', location.pathname);
-                  } else {
-                    // Mettre à jour l'URL sans recharger la page
-                    const localizedPath = getLocalizedPath('/#faq');
-                    window.history.pushState(null, '', localizedPath);
-                    // Scroller vers la section
-                    setTimeout(() => {
-                      const element = document.getElementById('faq');
-                      if (element) {
-                        const offset = 100;
-                        const elementPosition = element.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }, 100);
-                    trackPlausibleNavigationClick(t('nav.faq'), localizedPath, {
-                      label: t('nav.faq'),
-                      pagePath: location.pathname,
-                      section: 'navbar_desktop'
-                    });
-                    trackNavigationClick('FAQ', localizedPath, location.pathname);
-                  }
+                  scrollToSection('faq');
+                  trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                    label: t('nav.faq'),
+                    pagePath: location.pathname,
+                    section: 'navbar_desktop'
+                  });
+                  trackNavigationClick('FAQ', '#faq', location.pathname);
                 }}
               >
                 {t('nav.faq')}
@@ -537,54 +440,16 @@ const Navbar = memo(() => {
             <a
               href={isServicePage() ? '#other-services' : getLocalizedPath('/#services')}
               onClick={(e) => {
-                if (isServicePage()) {
-                  e.preventDefault();
-                  closeMenu();
-                  // Attendre que le menu se ferme avant de scroller
-                  setTimeout(() => {
-                    const element = document.getElementById('other-services');
-                    if (element) {
-                      const offset = 100; // Offset pour la navbar fixe
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.services'), '#other-services', {
-                    label: t('nav.services'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('Our services', '#other-services', location.pathname);
-                } else {
-                  e.preventDefault();
-                  closeMenu();
-                  // Mettre à jour l'URL sans recharger la page
-                  const localizedPath = getLocalizedPath('/#services');
-                  window.history.pushState(null, '', localizedPath);
-                  // Scroller vers la section
-                  setTimeout(() => {
-                    const element = document.getElementById('services');
-                    if (element) {
-                      const offset = 100;
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.services'), localizedPath, {
-                    label: t('nav.services'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('Our services', localizedPath, location.pathname);
-                }
+                e.preventDefault();
+                closeMenu();
+                const sectionId = isServicePage() ? 'other-services' : 'services';
+                setTimeout(() => scrollToSection(sectionId), 300);
+                trackPlausibleNavigationClick(t('nav.services'), `#${sectionId}`, {
+                  label: t('nav.services'),
+                  pagePath: location.pathname,
+                  section: 'navbar_mobile'
+                });
+                trackNavigationClick('Our services', `#${sectionId}`, location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
@@ -593,54 +458,15 @@ const Navbar = memo(() => {
             <a
               href={isServicePage() ? '#how-it-works' : getLocalizedPath('/#how-it-works')}
               onClick={(e) => {
-                if (isServicePage()) {
-                  e.preventDefault();
-                  closeMenu();
-                  // Attendre que le menu se ferme avant de scroller
-                  setTimeout(() => {
-                    const element = document.getElementById('how-it-works');
-                    if (element) {
-                      const offset = 100; // Offset pour la navbar fixe
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
-                    label: t('nav.howItWorks'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('How it work', '#how-it-works', location.pathname);
-                } else {
-                  e.preventDefault();
-                  closeMenu();
-                  // Mettre à jour l'URL sans recharger la page
-                  const localizedPath = getLocalizedPath('/#how-it-works');
-                  window.history.pushState(null, '', localizedPath);
-                  // Scroller vers la section
-                  setTimeout(() => {
-                    const element = document.getElementById('how-it-works');
-                    if (element) {
-                      const offset = 100;
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.howItWorks'), localizedPath, {
-                    label: t('nav.howItWorks'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('How it work', localizedPath, location.pathname);
-                }
+                e.preventDefault();
+                closeMenu();
+                setTimeout(() => scrollToSection('how-it-works'), 300);
+                trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                  label: t('nav.howItWorks'),
+                  pagePath: location.pathname,
+                  section: 'navbar_mobile'
+                });
+                trackNavigationClick('How it work', '#how-it-works', location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
@@ -649,54 +475,15 @@ const Navbar = memo(() => {
             <a
               href={isServicePage() ? '#faq' : getLocalizedPath('/#faq')}
               onClick={(e) => {
-                if (isServicePage()) {
-                  e.preventDefault();
-                  closeMenu();
-                  // Attendre que le menu se ferme avant de scroller
-                  setTimeout(() => {
-                    const element = document.getElementById('faq');
-                    if (element) {
-                      const offset = 100; // Offset pour la navbar fixe
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
-                    label: t('nav.faq'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('FAQ', '#faq', location.pathname);
-                } else {
-                  e.preventDefault();
-                  closeMenu();
-                  // Mettre à jour l'URL sans recharger la page
-                  const localizedPath = getLocalizedPath('/#faq');
-                  window.history.pushState(null, '', localizedPath);
-                  // Scroller vers la section
-                  setTimeout(() => {
-                    const element = document.getElementById('faq');
-                    if (element) {
-                      const offset = 100;
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 300);
-                  trackPlausibleNavigationClick(t('nav.faq'), localizedPath, {
-                    label: t('nav.faq'),
-                    pagePath: location.pathname,
-                    section: 'navbar_mobile'
-                  });
-                  trackNavigationClick('FAQ', localizedPath, location.pathname);
-                }
+                e.preventDefault();
+                closeMenu();
+                setTimeout(() => scrollToSection('faq'), 300);
+                trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                  label: t('nav.faq'),
+                  pagePath: location.pathname,
+                  section: 'navbar_mobile'
+                });
+                trackNavigationClick('FAQ', '#faq', location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
