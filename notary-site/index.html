@@ -81,7 +81,7 @@
         .flex-col{flex-direction:column}
         .flex-1{flex:1 1 0%}
         
-        /* Skeleton styles - fonctionne pour TOUTES les pages */
+        /* Hero initial - VRAI contenu visible immédiatement */
         .skeleton-hero {
           position: relative;
           height: 100vh;
@@ -114,43 +114,33 @@
         .skeleton-inner {
           max-width: 48rem;
         }
-        .skeleton-title {
-          height: 3.5rem;
-          background: rgba(255,255,255,0.2);
-          border-radius: 0.5rem;
-          width: 75%;
-          margin-bottom: 1.5rem;
-          animation: pulse 2s infinite;
-        }
-        .skeleton-text {
-          height: 1.5rem;
-          background: rgba(255,255,255,0.15);
-          border-radius: 0.25rem;
-          margin-bottom: 0.5rem;
-          animation: pulse 2s infinite;
-        }
-        .skeleton-btn {
-          height: 3rem;
-          width: 12rem;
-          background: #2563eb;
-          border-radius: 0.5rem;
-          margin-top: 2rem;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
       </style>
-      <!-- Skeleton universel -->
+      <!-- Hero avec VRAI contenu par défaut - React hydrate par-dessus -->
       <div class="skeleton-hero">
         <img src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp" alt="" width="1920" height="1080" fetchpriority="high" style="aspect-ratio:16/9">
         <div class="skeleton-overlay"></div>
         <div class="skeleton-content">
           <div class="skeleton-inner">
-            <div class="skeleton-title"></div>
-            <div class="skeleton-text" style="width:100%"></div>
-            <div class="skeleton-text" style="width:66%"></div>
-            <div class="skeleton-btn"></div>
+            <h1 style="font-size:2.5rem;color:white;margin-bottom:1rem;font-weight:bold;line-height:1.2">Certified Passport Copy - Delivered Same Day</h1>
+            <p style="font-size:1rem;color:rgba(255,255,255,0.9);margin-bottom:1.5rem;line-height:1.6">Official certified true copy of your passport. Valid worldwide for visa applications, banking and expatriation. 100% online video verification.</p>
+            <a href="https://app.mynotary.io" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#2563eb;color:white;text-decoration:none;border-radius:0.5rem;font-weight:600;font-size:0.875rem">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/></svg>
+              Certify My Passport
+            </a>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1.5rem">
+              <div style="display:flex;align-items:center;gap:0.5rem;color:white;font-size:0.875rem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Accepted in EU & Internationally
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;color:white;font-size:0.875rem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                Same Day Delivery
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;color:white;font-size:0.875rem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Bank-Level Security & GDPR Compliant
+              </div>
+            </div>
           </div>
         </div>
       </div>
