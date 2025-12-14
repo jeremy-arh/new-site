@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const LANGUAGE_NAMES = {
@@ -29,12 +30,13 @@ const getFlagUrl = (lang) => {
 const LanguageSelector = ({ isWhite = false }) => {
   const { language, setLanguage, supportedLanguages } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef(null);
 
   // Ferme le dropdown si on clique en dehors
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
@@ -48,15 +50,27 @@ const LanguageSelector = ({ isWhite = false }) => {
     };
   }, [isOpen]);
 
+  const handleToggle = () => {
+    if (!isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.bottom + 8,
+        left: rect.left
+      });
+    }
+    setIsOpen(!isOpen);
+  };
+
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     setIsOpen(false);
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        ref={buttonRef}
+        onClick={handleToggle}
         className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors rounded-lg whitespace-nowrap flex-shrink-0 ${
           isWhite 
             ? 'text-white hover:text-white/80 hover:bg-white/10' 
@@ -85,8 +99,15 @@ const LanguageSelector = ({ isWhite = false }) => {
         </svg>
       </button>
 
-      {isOpen && (
-        <div className="fixed mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[9999] border border-gray-200" style={{ top: dropdownRef.current?.getBoundingClientRect().bottom + 'px', left: dropdownRef.current?.getBoundingClientRect().left + 'px' }}>
+      {isOpen && createPortal(
+        <div 
+          className="fixed w-48 bg-white rounded-lg shadow-xl py-1 border border-gray-200"
+          style={{ 
+            top: position.top,
+            left: position.left,
+            zIndex: 99999
+          }}
+        >
           {supportedLanguages.map((lang) => (
             <button
               key={lang}
@@ -119,11 +140,11 @@ const LanguageSelector = ({ isWhite = false }) => {
               )}
             </button>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
 };
 
 export default LanguageSelector;
-
