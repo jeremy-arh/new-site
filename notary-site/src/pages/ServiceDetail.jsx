@@ -79,11 +79,11 @@ const ServiceIcon = memo(({ icon, color = '#000000' }) => {
 });
 
 // Image Hero - Desktop et Mobile
-const HERO_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/q=85,f=webp';
-const HERO_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/w=800,q=85,f=webp';
+const HERO_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/q=20,f=webp';
+const HERO_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/w=800,q=20,f=webp';
 // Image Pricing - Desktop et Mobile
-const PRICING_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/q=85,f=webp';
-const PRICING_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/w=800,q=85,f=webp';
+const PRICING_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/q=20,f=webp';
+const PRICING_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/w=800,q=20,f=webp';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
