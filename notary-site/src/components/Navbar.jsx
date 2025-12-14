@@ -254,11 +254,11 @@ const Navbar = memo(() => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 z-50 ${!isMobile && isAtTop && isOnServicePage ? '' : 'shadow-sm'} ${isMobile ? 'transition-transform duration-300 px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
+      <nav className={`fixed w-full top-0 z-50 overflow-visible ${!isMobile && isAtTop && isOnServicePage ? '' : 'shadow-sm'} ${isMobile ? 'transition-transform duration-300 px-[10px] pt-[10px]' : 'px-0 pt-0'} ${
         !isHeaderVisible && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div
-          className={`${isMobile ? 'transition-all duration-300' : 'transition-all duration-300'} ${isMobile ? 'rounded-2xl' : 'rounded-none'}`}
+          className={`${isMobile ? 'transition-all duration-300' : 'transition-all duration-300'} ${isMobile ? 'rounded-2xl' : 'rounded-none'} overflow-visible`}
           style={isMobile ? (isMenuOpen ? {
             background: 'transparent',
             borderRadius: '16px',
@@ -277,9 +277,9 @@ const Navbar = memo(() => {
             background: '#FEFEFE',
           })}
         >
-          <div className={`max-w-[1300px] mx-auto ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
+          <div className={`max-w-[1300px] mx-auto overflow-visible ${isMobile ? 'px-[20px]' : 'px-[30px]'}`}>
             <div 
-              className={`flex items-center justify-between ${isMobile ? 'h-14' : 'h-20'}`}
+              className={`flex items-center justify-between overflow-visible ${isMobile ? 'h-14' : 'h-20'}`}
             >
             {/* Logo */}
             <a href="/" className="flex-shrink-0 relative z-[60]">
@@ -301,7 +301,7 @@ const Navbar = memo(() => {
 
             {/* Desktop Navigation + CTA - Right aligned */}
             <div 
-              className={`${isMobile ? 'hidden' : 'flex'} items-center gap-8 flex-shrink-0`}
+              className={`${isMobile ? 'hidden' : 'flex'} items-center gap-8 flex-shrink-0 overflow-visible`}
               style={{ marginLeft: 'auto' }}
             >
               <a 
