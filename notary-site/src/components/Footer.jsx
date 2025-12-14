@@ -1,7 +1,6 @@
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
-import { IMAGES } from '../utils/imageProxy';
 
 // IMPORT STATIQUE - Les données sont dans le bundle, ZERO fetch !
 import blogIndexData from '../../public/data/blog-index.json';
@@ -38,7 +37,7 @@ const Footer = memo(() => {
           <div className="md:col-span-1">
             <a href="/" className="inline-block">
               <img
-                src={IMAGES.LOGO_WHITE}
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp"
                 alt="Logo"
                 width="120"
                 height="32"

@@ -12,10 +12,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useService, useServicesList } from '../hooks/useServices';
 import PriceDisplay from '../components/PriceDisplay';
 
-import { IMAGES } from '../utils/imageProxy';
-
-// Image Hero - via proxy avec cache 1 an
-const HERO_IMG = IMAGES.HERO_SERVICE;
+// Image Hero
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -448,7 +446,7 @@ const ServiceDetail = () => {
             {/* Left Side - Image */}
             <div className="lg:w-2/5 flex items-center justify-center">
               <img
-                src={IMAGES.PRICING_IMAGE}
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/quality=20,format=webp"
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
                 loading="lazy"

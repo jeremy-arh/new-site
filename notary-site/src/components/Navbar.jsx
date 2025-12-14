@@ -11,7 +11,6 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 import { removeLanguageFromPath, SUPPORTED_LANGUAGES } from '../utils/language';
-import { IMAGES } from '../utils/imageProxy';
 
 // SVG inline pour éviter @iconify (performance)
 const IconOpenNew = memo(() => (
@@ -274,10 +273,10 @@ const Navbar = memo(() => {
               <img
                 src={
                   isMobile && !isMenuOpen 
-                    ? IMAGES.LOGO_WHITE
+                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp' 
                     : (!isMobile && isAtTop && isOnServicePage)
-                      ? IMAGES.LOGO_WHITE
-                      : IMAGES.LOGO_BLACK
+                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp'
+                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/quality=20,format=webp'
                 }
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
