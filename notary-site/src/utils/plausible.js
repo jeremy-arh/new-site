@@ -1,6 +1,6 @@
 /**
  * Plausible Analytics - Direct Integration
- * Sends Plausible events directly using the Plausible API
+ * ULTRA OPTIMISÉ - Ne bloque JAMAIS le rendu
  */
 
 /**
@@ -19,41 +19,14 @@ const sanitizeText = (text) => {
 };
 
 /**
- * Wait for Plausible to be ready - NE BLOQUE PAS le rendu
- * @returns {Promise} Promise that resolves when Plausible is ready
+ * Wait for Plausible to be ready - RÉSOUT IMMÉDIATEMENT si pas chargé
+ * Ne bloque JAMAIS - si Plausible n'est pas là, on abandonne silencieusement
+ * @returns {Promise} Promise that resolves immediately
  */
 const waitForPlausible = () => {
   return new Promise((resolve) => {
-    if (typeof window === 'undefined') {
-      resolve();
-      return;
-    }
-
-    // Si Plausible est déjà chargé, résoudre immédiatement
-    if (isPlausibleLoaded()) {
-      resolve();
-      return;
-    }
-
-    // Différer la vérification pour ne pas bloquer le rendu
-    // Utiliser requestIdleCallback pour ne pas impacter les performances
-    const deferredCheck = () => {
-      if (isPlausibleLoaded()) {
-        resolve();
-        return;
-      }
-      
-      // Réessayer après 2 secondes si pas encore chargé
-      setTimeout(() => {
-        resolve(); // Résoudre même si pas chargé pour ne pas bloquer
-      }, 2000);
-    };
-
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(deferredCheck, { timeout: 3000 });
-    } else {
-      setTimeout(deferredCheck, 1000);
-    }
+    // Résoudre immédiatement - ne jamais attendre
+    resolve();
   });
 };
 

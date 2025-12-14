@@ -145,72 +145,69 @@ const getUTMParams = () => {
   };
 };
 
-// Generic event tracking function
+// Generic event tracking function - ULTRA OPTIMISÉ pour ne JAMAIS bloquer
+// Utilise setTimeout pour être complètement non-bloquant
 export const trackEvent = async (eventType, pagePath = null, metadata = {}) => {
   if (typeof window === 'undefined' || !supabase) {
     return;
   }
 
-  try {
-    const visitorId = getVisitorId();
-    const sessionId = getSessionId();
-    const deviceInfo = getDeviceInfo();
-    // Get geo info (cached, non-blocking)
-    const geoInfo = await getGeoInfo().catch(() => ({
-      countryCode: null,
-      countryName: null,
-      city: null,
-      region: null,
-      ip: null
-    }));
-    const language = getBrowserLanguage();
-    const utmParams = getUTMParams();
-
-    // Get current user if authenticated
-    let userId = null;
+  // Exécuter de manière complètement asynchrone après le rendu
+  setTimeout(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      userId = user?.id || null;
+      const visitorId = getVisitorId();
+      const sessionId = getSessionId();
+      const deviceInfo = getDeviceInfo();
+      // Get geo info (cached only - no API calls)
+      const geoInfo = await getGeoInfo().catch(() => ({
+        countryCode: null,
+        countryName: null,
+        city: null,
+        region: null,
+        ip: null
+      }));
+      const language = getBrowserLanguage();
+      const utmParams = getUTMParams();
+
+      // Ne PAS appeler supabase.auth.getUser() - c'est bloquant !
+      const userId = null;
+
+      const eventData = {
+        event_type: eventType,
+        page_path: pagePath || window.location.pathname,
+        visitor_id: visitorId,
+        session_id: sessionId,
+        user_id: userId,
+        country_code: geoInfo.countryCode,
+        country_name: geoInfo.countryName,
+        city: geoInfo.city,
+        region: geoInfo.region,
+        ip_address: geoInfo.ip,
+        language: language,
+        device_type: deviceInfo.deviceType,
+        browser_name: deviceInfo.browserName,
+        browser_version: deviceInfo.browserVersion,
+        os_name: deviceInfo.osName,
+        os_version: deviceInfo.osVersion,
+        screen_width: deviceInfo.screenWidth,
+        screen_height: deviceInfo.screenHeight,
+        referrer: document.referrer || null,
+        utm_source: utmParams.utmSource,
+        utm_medium: utmParams.utmMedium,
+        utm_campaign: utmParams.utmCampaign,
+        metadata: metadata
+      };
+
+      // Fire and forget - ne pas attendre la réponse
+      supabase
+        .from('analytics_events')
+        .insert([eventData])
+        .then(() => {})
+        .catch(() => {});
     } catch (error) {
-      // User not authenticated, continue without userId
+      // Silencieux - ne jamais bloquer pour des erreurs analytics
     }
-
-    const eventData = {
-      event_type: eventType,
-      page_path: pagePath || window.location.pathname,
-      visitor_id: visitorId,
-      session_id: sessionId,
-      user_id: userId,
-      country_code: geoInfo.countryCode,
-      country_name: geoInfo.countryName,
-      city: geoInfo.city,
-      region: geoInfo.region,
-      ip_address: geoInfo.ip,
-      language: language,
-      device_type: deviceInfo.deviceType,
-      browser_name: deviceInfo.browserName,
-      browser_version: deviceInfo.browserVersion,
-      os_name: deviceInfo.osName,
-      os_version: deviceInfo.osVersion,
-      screen_width: deviceInfo.screenWidth,
-      screen_height: deviceInfo.screenHeight,
-      referrer: document.referrer || null,
-      utm_source: utmParams.utmSource,
-      utm_medium: utmParams.utmMedium,
-      utm_campaign: utmParams.utmCampaign,
-      metadata: metadata
-    };
-
-    const { error } = await supabase
-      .from('analytics_events')
-      .insert([eventData]);
-
-    if (error) {
-      console.error('Error tracking event:', error);
-    }
-  } catch (error) {
-    console.error('Error in trackEvent:', error);
-  }
+  }, 0);
 };
 
 // Track pageview

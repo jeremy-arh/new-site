@@ -1,9 +1,7 @@
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
-import { trackServiceClick as trackPlausibleServiceClick, trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
-import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
@@ -11,6 +9,44 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useService, useServicesList } from '../hooks/useServices';
 import PriceDisplay from '../components/PriceDisplay';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level pour ne pas bloquer le bundle critique
+let trackPlausibleServiceClick = null;
+let trackPlausibleCTAClick = null;
+let trackServiceClick = null;
+let trackCTAClick = null;
+
+// Charger les analytics de manière ultra-différée (après 3 secondes)
+const loadAnalytics = () => {
+  if (trackPlausibleServiceClick) return Promise.resolve();
+  
+  return new Promise((resolve) => {
+    const load = () => {
+      import('../utils/plausible').then((plausible) => {
+        trackPlausibleServiceClick = plausible.trackServiceClick;
+        trackPlausibleCTAClick = plausible.trackCTAClick;
+      });
+      import('../utils/analytics').then((analytics) => {
+        trackServiceClick = analytics.trackServiceClick;
+        trackCTAClick = analytics.trackCTAClick;
+      });
+      resolve();
+    };
+    
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(load, { timeout: 5000 });
+    } else {
+      setTimeout(load, 3000);
+    }
+  });
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
 
 // Image Hero
 const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp';
@@ -105,8 +141,10 @@ const OtherServicesSection = memo(({ currentServiceId }) => {
               to={getLocalizedPath(`/services/${serviceItem.service_id}`)}
               className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-gray-200 flex flex-col"
               onClick={() => {
-                trackPlausibleServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
-                trackServiceClick(serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
+                loadAnalytics().then(() => {
+                  safeTrack(trackPlausibleServiceClick, serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
+                  safeTrack(trackServiceClick, serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
+                });
               }}
             >
               <div className="flex items-center gap-3 mb-4">
@@ -204,17 +242,28 @@ const ServiceDetail = () => {
   const { service, error: serviceError } = useService(serviceId);
   const error = serviceError ? t('serviceDetail.loadServiceError') : null;
 
+  // Différer le formatage du prix pour ne pas bloquer le rendu initial
   useEffect(() => {
     if (service?.base_price) {
-      formatPrice(service.base_price).then(setCtaPrice);
+      // Différer pour ne pas bloquer le FCP
+      const timer = setTimeout(() => {
+        formatPrice(service.base_price).then(setCtaPrice);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [service?.base_price, formatPrice]);
 
-  // Track service view quand le service est chargé
+  // Track service view - ULTRA DIFFÉRÉ pour ne pas bloquer du tout
   useEffect(() => {
     if (service && serviceId) {
-      trackPlausibleServiceClick(serviceId, service.name, 'service_detail_page');
-      trackServiceClick(serviceId, service.name, 'service_detail_page', location.pathname);
+      // Charger analytics après 3s et tracker après 4s
+      const timer = setTimeout(() => {
+        loadAnalytics().then(() => {
+          safeTrack(trackPlausibleServiceClick, serviceId, service.name, 'service_detail_page');
+          safeTrack(trackServiceClick, serviceId, service.name, 'service_detail_page', location.pathname);
+        });
+      }, 4000);
+      return () => clearTimeout(timer);
     }
   }, [service, serviceId, location.pathname]);
 
@@ -301,13 +350,15 @@ const ServiceDetail = () => {
                 onClick={() => {
                   const ctaCopy = service.cta || t('nav.notarizeNow');
                   const destination = getFormUrl(currency, service?.service_id || serviceId);
-
-                  trackPlausibleCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname, {
-                    ctaText: ctaCopy,
-                    destination,
-                    elementId: 'service_detail_hero'
+                  
+                  loadAnalytics().then(() => {
+                    safeTrack(trackPlausibleCTAClick, 'service_detail_hero', service?.service_id || serviceId, location.pathname, {
+                      ctaText: ctaCopy,
+                      destination,
+                      elementId: 'service_detail_hero'
+                    });
+                    safeTrack(trackCTAClick, 'service_detail_hero', service?.service_id || serviceId, location.pathname);
                   });
-                  trackCTAClick('service_detail_hero', service?.service_id || serviceId, location.pathname);
                 }}
               >
                 <IconOpenNew />
@@ -468,12 +519,14 @@ const ServiceDetail = () => {
                   href={getFormUrl(currency, service?.service_id || serviceId)}
                   onClick={() => {
                     const destination = getFormUrl(currency, service?.service_id || serviceId);
-                    trackPlausibleCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname, {
-                      ctaText: 'Upload my document',
-                      destination,
-                      elementId: 'service_detail_pricing'
+                    loadAnalytics().then(() => {
+                      safeTrack(trackPlausibleCTAClick, 'service_detail_pricing', service?.service_id || serviceId, location.pathname, {
+                        ctaText: 'Upload my document',
+                        destination,
+                        elementId: 'service_detail_pricing'
+                      });
+                      safeTrack(trackCTAClick, 'service_detail_pricing', service?.service_id || serviceId, location.pathname);
                     });
-                    trackCTAClick('service_detail_pricing', service?.service_id || serviceId, location.pathname);
                   }}
                   className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-colors duration-200 text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"
                 >

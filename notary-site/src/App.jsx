@@ -14,6 +14,7 @@ import { trackPageView as trackPlausiblePageView } from './utils/plausible'
 import { trackPageView, trackScrollDepth } from './utils/analytics'
 
 // Component to track page views and scroll depth
+// ULTRA DIFFÉRÉ pour ne pas bloquer le rendu initial
 function PageViewTracker() {
   const location = useLocation();
 
@@ -21,79 +22,72 @@ function PageViewTracker() {
     // Reset scroll milestones for new page
     sessionStorage.removeItem('analytics_scroll_milestones');
     
-    // Track page view on route change (both Plausible and Analytics)
-    const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
-    trackPlausiblePageView(pageName, location.pathname).catch(err => {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('Plausible trackPageView error:', err);
-      }
-    });
-    trackPageView(location.pathname);
+    // DIFFÉRER le tracking de 3 secondes pour ne pas bloquer le LCP
+    const timer = setTimeout(() => {
+      const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
+      trackPlausiblePageView(pageName, location.pathname).catch(() => {});
+      trackPageView(location.pathname);
+    }, 3000);
+    
+    return () => clearTimeout(timer);
   }, [location]);
 
-  // Track scroll depth - Optimisé pour éviter les forced layouts
+  // Track scroll depth - ULTRA DIFFÉRÉ pour ne pas causer de forced layout
+  // Désactivé pendant les 5 premières secondes pour garantir un chargement rapide
   useEffect(() => {
+    let scrollTrackingEnabled = false;
     let ticking = false;
     let cachedWindowHeight = 0;
     let cachedDocumentHeight = 0;
     let lastTrackedMilestone = 0;
     
-    // Cache les dimensions une seule fois au chargement et au resize
-    const updateDimensions = () => {
-      cachedWindowHeight = window.innerHeight;
-      cachedDocumentHeight = document.documentElement.scrollHeight;
-    };
-    
-    // Différer la lecture initiale pour ne pas bloquer le rendu
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(updateDimensions, { timeout: 500 });
-    } else {
-      setTimeout(updateDimensions, 100);
-    }
+    // Activer le tracking après 5 secondes seulement
+    const enableTimer = setTimeout(() => {
+      scrollTrackingEnabled = true;
+      // Lire les dimensions une seule fois, de manière non-bloquante
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          cachedWindowHeight = window.innerHeight;
+          cachedDocumentHeight = document.documentElement.scrollHeight;
+        }, { timeout: 2000 });
+      } else {
+        cachedWindowHeight = window.innerHeight;
+        cachedDocumentHeight = document.documentElement.scrollHeight;
+      }
+    }, 5000);
     
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Utiliser scrollY qui est plus performant que pageYOffset
-          const scrollTop = window.scrollY;
-          
-          // Éviter les calculs si les dimensions ne sont pas encore cachées
-          if (cachedDocumentHeight === 0) {
-            ticking = false;
-            return;
-          }
-          
-          const scrollPercentage = Math.round(((scrollTop + cachedWindowHeight) / cachedDocumentHeight) * 100);
-          
-          // Éviter les appels redondants si on n'a pas atteint un nouveau milestone
-          const milestones = [25, 50, 75, 100];
-          const currentMilestone = milestones.find(m => scrollPercentage >= m && m > lastTrackedMilestone);
-          
-          if (currentMilestone) {
-            lastTrackedMilestone = currentMilestone;
-            trackScrollDepth(scrollPercentage);
-          }
-          
+      // Ne rien faire pendant les 5 premières secondes
+      if (!scrollTrackingEnabled || ticking) return;
+      
+      ticking = true;
+      // Utiliser setTimeout au lieu de rAF pour éviter les forced layouts
+      setTimeout(() => {
+        if (cachedDocumentHeight === 0) {
           ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    
-    // Mettre à jour les dimensions au resize (throttled)
-    let resizeTimeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(updateDimensions, 200);
+          return;
+        }
+        
+        const scrollTop = window.scrollY;
+        const scrollPercentage = Math.round(((scrollTop + cachedWindowHeight) / cachedDocumentHeight) * 100);
+        
+        const milestones = [25, 50, 75, 100];
+        const currentMilestone = milestones.find(m => scrollPercentage >= m && m > lastTrackedMilestone);
+        
+        if (currentMilestone) {
+          lastTrackedMilestone = currentMilestone;
+          trackScrollDepth(scrollPercentage);
+        }
+        
+        ticking = false;
+      }, 100);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
+      clearTimeout(enableTimer);
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
     };
   }, [location]);
 
