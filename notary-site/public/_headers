@@ -1,34 +1,106 @@
-# Cache des assets statiques - 1 an
+# ===========================================
+# Cloudflare Pages - Headers Configuration
+# https://developers.cloudflare.com/pages/configuration/headers/
+# ===========================================
+
+# ============================================
+# GLOBAL SECURITY HEADERS (toutes les pages)
+# ============================================
+/*
+  # Protection contre le clickjacking
+  X-Frame-Options: DENY
+  
+  # Empêche le MIME type sniffing
+  X-Content-Type-Options: nosniff
+  
+  # Politique de référent stricte
+  Referrer-Policy: strict-origin-when-cross-origin
+  
+  # Permissions Policy - désactive les fonctionnalités non utilisées
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  
+  # Content Security Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https://imagedelivery.net https://*.cloudflare.com data: blob:; connect-src 'self' https://*.supabase.co https://cloudflareinsights.com wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  
+  # Strict Transport Security (HTTPS obligatoire)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  
+  # Protection XSS (navigateurs anciens)
+  X-XSS-Protection: 1; mode=block
+
+# ============================================
+# CACHE AGRESSIF - Assets avec hash (immutable)
+# ============================================
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/*.js
+# ============================================
+# CACHE IMAGES
+# ============================================
+/img/*
   Cache-Control: public, max-age=31536000, immutable
-
-/*.css
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.woff2
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.woff
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.svg
-  Cache-Control: public, max-age=31536000, immutable
-
+  
 /*.png
   Cache-Control: public, max-age=31536000, immutable
 
 /*.jpg
   Cache-Control: public, max-age=31536000, immutable
 
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
 /*.webp
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML - cache court pour permettre les mises à jour
+/*.avif
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+# ============================================
+# CACHE FONTS
+# ============================================
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/*.otf
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# ============================================
+# CACHE DATA JSON (prebuild)
+# ============================================
+/data/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# ============================================
+# HTML - Cache court avec revalidation
+# ============================================
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
-/
+/index.html
   Cache-Control: public, max-age=0, must-revalidate
+
+# ============================================
+# EMPÊCHER L'INDEXATION DES URLS *.pages.dev
+# (Évite le contenu dupliqué avec le domaine principal)
+# ============================================
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:branch.:project.pages.dev/*
+  X-Robots-Tag: noindex
