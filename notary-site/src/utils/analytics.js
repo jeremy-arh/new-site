@@ -101,23 +101,8 @@ const getDeviceInfo = () => {
 const GEO_CACHE_KEY = 'analytics_geo_cache';
 const GEO_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-// Get cached geo info or fetch new one
+// Get cached geo info - PAS D'APPEL API pour éviter les latences (1000ms+)
 const getGeoInfo = async () => {
-  // Check cache first
-  try {
-    const cached = localStorage.getItem(GEO_CACHE_KEY);
-    if (cached) {
-      const { data, timestamp } = JSON.parse(cached);
-      const now = Date.now();
-      // Use cached data if less than 24 hours old
-      if (now - timestamp < GEO_CACHE_DURATION) {
-        return data;
-      }
-    }
-  } catch (error) {
-    // Cache invalid, continue to fetch
-  }
-
   // Default values
   const defaultGeoInfo = {
     countryCode: null,
@@ -127,64 +112,21 @@ const getGeoInfo = async () => {
     ip: null
   };
 
-  // Try to fetch geo info (non-blocking, use defaults if fails)
+  // Utiliser uniquement le cache s'il existe
   try {
-    // Try ip-api.com first with HTTPS (more reliable, free tier: 45 requests/minute)
-    const response = await fetch('https://ip-api.com/json/?fields=status,message,country,countryCode,city,regionName,query');
-    if (response.ok) {
-      const data = await response.json();
-      if (data.status === 'success') {
-        const geoInfo = {
-          countryCode: data.countryCode || null,
-          countryName: data.country || null,
-          city: data.city || null,
-          region: data.regionName || null,
-          ip: data.query || null
-        };
-        // Cache the result
-        try {
-          localStorage.setItem(GEO_CACHE_KEY, JSON.stringify({
-            data: geoInfo,
-            timestamp: Date.now()
-          }));
-        } catch (e) {
-          // localStorage might be full or disabled, ignore
-        }
-        return geoInfo;
+    const cached = localStorage.getItem(GEO_CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      const now = Date.now();
+      if (now - timestamp < GEO_CACHE_DURATION) {
+        return data;
       }
     }
   } catch (error) {
-    // Silently fail, will use defaults
+    // Cache invalid
   }
 
-  // Fallback: try ipapi.co (if ip-api.com fails)
-  try {
-    const fallbackResponse = await fetch('https://ipapi.co/json/');
-    if (fallbackResponse.ok) {
-      const data = await fallbackResponse.json();
-      const geoInfo = {
-        countryCode: data.country_code || null,
-        countryName: data.country_name || null,
-        city: data.city || null,
-        region: data.region || null,
-        ip: data.ip || null
-      };
-      // Cache the result
-      try {
-        localStorage.setItem(GEO_CACHE_KEY, JSON.stringify({
-          data: geoInfo,
-          timestamp: Date.now()
-        }));
-      } catch (e) {
-        // localStorage might be full or disabled, ignore
-      }
-      return geoInfo;
-    }
-  } catch (error) {
-    // Silently fail, will use defaults
-  }
-
-  // Return defaults if all services fail
+  // PAS d'appel à ip-api.com ou ipapi.co - ces appels causaient 1000ms+ de latence
   return defaultGeoInfo;
 };
 
