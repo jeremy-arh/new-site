@@ -86,7 +86,7 @@ const LanguageSelector = ({ isWhite = false }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[60] border border-gray-200">
+        <div className="fixed mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[9999] border border-gray-200" style={{ top: dropdownRef.current?.getBoundingClientRect().bottom + 'px', left: dropdownRef.current?.getBoundingClientRect().left + 'px' }}>
           {supportedLanguages.map((lang) => (
             <button
               key={lang}

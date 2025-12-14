@@ -88,7 +88,7 @@ const CurrencySelector = ({ isWhite = false }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[60] max-h-96 overflow-y-auto border border-gray-200">
+        <div className="fixed mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-[9999] max-h-96 overflow-y-auto border border-gray-200" style={{ top: dropdownRef.current?.getBoundingClientRect().bottom + 'px', left: dropdownRef.current?.getBoundingClientRect().left + 'px' }}>
           {CURRENCIES.map((curr) => (
             <button
               key={curr.code}
