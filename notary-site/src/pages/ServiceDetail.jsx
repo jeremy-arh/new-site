@@ -10,41 +10,73 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useService, useServicesList } from '../hooks/useServices';
 import PriceDisplay from '../components/PriceDisplay';
 
-// ANALYTICS DIFFÉRÉS - Ne pas importer au top level pour ne pas bloquer le bundle critique
-let trackPlausibleServiceClick = null;
-let trackPlausibleCTAClick = null;
-let trackServiceClick = null;
-let trackCTAClick = null;
+// ANALYTICS : Plausible uniquement (léger, ~1KB)
+// PAS de Supabase - les données sont dans le build !
+const trackWithPlausible = (type, ...args) => {
+  import('../utils/plausible').then((m) => {
+    if (type === 'service') m.trackServiceClick(...args);
+    else if (type === 'cta') m.trackCTAClick(...args);
+  }).catch(() => {});
+};
 
-// Charger les analytics après 2 secondes (après le LCP)
-const loadAnalytics = () => {
-  if (trackPlausibleServiceClick) return Promise.resolve();
+// Icônes des services - SVG inline pour éviter @iconify (performance)
+const ServiceIcon = memo(({ icon, color = '#000000' }) => {
+  const iconMap = {
+    'mdi:translate': (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.87 15.07l-2.54-2.51l.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35C8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5l3.11 3.11l.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7l1.62-4.33L19.12 17h-3.24Z"/>
+      </svg>
+    ),
+    'hugeicons:user-unlock-01': (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="8" r="4"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/><path d="M15 14l2 2l4-4"/>
+      </svg>
+    ),
+    'material-symbols-light:business-center-outline': (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 16h4v-2h-4v2Zm-6 4V8h4V4h8v4h4v12H4Zm6-12h4V6h-4v2ZM6 18h12V10H6v8Z"/>
+      </svg>
+    ),
+    'solar:diploma-broken': (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 4h16v12H4V4Zm8 14l-3 4v-4H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5v4l-3-4Z"/>
+      </svg>
+    ),
+    'hugeicons:legal-document-02': (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/>
+      </svg>
+    ),
+    'lucide:signature': (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 17a5 5 0 0 0 10 0c0-2.76-2.24-5-5-5s-5 2.24-5 5Z"/><path d="M12 17h10"/><path d="M22 17a5 5 0 0 0-5-5"/>
+      </svg>
+    ),
+    'prime:copy': (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z"/>
+      </svg>
+    ),
+  };
   
-  return new Promise((resolve) => {
-    const load = () => {
-      Promise.all([
-        import('../utils/plausible'),
-        import('../utils/analytics')
-      ]).then(([plausible, analytics]) => {
-        trackPlausibleServiceClick = plausible.trackServiceClick;
-        trackPlausibleCTAClick = plausible.trackCTAClick;
-        trackServiceClick = analytics.trackServiceClick;
-        trackCTAClick = analytics.trackCTAClick;
-        resolve();
-      }).catch(() => resolve());
-    };
-    
-    // Charger immédiatement si appelé (le délai est géré ailleurs)
-    load();
-  });
-};
-
-// Helper pour tracker de manière non-bloquante
-const safeTrack = (fn, ...args) => {
-  if (fn) {
-    try { fn(...args); } catch (e) { /* ignore */ }
+  const svgIcon = iconMap[icon];
+  
+  if (!svgIcon) {
+    // Fallback: icône document générique
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/>
+        <path d="M14 2v6h6"/>
+      </svg>
+    );
   }
-};
+  
+  return (
+    <div className="w-8 h-8" style={{ color }}>
+      {svgIcon}
+    </div>
+  );
+});
 
 // Image Hero
 const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp';
@@ -83,11 +115,6 @@ const IconArrowLeft = memo(() => (
 const IconOpenNew = memo(() => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
     <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
-  </svg>
-));
-const IconBadgeCheck = memo(() => (
-  <svg className="w-10 h-10 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
   </svg>
 ));
 const IconArrowRight = memo(() => (
@@ -139,15 +166,12 @@ const OtherServicesSection = memo(({ currentServiceId }) => {
               to={getLocalizedPath(`/services/${serviceItem.service_id}`)}
               className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-gray-200 flex flex-col"
               onClick={() => {
-                loadAnalytics().then(() => {
-                  safeTrack(trackPlausibleServiceClick, serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
-                  safeTrack(trackServiceClick, serviceItem.service_id, serviceItem.name, 'service_detail_other_services', location.pathname);
-                });
+                trackWithPlausible('service', serviceItem.service_id, serviceItem.name, 'service_detail_other_services');
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 flex items-center justify-center">
-                  <IconBadgeCheck />
+                <div className="w-12 h-12 flex items-center justify-center rounded-xl" style={{ backgroundColor: `${serviceItem.color}15` }}>
+                  <ServiceIcon icon={serviceItem.icon} color={serviceItem.color} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{serviceItem.list_title || serviceItem.name}</h3>
               </div>
@@ -251,26 +275,12 @@ const ServiceDetail = () => {
     }
   }, [service?.base_price, formatPrice]);
 
-  // Track service view - 100% tracking, non-bloquant via requestIdleCallback
+  // Track service view - Plausible uniquement (léger, ~1KB)
   useEffect(() => {
     if (service && serviceId) {
-      const track = () => {
-        loadAnalytics().then(() => {
-          safeTrack(trackPlausibleServiceClick, serviceId, service.name, 'service_detail_page');
-          safeTrack(trackServiceClick, serviceId, service.name, 'service_detail_page', location.pathname);
-        });
-      };
-      
-      // Tracker dès que le navigateur est idle
-      if ('requestIdleCallback' in window) {
-        const id = requestIdleCallback(track, { timeout: 1000 });
-        return () => cancelIdleCallback(id);
-      } else {
-        const timer = setTimeout(track, 100);
-        return () => clearTimeout(timer);
-      }
+      trackWithPlausible('service', serviceId, service.name, 'service_detail_page');
     }
-  }, [service, serviceId, location.pathname]);
+  }, [service, serviceId]);
 
   // Les données sont chargées de manière synchrone (prebuild), pas besoin de skeleton
 
@@ -356,13 +366,10 @@ const ServiceDetail = () => {
                   const ctaCopy = service.cta || t('nav.notarizeNow');
                   const destination = getFormUrl(currency, service?.service_id || serviceId);
                   
-                  loadAnalytics().then(() => {
-                    safeTrack(trackPlausibleCTAClick, 'service_detail_hero', service?.service_id || serviceId, location.pathname, {
-                      ctaText: ctaCopy,
-                      destination,
-                      elementId: 'service_detail_hero'
-                    });
-                    safeTrack(trackCTAClick, 'service_detail_hero', service?.service_id || serviceId, location.pathname);
+                  trackWithPlausible('cta', 'service_detail_hero', service?.service_id || serviceId, location.pathname, {
+                    ctaText: ctaCopy,
+                    destination,
+                    elementId: 'service_detail_hero'
                   });
                 }}
               >
@@ -524,13 +531,10 @@ const ServiceDetail = () => {
                   href={getFormUrl(currency, service?.service_id || serviceId)}
                   onClick={() => {
                     const destination = getFormUrl(currency, service?.service_id || serviceId);
-                    loadAnalytics().then(() => {
-                      safeTrack(trackPlausibleCTAClick, 'service_detail_pricing', service?.service_id || serviceId, location.pathname, {
-                        ctaText: 'Upload my document',
-                        destination,
-                        elementId: 'service_detail_pricing'
-                      });
-                      safeTrack(trackCTAClick, 'service_detail_pricing', service?.service_id || serviceId, location.pathname);
+                    trackWithPlausible('cta', 'service_detail_pricing', service?.service_id || serviceId, location.pathname, {
+                      ctaText: 'Upload my document',
+                      destination,
+                      elementId: 'service_detail_pricing'
                     });
                   }}
                   className="block w-full text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 text-white font-bold rounded-xl transition-colors duration-200 text-center bg-black hover:bg-gray-900 shadow-lg cursor-pointer"

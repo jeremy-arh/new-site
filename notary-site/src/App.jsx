@@ -9,111 +9,44 @@ import ScrollToTop from './components/ScrollToTop'
 import CTAPopup from './components/CTAPopup'
 import LanguageRouter from './components/LanguageRouter'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
-import { setupLinkPrefetch, prefetchVisibleLinks, prefetchBlogPosts, prefetchServices, prefetchForm } from './utils/prefetch'
-import { trackPageView as trackPlausiblePageView } from './utils/plausible'
-import { trackPageView, trackScrollDepth } from './utils/analytics'
 
-// Component to track page views - 100% tracking, non-bloquant
+// Plausible uniquement - PAS de Supabase analytics (46 KiB économisés)
+import { trackPageView as trackPlausiblePageView } from './utils/plausible'
+
+// Prefetch chargé dynamiquement (mais sans analytics Supabase)
+let prefetchModule = null;
+
+const loadPrefetch = () => {
+  if (prefetchModule) return Promise.resolve(prefetchModule);
+  return import('./utils/prefetch').then(m => { prefetchModule = m; return m; });
+};
+
+// Component to track page views - Plausible uniquement (léger, ~1KB)
+// PAS de Supabase analytics - économie de 46 KiB !
 function PageViewTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    // Reset scroll milestones for new page
-    sessionStorage.removeItem('analytics_scroll_milestones');
-    
-    // Tracker dès que le navigateur est idle (après le rendu initial)
-    const track = () => {
-      const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
-      trackPlausiblePageView(pageName, location.pathname).catch(() => {});
-      trackPageView(location.pathname);
-    };
-    
-    // requestIdleCallback pour ne pas bloquer le rendu, mais tracker ASAP
-    if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(track, { timeout: 1000 });
-      return () => cancelIdleCallback(id);
-    } else {
-      // Fallback: setTimeout court pour les navigateurs sans requestIdleCallback
-      const timer = setTimeout(track, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [location]);
-
-  // Track scroll depth - Activé dès que idle, non-bloquant
-  useEffect(() => {
-    let scrollTrackingEnabled = false;
-    let ticking = false;
-    let cachedWindowHeight = 0;
-    let cachedDocumentHeight = 0;
-    let lastTrackedMilestone = 0;
-    let idleId = null;
-    
-    // Activer le tracking dès que le navigateur est idle
-    const enableTracking = () => {
-      scrollTrackingEnabled = true;
-      cachedWindowHeight = window.innerHeight;
-      cachedDocumentHeight = document.documentElement.scrollHeight;
-    };
-    
-    if ('requestIdleCallback' in window) {
-      idleId = requestIdleCallback(enableTracking, { timeout: 2000 });
-    } else {
-      setTimeout(enableTracking, 500);
-    }
-    
-    const handleScroll = () => {
-      // Ne rien faire pendant les 5 premières secondes
-      if (!scrollTrackingEnabled || ticking) return;
-      
-      ticking = true;
-      // Utiliser setTimeout au lieu de rAF pour éviter les forced layouts
-      setTimeout(() => {
-        if (cachedDocumentHeight === 0) {
-          ticking = false;
-          return;
-        }
-        
-        const scrollTop = window.scrollY;
-        const scrollPercentage = Math.round(((scrollTop + cachedWindowHeight) / cachedDocumentHeight) * 100);
-        
-        const milestones = [25, 50, 75, 100];
-        const currentMilestone = milestones.find(m => scrollPercentage >= m && m > lastTrackedMilestone);
-        
-        if (currentMilestone) {
-          lastTrackedMilestone = currentMilestone;
-          trackScrollDepth(scrollPercentage);
-        }
-        
-        ticking = false;
-      }, 100);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      if (idleId && 'cancelIdleCallback' in window) cancelIdleCallback(idleId);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/').pop();
+    trackPlausiblePageView(pageName, location.pathname).catch(() => {});
   }, [location]);
 
   return null;
 }
 
-// Component to prefetch form on app load
+// Component to prefetch form - chargé dynamiquement
 function FormPrefetcher() {
   const { currency } = useCurrency();
   const location = useLocation();
 
   useEffect(() => {
-    // Detect serviceId from URL if on a service page
     const serviceMatch = location.pathname.match(/\/services\/([^/]+)/);
     const serviceId = serviceMatch ? serviceMatch[1] : null;
 
-    // Prefetch the form page after a short delay to not block initial page load
-    // Prefetch with the current currency and serviceId (if on service page)
+    // Prefetch après 2 secondes pour ne pas bloquer
     const prefetchTimer = setTimeout(() => {
-      prefetchForm(currency, serviceId);
-    }, 1000);
+      loadPrefetch().then(m => m.prefetchForm(currency, serviceId)).catch(() => {});
+    }, 2000);
 
     return () => clearTimeout(prefetchTimer);
   }, [currency, location.pathname]);
@@ -124,30 +57,21 @@ function FormPrefetcher() {
 function App() {
   useScrollAnimation();
 
-  // Initialize prefetching on app load
+  // Prefetch chargé dynamiquement après 3 secondes
   useEffect(() => {
-    // Setup link hover prefetch immediately
-    setupLinkPrefetch();
-
-    // Wait for DOM to be ready
-    const initPrefetch = () => {
-      // Prefetch visible links (including form links)
-      prefetchVisibleLinks();
-
-      // Prefetch initial data (blog posts and services) in background
-      // These will be cached and available instantly when needed
-      prefetchBlogPosts(10).catch(console.error);
-      prefetchServices().catch(console.error);
-    };
-
-    // Run immediately if DOM is ready, otherwise wait
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      setTimeout(initPrefetch, 500);
-    } else {
-      window.addEventListener('load', () => {
-        setTimeout(initPrefetch, 500);
-      });
-    }
+    const timer = setTimeout(() => {
+      loadPrefetch().then(m => {
+        m.setupLinkPrefetch();
+        m.prefetchVisibleLinks();
+        // Blog et services après 5 secondes (vraiment pas urgent)
+        setTimeout(() => {
+          m.prefetchBlogPosts(10).catch(() => {});
+          m.prefetchServices().catch(() => {});
+        }, 2000);
+      }).catch(() => {});
+    }, 3000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { useCurrency } from '../contexts/CurrencyContext';
 import CurrencySelector from './CurrencySelector';
 import LanguageSelector from './LanguageSelector';

@@ -44,20 +44,21 @@
       h1, h2 { font-family: Georgia, 'Times New Roman', serif; }
     </style>
     
-    <!-- Google Tag Manager - différé -->
+    <!-- Google Tag Manager - Chargé quand le browser est idle -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function loadGTM() {
-        var f = document.getElementsByTagName('script')[0];
         var j = document.createElement('script');
         j.async = true;
         j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MR7JDNSD';
-        f.parentNode.insertBefore(j, f);
+        document.head.appendChild(j);
       }
+      // Charger GTM dès que le navigateur est idle (ne bloque jamais le rendu)
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadGTM, { timeout: 3000 });
+        requestIdleCallback(loadGTM, { timeout: 8000 });
       } else {
-        setTimeout(loadGTM, 2000);
+        // Fallback pour Safari : attendre que la page soit complète
+        window.addEventListener('load', function() { setTimeout(loadGTM, 1000); });
       }
     </script>
   </head>
