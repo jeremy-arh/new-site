@@ -1,7 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -463,55 +462,16 @@ function StepAnimation({ step }) {
 }
 
 const HowItWorks = memo(() => {
-  const [servicePrice, setServicePrice] = useState(null);
-  const [formattedPrice, setFormattedPrice] = useState('');
   const location = useLocation();
-  const { formatPrice, currency } = useCurrency();
+  const { currency } = useCurrency();
   const { t } = useTranslation();
 
-  // Fetch service price and serviceId if on a service detail page
-  const [currentServiceId, setCurrentServiceId] = useState(null);
-  
-  useEffect(() => {
-    const fetchServicePrice = async () => {
-      const path = location.pathname || '';
-      const serviceMatch = path.match(/^\/services\/([^/]+)/);
-      
-      if (serviceMatch && serviceMatch[1]) {
-        const serviceId = decodeURIComponent(serviceMatch[1]);
-        setCurrentServiceId(serviceId);
-        try {
-          const { data, error } = await supabase
-            .from('services')
-            .select('base_price')
-            .eq('service_id', serviceId)
-            .single();
-
-          if (!error && data?.base_price) {
-            setServicePrice(data.base_price);
-          } else {
-            setServicePrice(null);
-          }
-        } catch (error) {
-          console.error('Error fetching service price:', error);
-          setServicePrice(null);
-        }
-      } else {
-        setServicePrice(null);
-        setCurrentServiceId(null);
-      }
-    };
-
-    fetchServicePrice();
+  // Extraire le serviceId depuis l'URL (pas d'appel API pour éviter CLS)
+  const currentServiceId = useMemo(() => {
+    const path = location.pathname || '';
+    const serviceMatch = path.match(/^\/services\/([^/]+)/);
+    return serviceMatch ? decodeURIComponent(serviceMatch[1]) : null;
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (servicePrice) {
-      formatPrice(servicePrice).then(setFormattedPrice);
-    } else {
-      setFormattedPrice('');
-    }
-  }, [servicePrice, formatPrice]);
 
   const steps = useMemo(() => [
     {
@@ -699,12 +659,6 @@ const HowItWorks = memo(() => {
                     {t('nav.notarizeNow')}
                   </span>
                 </a>
-                {formattedPrice && (
-                  <div className="text-white flex items-center gap-1 justify-center">
-                    <span className="text-base font-semibold">{formattedPrice}</span>
-                    <span className="text-xs font-normal text-white/70">{t('services.perDocument')} - no hidden fee</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
