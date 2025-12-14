@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { useState, useEffect, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
@@ -6,6 +5,48 @@ import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
+
+// SVG Icons inline pour éviter @iconify/react (300ms de latence)
+const IconUpload = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+  </svg>
+));
+const IconPeople = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+  </svg>
+));
+const IconCreditCard = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+    <path d="M9 16l2-2 2 2 4-4-1.41-1.41L12 14.17l-1.59-1.59L9 14z" fill="currentColor"/>
+  </svg>
+));
+const IconIdentityCard = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 6h16v2H4V6zm0 12v-8h16v8H4zm2-6h4v1H6v-1zm0 2h4v1H6v-1zm6-2h6v1h-6v-1zm0 2h4v1h-4v-1z"/>
+  </svg>
+));
+const IconCheck = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </svg>
+));
+const IconOpenNew = memo(({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7h-7z"/>
+  </svg>
+));
+
+// Map des icônes par nom
+const STEP_ICONS = {
+  'line-md:uploading-loop': IconUpload,
+  'formkit:people': IconPeople,
+  'mynaui:credit-card-check-solid': IconCreditCard,
+  'hugeicons:identity-card': IconIdentityCard,
+  'stash:check-solid': IconCheck,
+};
 
 const STEP_ANIMATION_STYLES = `
 .hiw-anim-screen {
@@ -558,7 +599,7 @@ const HowItWorks = memo(() => {
                   
                   {/* Text Block - Below Illustration */}
                 <div className="grid grid-cols-[auto,1fr] gap-3 items-center">
-                    <Icon icon={step.icon} className="w-4 h-4 lg:w-5 lg:h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                    {(() => { const StepIcon = STEP_ICONS[step.icon]; return StepIcon ? <StepIcon className="w-4 h-4 lg:w-5 lg:h-5 text-gray-900 flex-shrink-0 mt-0.5" /> : null; })()}
                   <div className="flex items-center">
                     <h3 className="text-base lg:text-lg font-semibold text-gray-900 leading-tight">
                         {step.title}
@@ -594,7 +635,7 @@ const HowItWorks = memo(() => {
                   <StepAnimation step={index + 1} />
                 </div>
                 <div className="grid grid-cols-[auto,1fr] gap-3 items-center">
-                  <Icon icon={step.icon} className="w-6 h-6 text-black flex-shrink-0 mt-0.5" />
+                  {(() => { const StepIcon = STEP_ICONS[step.icon]; return StepIcon ? <StepIcon className="w-6 h-6 text-black flex-shrink-0 mt-0.5" /> : null; })()}
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center">
                       <h3 className="text-base font-semibold text-gray-900 leading-tight">
@@ -654,7 +695,7 @@ const HowItWorks = memo(() => {
                     trackCTAClick('how_it_works', currentServiceId, location.pathname);
                   }}
                 >
-                  <Icon icon="lsicon:open-new-filled" className="w-5 h-5" />
+                  <IconOpenNew className="w-5 h-5" />
                   <span className="btn-text inline-block">
                     {t('nav.notarizeNow')}
                   </span>
