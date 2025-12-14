@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "prebuild": "node scripts/prebuild-services.js",
+    "build": "npm run prebuild && vite build",
+    "build:skip-prebuild": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "check:optimization": "node scripts/check-optimization.js"

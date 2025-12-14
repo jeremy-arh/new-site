@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, lazy, Suspense, useMemo, useCallback, memo
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
-import { supabase } from '../lib/supabase';
 import { trackServiceClick as trackPlausibleServiceClick, trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackServiceClick, trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -10,7 +9,7 @@ import { getFormUrl } from '../utils/formUrl';
 import { getCanonicalUrl } from '../utils/canonicalUrl';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
-import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields } from '../utils/services';
+import { useService, useServicesList } from '../hooks/useServices';
 import PriceDisplay from '../components/PriceDisplay';
 
 // Image Hero
@@ -71,35 +70,18 @@ const ChatCTA = lazy(() => import('../components/ChatCTA'));
 
 // Other Services Section Component - memoized pour éviter re-renders
 const OtherServicesSection = memo(({ currentServiceId }) => {
-  const [services, setServices] = useState([]);
   const { t } = useTranslation();
-  const { language, getLocalizedPath } = useLanguage();
+  const { getLocalizedPath } = useLanguage();
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('services')
-          .select(getServiceFields())
-          .eq('is_active', true)
-          .eq('show_in_list', true)
-          .neq('service_id', currentServiceId)
-          .order('created_at', { ascending: true })
-          .limit(6);
+  // Utiliser le hook prebuild au lieu de requêtes Supabase
+  const { services, isLoading } = useServicesList({
+    showInListOnly: true,
+    excludeServiceId: currentServiceId,
+    limit: 6
+  });
 
-        if (error) throw error;
-        
-        const formattedServices = formatServicesForLanguage(data || [], language);
-        setServices(formattedServices);
-      } catch (error) {
-        console.error('Error fetching other services:', error);
-      }
-    };
-    fetchServices();
-  }, [currentServiceId, language]);
-
-  if (services.length === 0) {
+  if (isLoading || services.length === 0) {
     return null;
   }
 
@@ -272,27 +254,18 @@ const useIsMobile = (breakpoint = 1150) => {
 const ServiceDetail = () => {
   const { serviceId: rawServiceId } = useParams();
   const location = useLocation();
-  const [service, setService] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const isMobile = useIsMobile(1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
   const { t } = useTranslation();
-  const { language, getLocalizedPath } = useLanguage();
+  const { getLocalizedPath } = useLanguage();
 
   // Décoder le serviceId depuis l'URL (au cas où il contiendrait des caractères encodés)
   const serviceId = useMemo(() => rawServiceId ? decodeURIComponent(rawServiceId) : null, [rawServiceId]);
 
-  useEffect(() => {
-    if (serviceId) {
-      fetchService();
-    } else {
-      setError(t('common.error'));
-      setService(null);
-      setIsLoading(false);
-    }
-  }, [serviceId, language]);
+  // Utiliser le hook prebuild au lieu de requêtes Supabase
+  const { service, isLoading, error: serviceError } = useService(serviceId);
+  const error = serviceError ? t('serviceDetail.loadServiceError') : null;
 
   useEffect(() => {
     if (service?.base_price) {
@@ -300,65 +273,13 @@ const ServiceDetail = () => {
     }
   }, [service?.base_price, formatPrice]);
 
-  const fetchService = async () => {
-    setIsLoading(true);
-    setError(null);
-    setService(null);
-
-    if (!serviceId) {
-      setError(t('common.error'));
-      setIsLoading(false);
-      return;
+  // Track service view quand le service est chargé
+  useEffect(() => {
+    if (service && serviceId) {
+      trackPlausibleServiceClick(serviceId, service.name, 'service_detail_page');
+      trackServiceClick(serviceId, service.name, 'service_detail_page', location.pathname);
     }
-
-    try {
-      // Toujours charger depuis la DB pour avoir les dernières traductions
-      // Le cache peut contenir des données obsolètes sans les traductions
-      // Utiliser getServiceFields() pour s'assurer que tous les champs multilingues sont chargés
-      const { data, error } = await supabase
-        .from('services')
-        .select(getServiceFields())
-        .eq('service_id', serviceId)
-        .eq('is_active', true)
-        .single();
-
-      if (error) throw error;
-
-      if (!data) {
-        setError(t('common.error'));
-        return;
-      }
-
-      const serviceData = data;
-
-      // Toujours formater le service selon la langue actuelle (même s'il vient du cache)
-      const formattedService = formatServiceForLanguage(serviceData, language);
-      
-      // Debug: vérifier la langue et les données
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[ServiceDetail] Language:', language);
-        console.log('[ServiceDetail] Service data keys:', Object.keys(serviceData));
-        console.log('[ServiceDetail] Formatted service name:', formattedService.name);
-        console.log('[ServiceDetail] French name available:', serviceData.name_fr);
-        console.log('[ServiceDetail] All multilingual fields:', {
-          name_fr: serviceData.name_fr,
-          description_fr: serviceData.description_fr,
-          short_description_fr: serviceData.short_description_fr
-        });
-      }
-      
-      setService(formattedService);
-
-      // Track service view
-      trackPlausibleServiceClick(serviceId, formattedService.name, 'service_detail_page');
-      trackServiceClick(serviceId, formattedService.name, 'service_detail_page', location.pathname);
-    } catch (error) {
-      console.error('Error fetching service:', error);
-      setError(t('serviceDetail.loadServiceError'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [service, serviceId, location.pathname]);
 
   // Afficher le Hero immédiatement pendant le chargement (skeleton)
   // IMPORTANT: Doit avoir exactement les mêmes dimensions que le contenu final pour éviter CLS

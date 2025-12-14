@@ -1,43 +1,18 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { Icon } from '@iconify/react';
 import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
 import { trackServiceClick } from '../utils/analytics';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { formatServicesForLanguage, getServiceFields } from '../utils/services';
+import { useServicesList } from '../hooks/useServices';
 import PriceDisplay from './PriceDisplay';
 
 const Services = () => {
-  const [services, setServices] = useState([]);
-  const { language, getLocalizedPath } = useLanguage();
+  const { getLocalizedPath } = useLanguage();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    fetchServices();
-  }, [language]);
-
-  const fetchServices = async () => {
-    try {
-      // Charger tous les champs, y compris les champs multilingues
-      // Utiliser getServiceFields() pour s'assurer que tous les champs multilingues sont chargés
-      const { data, error } = await supabase
-        .from('services')
-        .select(getServiceFields())
-        .eq('is_active', true)
-        .eq('show_in_list', true)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-      
-      // Formater les services selon la langue
-      const formattedServices = formatServicesForLanguage(data || [], language);
-      setServices(formattedServices);
-    } catch (error) {
-      console.error('Error fetching services:', error);
-    }
-  };
+  
+  // Utiliser le hook prebuild au lieu de requêtes Supabase
+  const { services, isLoading } = useServicesList({ showInListOnly: true });
 
   return (
     <section id="services" className="py-20 px-4 sm:px-[30px] bg-white overflow-hidden">
@@ -52,7 +27,18 @@ const Services = () => {
           </h2>
         </div>
 
-        {services.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-20">
+            <div className="animate-pulse space-y-4">
+              <div className="h-6 bg-gray-200 rounded w-1/4 mx-auto"></div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-gray-100 rounded-2xl p-6 h-48"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : services.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 text-lg">{t('services.noServices')}</p>
           </div>
