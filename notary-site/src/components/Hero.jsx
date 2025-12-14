@@ -53,8 +53,9 @@ const IconOpenNew = memo(() => (
   </svg>
 ));
 
-// Image Hero
-const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/quality=20,format=webp';
+// Image Hero - Desktop et Mobile
+const HERO_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/quality=85,format=webp';
+const HERO_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/w=800,quality=85,format=webp';
 
 // SUPPRIMÉ: useIsMobile causait un CLS énorme - utiliser uniquement CSS responsive
 
@@ -68,16 +69,19 @@ const Hero = memo(() => {
       <div
         className="relative lg:rounded-3xl overflow-hidden min-h-screen lg:min-h-0 lg:h-[calc(100vh-110px)] flex items-center"
       >
-        {/* Image Hero avec fetchpriority high pour LCP */}
-        <img
-          src={HERO_IMG}
-          alt=""
-          width="1920"
-          height="1080"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ aspectRatio: '16/9' }}
-          fetchpriority="high"
-        />
+        {/* Image Hero avec fetchpriority high pour LCP - w=800 sur mobile */}
+        <picture>
+          <source media="(max-width: 768px)" srcSet={HERO_IMG_MOBILE} />
+          <img
+            src={HERO_IMG_DESKTOP}
+            alt=""
+            width="1920"
+            height="1080"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ aspectRatio: '16/9' }}
+            fetchPriority="high"
+          />
+        </picture>
 
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/60"></div>

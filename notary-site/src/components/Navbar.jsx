@@ -369,10 +369,10 @@ const Navbar = memo(() => {
               <img
                 src={
                   isMobile && !isMenuOpen 
-                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp' 
+                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=85,format=webp' 
                     : (!isMobile && isAtTop && isOnServicePage)
-                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp'
-                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/quality=20,format=webp'
+                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=85,format=webp'
+                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/quality=85,format=webp'
                 }
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}

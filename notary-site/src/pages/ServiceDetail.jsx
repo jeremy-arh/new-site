@@ -78,8 +78,12 @@ const ServiceIcon = memo(({ icon, color = '#000000' }) => {
   );
 });
 
-// Image Hero
-const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp';
+// Image Hero - Desktop et Mobile
+const HERO_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=85,format=webp';
+const HERO_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/w=800,quality=85,format=webp';
+// Image Pricing - Desktop et Mobile
+const PRICING_IMG_DESKTOP = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/quality=85,format=webp';
+const PRICING_IMG_MOBILE = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/w=800,quality=85,format=webp';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -333,16 +337,19 @@ const ServiceDetail = () => {
       />
       {/* Hero Section - hauteur fixe pour éviter CLS */}
       <section data-hero className="relative overflow-hidden h-screen flex items-center">
-        {/* Image Hero avec dimensions fixes pour éviter CLS */}
-        <img
-          src={HERO_IMG}
-          alt=""
-          width="1920"
-          height="1080"
-          className="absolute inset-0 w-full h-full object-cover object-top"
-          style={{ aspectRatio: '16/9' }}
-          fetchpriority="high"
-        />
+        {/* Image Hero avec dimensions fixes pour éviter CLS - w=800 sur mobile */}
+        <picture>
+          <source media="(max-width: 768px)" srcSet={HERO_IMG_MOBILE} />
+          <img
+            src={HERO_IMG_DESKTOP}
+            alt=""
+            width="1920"
+            height="1080"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+            style={{ aspectRatio: '16/9' }}
+            fetchPriority="high"
+          />
+        </picture>
         
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/60"></div>
@@ -414,17 +421,20 @@ const ServiceDetail = () => {
       >
         <div className="max-w-[1300px] w-full mx-auto">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Left Side - Image */}
+            {/* Left Side - Image - w=800 sur mobile */}
             <div className="lg:w-2/5 flex items-center justify-center">
-              <img
-                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/quality=20,format=webp"
-                alt={service.name}
-                className="w-full h-auto rounded-2xl object-cover"
-                loading="lazy"
-                width="520"
-                height="650"
-                style={{ maxHeight: '800px', aspectRatio: '4 / 5' }}
-              />
+              <picture>
+                <source media="(max-width: 768px)" srcSet={PRICING_IMG_MOBILE} />
+                <img
+                  src={PRICING_IMG_DESKTOP}
+                  alt={service.name}
+                  className="w-full h-auto rounded-2xl object-cover"
+                  loading="lazy"
+                  width="520"
+                  height="650"
+                  style={{ maxHeight: '800px', aspectRatio: '4 / 5' }}
+                />
+              </picture>
             </div>
 
             {/* Right Side - Pricing Block */}
