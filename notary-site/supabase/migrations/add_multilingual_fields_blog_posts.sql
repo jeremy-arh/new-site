@@ -128,3 +128,4 @@ COMMENT ON COLUMN blog_posts.category_pt IS 'Blog post category in Portuguese';
 
 
 
+

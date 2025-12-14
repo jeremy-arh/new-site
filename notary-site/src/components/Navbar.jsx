@@ -25,25 +25,52 @@ const IconOpenNewLarge = memo(() => (
 ));
 
 // Helper function pour scroll vers une section
+// Optimisé pour utiliser requestAnimationFrame et éviter les forced layouts
 const scrollToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
   if (element) {
-    const navbarHeight = window.innerWidth < 768 ? 70 : 90;
-    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({
-      top: elementPosition - navbarHeight,
-      behavior: 'smooth'
+    // Utiliser requestAnimationFrame pour grouper les lectures de layout
+    requestAnimationFrame(() => {
+      const navbarHeight = cachedWindowWidth < 768 ? 70 : 90;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - navbarHeight,
+        behavior: 'smooth'
+      });
     });
   }
 };
 
+// Cacher les dimensions pour éviter les forced layouts répétés
+let cachedWindowWidth = typeof window !== 'undefined' ? 0 : 1200; // Valeur par défaut SSR-safe
+let cachedScrollY = 0;
+let dimensionsCached = false;
+
+// Initialiser les dimensions de façon différée pour ne pas bloquer le rendu initial
+if (typeof window !== 'undefined') {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      cachedWindowWidth = window.innerWidth;
+      cachedScrollY = window.scrollY;
+      dimensionsCached = true;
+    }, { timeout: 100 });
+  } else {
+    setTimeout(() => {
+      cachedWindowWidth = window.innerWidth;
+      cachedScrollY = window.scrollY;
+      dimensionsCached = true;
+    }, 50);
+  }
+}
+
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
+  // Utiliser une valeur par défaut qui ne cause pas de flash (assume desktop)
+  const [isMobile, setIsMobile] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isAtTop, setIsAtTop] = useState(window.scrollY === 0);
+  const [isAtTop, setIsAtTop] = useState(true);
   const [isHeroOutOfView, setIsHeroOutOfView] = useState(false);
   const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
@@ -53,6 +80,28 @@ const Navbar = memo(() => {
   const { formatPrice, currency } = useCurrency();
   const { t } = useTranslation();
   const { language, getLocalizedPath } = useLanguage();
+  
+  // Initialiser les états depuis le cache une seule fois au montage
+  useEffect(() => {
+    if (dimensionsCached) {
+      setIsMobile(cachedWindowWidth < 1150);
+      setIsAtTop(cachedScrollY === 0);
+    } else {
+      // Fallback si le cache n'est pas encore prêt
+      const checkDimensions = () => {
+        cachedWindowWidth = window.innerWidth;
+        cachedScrollY = window.scrollY;
+        dimensionsCached = true;
+        setIsMobile(cachedWindowWidth < 1150);
+        setIsAtTop(cachedScrollY === 0);
+      };
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(checkDimensions, { timeout: 100 });
+      } else {
+        setTimeout(checkDimensions, 50);
+      }
+    }
+  }, []);
   // Note: Navbar is outside specific Route elements, so useParams is not reliable here
   
   // Helper function to check if we're on a service detail page (with or without language prefix)
@@ -65,13 +114,15 @@ const Navbar = memo(() => {
   const isOnServicePage = isServicePage();
 
   const handleScroll = useCallback(() => {
+    // Utiliser le cache pour éviter les forced layouts
     const currentScrollY = window.scrollY;
-
+    cachedScrollY = currentScrollY; // Mettre à jour le cache
+    
     setIsScrolled(currentScrollY > 50);
     setIsAtTop(currentScrollY === 0);
 
-    // Only apply hide/show logic on mobile
-    if (window.innerWidth < 1150) {
+    // Utiliser la valeur cachée de la largeur pour éviter un reflow
+    if (cachedWindowWidth < 1150) {
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Scrolling down
         setIsHeaderVisible(false);
@@ -87,7 +138,9 @@ const Navbar = memo(() => {
   }, [lastScrollY]);
 
   const handleResize = useCallback(() => {
-    setIsMobile(window.innerWidth < 1150);
+    // Mettre à jour le cache et l'état
+    cachedWindowWidth = window.innerWidth;
+    setIsMobile(cachedWindowWidth < 1150);
   }, []);
 
   const toggleMenu = useCallback(() => {
@@ -99,10 +152,7 @@ const Navbar = memo(() => {
   }, []);
 
   useEffect(() => {
-    // Vérifier l'état initial au chargement
-    setIsAtTop(window.scrollY === 0);
-    
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
@@ -156,7 +206,7 @@ const Navbar = memo(() => {
   }, [location.pathname]); // Re-observer quand on change de page
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, [handleResize]);
 
@@ -509,12 +559,15 @@ const Navbar = memo(() => {
                   setTimeout(() => {
                     const element = document.getElementById('contact');
                     if (element) {
-                      const offset = 100;
-                      const elementPosition = element.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
+                      // Grouper les lectures de layout dans un requestAnimationFrame
+                      requestAnimationFrame(() => {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                        });
                       });
                     }
                   }, 300);

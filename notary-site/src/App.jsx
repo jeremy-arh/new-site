@@ -31,27 +31,70 @@ function PageViewTracker() {
     trackPageView(location.pathname);
   }, [location]);
 
-  // Track scroll depth
+  // Track scroll depth - Optimisé pour éviter les forced layouts
   useEffect(() => {
     let ticking = false;
+    let cachedWindowHeight = 0;
+    let cachedDocumentHeight = 0;
+    let lastTrackedMilestone = 0;
+    
+    // Cache les dimensions une seule fois au chargement et au resize
+    const updateDimensions = () => {
+      cachedWindowHeight = window.innerHeight;
+      cachedDocumentHeight = document.documentElement.scrollHeight;
+    };
+    
+    // Différer la lecture initiale pour ne pas bloquer le rendu
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(updateDimensions, { timeout: 500 });
+    } else {
+      setTimeout(updateDimensions, 100);
+    }
     
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const windowHeight = window.innerHeight;
-          const documentHeight = document.documentElement.scrollHeight;
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const scrollPercentage = Math.round(((scrollTop + windowHeight) / documentHeight) * 100);
+          // Utiliser scrollY qui est plus performant que pageYOffset
+          const scrollTop = window.scrollY;
           
-          trackScrollDepth(scrollPercentage);
+          // Éviter les calculs si les dimensions ne sont pas encore cachées
+          if (cachedDocumentHeight === 0) {
+            ticking = false;
+            return;
+          }
+          
+          const scrollPercentage = Math.round(((scrollTop + cachedWindowHeight) / cachedDocumentHeight) * 100);
+          
+          // Éviter les appels redondants si on n'a pas atteint un nouveau milestone
+          const milestones = [25, 50, 75, 100];
+          const currentMilestone = milestones.find(m => scrollPercentage >= m && m > lastTrackedMilestone);
+          
+          if (currentMilestone) {
+            lastTrackedMilestone = currentMilestone;
+            trackScrollDepth(scrollPercentage);
+          }
+          
           ticking = false;
         });
         ticking = true;
       }
     };
+    
+    // Mettre à jour les dimensions au resize (throttled)
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateDimensions, 200);
+    };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
   }, [location]);
 
   return null;

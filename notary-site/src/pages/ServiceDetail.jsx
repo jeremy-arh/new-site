@@ -227,15 +227,30 @@ const WhatIsContent = memo(({ service, t }) => {
   );
 });
 
-// Hook optimisé pour détecter mobile avec matchMedia (pas de resize listener)
+// Hook optimisé pour détecter mobile avec matchMedia
+// Utilise une initialisation différée pour éviter les forced layouts au chargement initial
 const useIsMobile = (breakpoint = 1150) => {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(`(max-width: ${breakpoint}px)`).matches;
-  });
+  // Valeur par défaut: false (desktop) pour éviter le flash de contenu
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    
+    // Différer la lecture initiale pour ne pas bloquer le rendu
+    const initializeState = () => {
+      setIsMobile(mq.matches);
+    };
+    
+    // Utiliser requestIdleCallback pour la lecture initiale
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initializeState, { timeout: 100 });
+    } else {
+      // Fallback: setTimeout court
+      setTimeout(initializeState, 0);
+    }
+    
     const handler = (e) => setIsMobile(e.matches);
     
     // Modern API

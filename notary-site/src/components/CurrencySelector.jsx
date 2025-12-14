@@ -67,13 +67,18 @@ const CurrencySelector = ({ isWhite = false }) => {
 
   const handleToggle = () => {
     if (!isOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 8,
-        left: rect.left
+      // Utiliser requestAnimationFrame pour éviter les forced layouts
+      requestAnimationFrame(() => {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setPosition({
+          top: rect.bottom + 8,
+          left: rect.left
+        });
+        setIsOpen(true);
       });
+    } else {
+      setIsOpen(!isOpen);
     }
-    setIsOpen(!isOpen);
   };
 
   const handleCurrencyChange = (newCurrency) => {
