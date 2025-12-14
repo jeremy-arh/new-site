@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useState, useEffect, useCallback, memo, useMemo } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
@@ -412,30 +412,54 @@ const STEP_ANIMATION_STYLES = `
 `;
 
 function StepAnimation({ step, isMobile }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef(null);
   const baseUrl = 'https://jlizwheftlnhoifbqeex.supabase.co/storage/v1/object/public/assets/how-it-work';
   const videoSrc = `${baseUrl}/step-${step}.mp4`;
+
+  // Lazy load video when visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '100px', threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   if (isMobile) {
     return (
       <div
+        ref={containerRef}
         className="w-full overflow-hidden rounded-xl border border-gray-200 bg-white"
         style={{ aspectRatio: '16 / 10' }}
       >
-        <video
-          src={videoSrc}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-contain pointer-events-none"
-        />
+        {isVisible && (
+          <video
+            src={videoSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="none"
+            className="w-full h-full object-contain pointer-events-none"
+          />
+        )}
       </div>
     );
   }
 
   return (
-    <div className="hiw-anim-screen" data-step={step}>
+    <div ref={containerRef} className="hiw-anim-screen" data-step={step}>
       <div className="hiw-anim-topbar">
         <span className="hiw-anim-dot hiw-anim-dot-red"></span>
         <span className="hiw-anim-dot hiw-anim-dot-yellow"></span>
@@ -443,15 +467,17 @@ function StepAnimation({ step, isMobile }) {
       </div>
       <div className="hiw-anim-body">
         <div className="hiw-anim-window" style={{ height: '100%' }}>
-          <video
-            src={videoSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover rounded-xl pointer-events-none"
-          />
+          {isVisible && (
+            <video
+              src={videoSrc}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="none"
+              className="w-full h-full object-cover rounded-xl pointer-events-none"
+            />
+          )}
         </div>
       </div>
     </div>
