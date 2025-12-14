@@ -1,5 +1,34 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import Critters from 'critters'
+import { readFileSync, writeFileSync, readdirSync } from 'fs'
+import { join } from 'path'
+
+// Plugin personnalisé pour inliner le CSS critique après le build
+const criticalCssPlugin = () => ({
+  name: 'critical-css',
+  closeBundle: async () => {
+    const distPath = 'dist'
+    const critters = new Critters({
+      path: distPath,
+      preload: 'swap',
+      inlineFonts: false,
+      pruneSource: false,
+      reduceInlineStyles: true,
+    })
+    
+    // Trouver tous les fichiers HTML
+    const htmlFiles = readdirSync(distPath).filter(f => f.endsWith('.html'))
+    
+    for (const file of htmlFiles) {
+      const filePath = join(distPath, file)
+      const html = readFileSync(filePath, 'utf-8')
+      const result = await critters.process(html)
+      writeFileSync(filePath, result)
+      console.log(`✅ Critical CSS inlined for ${file}`)
+    }
+  }
+})
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -7,6 +36,7 @@ export default defineConfig({
     react({
       jsxRuntime: 'automatic'
     }),
+    criticalCssPlugin(),
   ],
   build: {
     // Terser pour minification (sans options unsafe qui cassent React)
