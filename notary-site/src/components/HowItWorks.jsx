@@ -1,10 +1,36 @@
 import { useState, useEffect, memo, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
-import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleCTAClick = null;
+let trackCTAClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleCTAClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleCTAClick = plausible.trackCTAClick;
+    trackCTAClick = analytics.trackCTAClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG Icons inline pour éviter @iconify/react (300ms de latence)
 const IconUpload = memo(({ className }) => (
@@ -687,12 +713,13 @@ const HowItWorks = memo(() => {
                   href={getFormUrl(currency, currentServiceId)}
                   className="primary-cta text-sm md:text-lg inline-flex items-center gap-3 bg-white text-black hover:bg-gray-100 whitespace-nowrap flex-shrink-0 justify-center"
                   onClick={() => {
-                    trackPlausibleCTAClick('how_it_works', currentServiceId, location.pathname, {
+                    loadAnalytics();
+                    safeTrack(trackPlausibleCTAClick, 'how_it_works', currentServiceId, location.pathname, {
                       ctaText: t('nav.notarizeNow'),
                       destination: getFormUrl(currency, currentServiceId),
                       elementId: 'how_it_works_cta'
                     });
-                    trackCTAClick('how_it_works', currentServiceId, location.pathname);
+                    safeTrack(trackCTAClick, 'how_it_works', currentServiceId, location.pathname);
                   }}
                 >
                   <IconOpenNew className="w-5 h-5" />

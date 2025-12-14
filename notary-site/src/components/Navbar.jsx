@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { trackCTAClick as trackPlausibleCTAClick, trackLoginClick as trackPlausibleLoginClick, trackNavigationClick as trackPlausibleNavigationClick } from '../utils/plausible';
-import { trackCTAClick, trackLoginClick, trackNavigationClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import CurrencySelector from './CurrencySelector';
 import LanguageSelector from './LanguageSelector';
@@ -11,6 +9,42 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatServiceForLanguage, getServiceFields } from '../utils/services';
 import { removeLanguageFromPath, SUPPORTED_LANGUAGES } from '../utils/language';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleCTAClick = null;
+let trackPlausibleLoginClick = null;
+let trackPlausibleNavigationClick = null;
+let trackCTAClick = null;
+let trackLoginClick = null;
+let trackNavigationClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleCTAClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleCTAClick = plausible.trackCTAClick;
+    trackPlausibleLoginClick = plausible.trackLoginClick;
+    trackPlausibleNavigationClick = plausible.trackNavigationClick;
+    trackCTAClick = analytics.trackCTAClick;
+    trackLoginClick = analytics.trackLoginClick;
+    trackNavigationClick = analytics.trackNavigationClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG inline pour éviter @iconify (performance)
 const IconOpenNew = memo(() => (
@@ -361,12 +395,13 @@ const Navbar = memo(() => {
                   e.preventDefault();
                   const sectionId = isServicePage() ? 'other-services' : 'services';
                   scrollToSection(sectionId);
-                  trackPlausibleNavigationClick(t('nav.services'), `#${sectionId}`, {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleNavigationClick, t('nav.services'), `#${sectionId}`, {
                     label: t('nav.services'),
                     pagePath: location.pathname,
                     section: 'navbar_desktop'
                   });
-                  trackNavigationClick('Our services', `#${sectionId}`, location.pathname);
+                  safeTrack(trackNavigationClick, 'Our services', `#${sectionId}`, location.pathname);
                 }}
               >
                 {t('nav.services')}
@@ -377,12 +412,13 @@ const Navbar = memo(() => {
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToSection('how-it-works');
-                  trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleNavigationClick, t('nav.howItWorks'), '#how-it-works', {
                     label: t('nav.howItWorks'),
                     pagePath: location.pathname,
                     section: 'navbar_desktop'
                   });
-                  trackNavigationClick('How it work', '#how-it-works', location.pathname);
+                  safeTrack(trackNavigationClick, 'How it work', '#how-it-works', location.pathname);
                 }}
               >
                 {t('nav.howItWorks')}
@@ -393,12 +429,13 @@ const Navbar = memo(() => {
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToSection('faq');
-                  trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleNavigationClick, t('nav.faq'), '#faq', {
                     label: t('nav.faq'),
                     pagePath: location.pathname,
                     section: 'navbar_desktop'
                   });
-                  trackNavigationClick('FAQ', '#faq', location.pathname);
+                  safeTrack(trackNavigationClick, 'FAQ', '#faq', location.pathname);
                 }}
               >
                 {t('nav.faq')}
@@ -415,12 +452,13 @@ const Navbar = memo(() => {
                 href="https://app.mynotary.io/login" 
                 className={`nav-link text-base font-semibold whitespace-nowrap flex-shrink-0 ${!isMobile && isAtTop && isOnServicePage ? 'text-white hover:text-white hover:underline' : ''}`}
                 onClick={() => {
-                  trackPlausibleLoginClick('navbar_desktop', {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleLoginClick, 'navbar_desktop', {
                     linkText: t('nav.login'),
                     pagePath: location.pathname,
                     destination: 'https://app.mynotary.io/login'
                   });
-                  trackLoginClick('navbar_desktop', location.pathname);
+                  safeTrack(trackLoginClick, 'navbar_desktop', location.pathname);
                 }}
               >
                 {t('nav.login')}
@@ -432,12 +470,13 @@ const Navbar = memo(() => {
                 href={getFormUrl(currency, currentServiceId)} 
                 className={`${isHeroOutOfView ? 'glassy-cta-blue' : 'glassy-cta'} text-sm relative z-10 flex-shrink-0 whitespace-nowrap px-6 py-3 font-semibold rounded-lg transition-all duration-300`}
                 onClick={() => {
-                  trackPlausibleCTAClick('navbar_desktop', currentServiceId, location.pathname, {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleCTAClick, 'navbar_desktop', currentServiceId, location.pathname, {
                     ctaText: ctaText || t('nav.notarizeNow'),
                     destination: getFormUrl(currency, currentServiceId),
                     elementId: 'navbar_desktop_cta'
                   });
-                  trackCTAClick('navbar_desktop', currentServiceId, location.pathname);
+                  safeTrack(trackCTAClick, 'navbar_desktop', currentServiceId, location.pathname);
                 }}
               >
                 <span className="btn-text inline-block inline-flex items-center gap-2 whitespace-nowrap">
@@ -494,12 +533,13 @@ const Navbar = memo(() => {
                 closeMenu();
                 const sectionId = isServicePage() ? 'other-services' : 'services';
                 setTimeout(() => scrollToSection(sectionId), 300);
-                trackPlausibleNavigationClick(t('nav.services'), `#${sectionId}`, {
+                loadAnalytics();
+                safeTrack(trackPlausibleNavigationClick, t('nav.services'), `#${sectionId}`, {
                   label: t('nav.services'),
                   pagePath: location.pathname,
                   section: 'navbar_mobile'
                 });
-                trackNavigationClick('Our services', `#${sectionId}`, location.pathname);
+                safeTrack(trackNavigationClick, 'Our services', `#${sectionId}`, location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
@@ -511,12 +551,13 @@ const Navbar = memo(() => {
                 e.preventDefault();
                 closeMenu();
                 setTimeout(() => scrollToSection('how-it-works'), 300);
-                trackPlausibleNavigationClick(t('nav.howItWorks'), '#how-it-works', {
+                loadAnalytics();
+                safeTrack(trackPlausibleNavigationClick, t('nav.howItWorks'), '#how-it-works', {
                   label: t('nav.howItWorks'),
                   pagePath: location.pathname,
                   section: 'navbar_mobile'
                 });
-                trackNavigationClick('How it work', '#how-it-works', location.pathname);
+                safeTrack(trackNavigationClick, 'How it work', '#how-it-works', location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
@@ -528,12 +569,13 @@ const Navbar = memo(() => {
                 e.preventDefault();
                 closeMenu();
                 setTimeout(() => scrollToSection('faq'), 300);
-                trackPlausibleNavigationClick(t('nav.faq'), '#faq', {
+                loadAnalytics();
+                safeTrack(trackPlausibleNavigationClick, t('nav.faq'), '#faq', {
                   label: t('nav.faq'),
                   pagePath: location.pathname,
                   section: 'navbar_mobile'
                 });
-                trackNavigationClick('FAQ', '#faq', location.pathname);
+                safeTrack(trackNavigationClick, 'FAQ', '#faq', location.pathname);
               }}
               className="block text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 py-2 whitespace-nowrap"
             >
@@ -571,12 +613,13 @@ const Navbar = memo(() => {
                       });
                     }
                   }, 300);
-                  trackPlausibleNavigationClick(t('common.contactUs'), localizedPath, {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleNavigationClick, t('common.contactUs'), localizedPath, {
                     label: t('common.contactUs'),
                     pagePath: location.pathname,
                     section: 'navbar_mobile'
                   });
-                  trackNavigationClick('contact', localizedPath, location.pathname);
+                  safeTrack(trackNavigationClick, 'contact', localizedPath, location.pathname);
                 }}
                 className="nav-link text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 whitespace-nowrap"
               >
@@ -586,12 +629,13 @@ const Navbar = memo(() => {
               <a
                 href="https://app.mynotary.io/login"
                 onClick={() => {
-                  trackPlausibleLoginClick('navbar_mobile', {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleLoginClick, 'navbar_mobile', {
                     linkText: t('nav.login'),
                     pagePath: location.pathname,
                     destination: 'https://app.mynotary.io/login'
                   });
-                  trackLoginClick('navbar_mobile', location.pathname);
+                  safeTrack(trackLoginClick, 'navbar_mobile', location.pathname);
                   closeMenu();
                 }}
                 className="nav-link text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200 whitespace-nowrap"
@@ -603,12 +647,13 @@ const Navbar = memo(() => {
               <a
                 href={getFormUrl(currency, currentServiceId)}
                 onClick={() => {
-                  trackPlausibleCTAClick('navbar_mobile', currentServiceId, location.pathname, {
+                  loadAnalytics();
+                  safeTrack(trackPlausibleCTAClick, 'navbar_mobile', currentServiceId, location.pathname, {
                     ctaText: ctaText || t('nav.notarizeNow'),
                     destination: getFormUrl(currency, currentServiceId),
                     elementId: 'navbar_mobile_cta'
                   });
-                  trackCTAClick('navbar_mobile', currentServiceId, location.pathname);
+                  safeTrack(trackCTAClick, 'navbar_mobile', currentServiceId, location.pathname);
                   closeMenu();
                 }}
                 className="block w-full text-center glassy-cta primary-cta text-lg py-4"

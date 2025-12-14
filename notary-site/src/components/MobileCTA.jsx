@@ -1,9 +1,35 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
-import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleCTAClick = null;
+let trackCTAClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleCTAClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleCTAClick = plausible.trackCTAClick;
+    trackCTAClick = analytics.trackCTAClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG inline pour éviter @iconify
 const IconOpenNew = memo(() => (
@@ -100,12 +126,13 @@ const MobileCTA = memo(({ ctaText = null, price, serviceId = null }) => {
               href={getFormUrl(currency, serviceId)}
               className="w-full text-center px-6 py-4 glassy-cta-blue font-bold rounded-lg transition-all duration-300"
               onClick={() => {
-                trackPlausibleCTAClick('mobile_cta', serviceId, window.location.pathname, {
+                loadAnalytics();
+                safeTrack(trackPlausibleCTAClick, 'mobile_cta', serviceId, window.location.pathname, {
                   ctaText: defaultCtaText,
                   destination: getFormUrl(currency, serviceId),
                   elementId: 'mobile_bottom_cta'
                 });
-                trackCTAClick('mobile_cta', serviceId, window.location.pathname);
+                safeTrack(trackCTAClick, 'mobile_cta', serviceId, window.location.pathname);
               }}
             >
               <span className="btn-text inline-block inline-flex items-center justify-center gap-2">

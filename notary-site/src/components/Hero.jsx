@@ -1,9 +1,35 @@
 import { memo } from 'react';
-import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
-import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
 import { useTranslation } from '../hooks/useTranslation';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleCTAClick = null;
+let trackCTAClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleCTAClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleCTAClick = plausible.trackCTAClick;
+    trackCTAClick = analytics.trackCTAClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG inline pour éviter @iconify (performance)
 const IconWorld = memo(() => (
@@ -71,12 +97,13 @@ const Hero = memo(() => {
               href={getFormUrl(currency)} 
               className="primary-cta text-base lg:text-lg inline-flex items-center gap-2 mb-8 lg:mb-12 text-white bg-blue-600 hover:bg-blue-700"
               onClick={() => {
-                trackPlausibleCTAClick('hero', null, window.location.pathname, {
+                loadAnalytics();
+                safeTrack(trackPlausibleCTAClick, 'hero', null, window.location.pathname, {
                   ctaText: t('nav.notarizeNow'),
                   destination: getFormUrl(currency),
                   elementId: 'hero_primary'
                 });
-                trackCTAClick('hero', null, window.location.pathname);
+                safeTrack(trackCTAClick, 'hero', null, window.location.pathname);
               }}
             >
               <IconOpenNew />

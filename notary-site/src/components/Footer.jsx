@@ -27,8 +27,8 @@ const Footer = memo(() => {
     <footer 
       className="bg-gray-900 text-white" 
       style={{ 
-        contain: 'layout style'
-        // Pas de min-height fixe - le contenu définit la hauteur
+        contain: 'layout style',
+        minHeight: '320px' // Hauteur min fixe pour éviter CLS sur desktop
       }}
     >
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">

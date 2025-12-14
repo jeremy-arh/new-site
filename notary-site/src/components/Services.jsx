@@ -1,11 +1,37 @@
 import { Link } from 'react-router-dom';
 import { memo } from 'react';
-import { trackServiceClick as trackPlausibleServiceClick } from '../utils/plausible';
-import { trackServiceClick } from '../utils/analytics';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useServicesList } from '../hooks/useServices';
 import PriceDisplay from './PriceDisplay';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleServiceClick = null;
+let trackServiceClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleServiceClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleServiceClick = plausible.trackServiceClick;
+    trackServiceClick = analytics.trackServiceClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG Icons inline pour éviter @iconify/react (300ms de latence)
 const IconBadgeCheck = memo(() => (
@@ -124,8 +150,9 @@ const Services = () => {
                   to={getLocalizedPath(`/services/${service.service_id}`)}
                   className="group block bg-gray-50 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 border border-gray-200 transform hover:-translate-y-2 scroll-slide-up flex flex-col"
                   onClick={() => {
-                    trackPlausibleServiceClick(service.service_id, service.name, 'homepage_services');
-                    trackServiceClick(service.service_id, service.name, 'homepage_services', window.location.pathname);
+                    loadAnalytics();
+                    safeTrack(trackPlausibleServiceClick, service.service_id, service.name, 'homepage_services');
+                    safeTrack(trackServiceClick, service.service_id, service.name, 'homepage_services', window.location.pathname);
                   }}
                 >
                   <div className="flex items-center gap-3 mb-4">

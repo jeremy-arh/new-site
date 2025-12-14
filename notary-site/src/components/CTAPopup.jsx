@@ -2,10 +2,36 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFormUrl } from '../utils/formUrl';
-import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
-import { trackCTAClick } from '../utils/analytics';
 import { useService } from '../hooks/useServices';
 import { useTranslation } from '../hooks/useTranslation';
+
+// ANALYTICS DIFFÉRÉS - Ne pas importer au top level (évite forced layouts de 78ms)
+let trackPlausibleCTAClick = null;
+let trackCTAClick = null;
+
+// Charger les analytics de manière non-bloquante
+const loadAnalytics = () => {
+  if (trackPlausibleCTAClick) return;
+  Promise.all([
+    import('../utils/plausible'),
+    import('../utils/analytics')
+  ]).then(([plausible, analytics]) => {
+    trackPlausibleCTAClick = plausible.trackCTAClick;
+    trackCTAClick = analytics.trackCTAClick;
+  }).catch(() => {});
+};
+
+// Helper pour tracker de manière non-bloquante
+const safeTrack = (fn, ...args) => {
+  if (fn) {
+    try { fn(...args); } catch (e) { /* ignore */ }
+  }
+};
+
+// Précharger après 2s
+if (typeof window !== 'undefined') {
+  setTimeout(loadAnalytics, 2000);
+}
 
 // SVG Icon inline pour éviter @iconify/react
 const IconOpenNew = () => (
@@ -58,7 +84,8 @@ const CTAPopup = () => {
   };
 
   const handleContactClick = () => {
-    trackPlausibleCTAClick('popup_contact', serviceId, location.pathname, {
+    loadAnalytics();
+    safeTrack(trackPlausibleCTAClick, 'popup_contact', serviceId, location.pathname, {
       ctaText: t('ctaPopup.contact'),
       destination: 'crisp_chat',
       ctaType: 'contact',
@@ -82,12 +109,13 @@ const CTAPopup = () => {
     const label = isServicePage && service?.cta ? service.cta : t('nav.notarizeNow');
     const formUrl = getFormUrl(currency, serviceId);
 
-    trackPlausibleCTAClick('popup_cta', serviceId, location.pathname, {
+    loadAnalytics();
+    safeTrack(trackPlausibleCTAClick, 'popup_cta', serviceId, location.pathname, {
       ctaText: label,
       destination: formUrl,
       elementId: 'popup_primary'
     });
-    trackCTAClick('popup_cta', serviceId, location.pathname);
+    safeTrack(trackCTAClick, 'popup_cta', serviceId, location.pathname);
     window.location.href = formUrl;
   };
 
