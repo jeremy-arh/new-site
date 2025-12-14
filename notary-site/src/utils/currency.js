@@ -180,35 +180,51 @@ const detectCurrencyFromLocale = () => {
 };
 
 /**
- * Fetch exchange rates from EUR
- * Uses exchangerate-api.com free tier
+ * Taux de change fixes depuis EUR - PAS D'APPEL API pour éviter 1000ms+ de latence
+ * Ces taux sont approximatifs et mis à jour manuellement
+ * Dernière mise à jour: Décembre 2024
+ */
+const FIXED_EXCHANGE_RATES = {
+  EUR: 1,
+  USD: 1.05,
+  GBP: 0.86,
+  CAD: 1.47,
+  AUD: 1.65,
+  JPY: 162,
+  CHF: 0.94,
+  CNY: 7.65,
+  INR: 88,
+  BRL: 6.4,
+  MXN: 21.5,
+  SEK: 11.5,
+  NOK: 11.8,
+  DKK: 7.46,
+  PLN: 4.32,
+  CZK: 25.3,
+  HUF: 405,
+  RON: 4.97,
+  BGN: 1.96,
+  HRK: 7.53,
+  RUB: 105,
+  TRY: 36,
+  ZAR: 19.5,
+  KRW: 1450,
+  SGD: 1.42,
+  HKD: 8.2,
+  NZD: 1.82,
+  THB: 37,
+  MYR: 4.7,
+  PHP: 61,
+  IDR: 17000,
+  VND: 26500,
+};
+
+/**
+ * Get exchange rates - SYNCHRONE, pas d'appel API
  */
 const fetchExchangeRates = async () => {
-  // Check cache first
-  const cached = getCachedExchangeRates();
-  if (cached) {
-    return cached;
-  }
-
-  try {
-    // Using exchangerate-api.com free endpoint
-    const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch exchange rates');
-    }
-
-    const data = await response.json();
-    
-    if (data.rates) {
-      saveExchangeRatesToCache(data.rates);
-      return data.rates;
-    }
-  } catch (error) {
-    console.warn('Error fetching exchange rates:', error);
-  }
-
-  return null;
+  // Utiliser les taux fixes pour éviter la latence
+  return FIXED_EXCHANGE_RATES;
 };
 
 /**

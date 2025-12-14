@@ -19,7 +19,7 @@ const sanitizeText = (text) => {
 };
 
 /**
- * Wait for Plausible to be ready
+ * Wait for Plausible to be ready - NE BLOQUE PAS le rendu
  * @returns {Promise} Promise that resolves when Plausible is ready
  */
 const waitForPlausible = () => {
@@ -29,22 +29,31 @@ const waitForPlausible = () => {
       return;
     }
 
-    // If Plausible is already loaded, resolve immediately
+    // Si Plausible est déjà chargé, résoudre immédiatement
     if (isPlausibleLoaded()) {
       resolve();
       return;
     }
 
-    // Wait for Plausible to load (max 5 seconds)
-    let attempts = 0;
-    const maxAttempts = 50;
-    const checkInterval = setInterval(() => {
-      attempts++;
-      if (isPlausibleLoaded() || attempts >= maxAttempts) {
-        clearInterval(checkInterval);
+    // Différer la vérification pour ne pas bloquer le rendu
+    // Utiliser requestIdleCallback pour ne pas impacter les performances
+    const deferredCheck = () => {
+      if (isPlausibleLoaded()) {
         resolve();
+        return;
       }
-    }, 100);
+      
+      // Réessayer après 2 secondes si pas encore chargé
+      setTimeout(() => {
+        resolve(); // Résoudre même si pas chargé pour ne pas bloquer
+      }, 2000);
+    };
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(deferredCheck, { timeout: 3000 });
+    } else {
+      setTimeout(deferredCheck, 1000);
+    }
   });
 };
 
