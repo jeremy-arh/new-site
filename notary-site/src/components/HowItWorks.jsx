@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useState, useEffect, useCallback, memo, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
@@ -412,7 +412,6 @@ const STEP_ANIMATION_STYLES = `
 `;
 
 function StepAnimation({ step, isMobile }) {
-  const containerRef = useRef(null);
   const baseUrl = 'https://jlizwheftlnhoifbqeex.supabase.co/storage/v1/object/public/assets/how-it-work';
   const videoSrc = `${baseUrl}/step-${step}.mp4`;
 
@@ -421,24 +420,22 @@ function StepAnimation({ step, isMobile }) {
       <div
         className="w-full overflow-hidden rounded-xl border border-gray-200 bg-white"
         style={{ aspectRatio: '16 / 10' }}
-        ref={containerRef}
       >
         <video
-          key={videoSrc}
           src={videoSrc}
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain pointer-events-none"
         />
       </div>
     );
   }
 
   return (
-    <div className="hiw-anim-screen" data-step={step} ref={containerRef}>
+    <div className="hiw-anim-screen" data-step={step}>
       <div className="hiw-anim-topbar">
         <span className="hiw-anim-dot hiw-anim-dot-red"></span>
         <span className="hiw-anim-dot hiw-anim-dot-yellow"></span>
@@ -447,14 +444,13 @@ function StepAnimation({ step, isMobile }) {
       <div className="hiw-anim-body">
         <div className="hiw-anim-window" style={{ height: '100%' }}>
           <video
-            key={videoSrc}
             src={videoSrc}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="w-full h-full object-cover rounded-xl"
+            className="w-full h-full object-cover rounded-xl pointer-events-none"
           />
         </div>
       </div>
