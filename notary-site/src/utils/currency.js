@@ -112,8 +112,8 @@ const saveExchangeRatesToCache = (rates) => {
 };
 
 /**
- * Detect user's currency based on IP geolocation
- * Uses ipapi.co free tier (1000 requests/day)
+ * Detect user's currency - SYNCHRONE, pas d'appel API pour éviter CLS
+ * Utilise uniquement la locale du navigateur
  */
 export const detectCurrencyFromIP = async () => {
   // Check cache first
@@ -122,30 +122,8 @@ export const detectCurrencyFromIP = async () => {
     return cached;
   }
 
-  try {
-    // Use ipapi.co free API
-    const response = await fetch('https://ipapi.co/json/', {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch geolocation');
-    }
-
-    const data = await response.json();
-    
-    if (data.currency) {
-      const currency = data.currency.toUpperCase();
-      saveCurrencyToCache(currency);
-      return currency;
-    }
-  } catch (error) {
-    console.warn('Error detecting currency from IP:', error);
-  }
-
-  // Fallback to browser locale
+  // PAS d'appel API ipapi.co - utiliser uniquement la locale du navigateur
+  // Cela évite le CLS causé par le changement de devise après le rendu initial
   return detectCurrencyFromLocale();
 };
 

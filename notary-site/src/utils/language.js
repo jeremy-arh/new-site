@@ -5,49 +5,23 @@ const SUPPORTED_LANGUAGES = ['en', 'fr', 'es', 'de', 'it', 'pt']; // Langues sup
 const DEFAULT_LANGUAGE = 'en';
 
 /**
- * Détecte la langue basée sur l'IP de l'utilisateur
- * Utilise l'API ipapi.co (gratuite, sans clé API requise)
+ * Détecte la langue basée sur la locale du navigateur
+ * PAS d'appel API pour éviter le CLS et améliorer les performances
  */
 export const detectLanguageFromIP = async () => {
   try {
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    
-    if (data.error) {
-      console.warn('Error detecting language from IP:', data.reason);
-      return DEFAULT_LANGUAGE;
-    }
-
-    // Récupère le code de langue (ex: 'FR', 'ES', 'DE')
-    const countryCode = data.country_code;
-    
-    // Mappe les codes pays aux codes langue
-    const countryToLanguage = {
-      'FR': 'fr',
-      'ES': 'es',
-      'DE': 'de',
-      'IT': 'it',
-      'PT': 'pt',
-      'BE': 'fr', // Belgique -> français
-      'CH': 'fr', // Suisse -> français
-      'CA': 'en', // Canada -> anglais
-      'US': 'en',
-      'GB': 'en',
-      'AU': 'en',
-      'NZ': 'en',
-      'IE': 'en',
-    };
-
-    const detectedLanguage = countryToLanguage[countryCode] || DEFAULT_LANGUAGE;
+    // Utiliser navigator.language au lieu d'un appel API
+    const browserLang = navigator.language || navigator.userLanguage || DEFAULT_LANGUAGE;
+    const langCode = browserLang.split('-')[0].toLowerCase();
     
     // Vérifie que la langue détectée est supportée
-    if (SUPPORTED_LANGUAGES.includes(detectedLanguage)) {
-      return detectedLanguage;
+    if (SUPPORTED_LANGUAGES.includes(langCode)) {
+      return langCode;
     }
     
     return DEFAULT_LANGUAGE;
   } catch (error) {
-    console.warn('Error detecting language from IP:', error);
+    console.warn('Error detecting language:', error);
     return DEFAULT_LANGUAGE;
   }
 };

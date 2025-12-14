@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, lazy, Suspense, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
@@ -62,11 +62,12 @@ const IconArrowRight = memo(() => (
   </svg>
 ));
 
-const HowItWorks = lazy(() => import('../components/HowItWorks'));
-const Testimonial = lazy(() => import('../components/Testimonial'));
-const FAQ = lazy(() => import('../components/FAQ'));
-const MobileCTA = lazy(() => import('../components/MobileCTA'));
-const ChatCTA = lazy(() => import('../components/ChatCTA'));
+// Import direct pour éviter le CLS causé par les Suspense fallbacks
+import HowItWorks from '../components/HowItWorks';
+import Testimonial from '../components/Testimonial';
+import FAQ from '../components/FAQ';
+import MobileCTA from '../components/MobileCTA';
+import ChatCTA from '../components/ChatCTA';
 
 // Other Services Section Component - memoized pour éviter re-renders
 const OtherServicesSection = memo(({ currentServiceId }) => {
@@ -136,49 +137,7 @@ const OtherServicesSection = memo(({ currentServiceId }) => {
   );
 });
 
-// Rend les sections non critiques uniquement lorsqu'elles approchent du viewport
-// Optimisé avec content-visibility pour le rendering
-const LazySection = memo(({ children, minHeight = 200, rootMargin = '200px 0px' }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    if (isVisible) return;
-    const target = sectionRef.current;
-    if (!target) return;
-
-    if (!('IntersectionObserver' in window)) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin, threshold: 0 }
-    );
-
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [isVisible, rootMargin]);
-
-  return (
-    <div 
-      ref={sectionRef} 
-      style={{ 
-        minHeight: !isVisible ? minHeight : undefined,
-        contentVisibility: !isVisible ? 'auto' : undefined,
-        containIntrinsicSize: !isVisible ? `0 ${minHeight}px` : undefined
-      }}
-    >
-      {isVisible ? children : null}
-    </div>
-  );
-});
+// SUPPRIMÉ: LazySection causait du CLS - composants chargés directement maintenant
 
 // Composant mémorisé pour le contenu "What is" - extrait la logique lourde
 const WhatIsContent = memo(({ service, t }) => {
@@ -537,36 +496,20 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Chat CTA Section - hauteur fixe pour éviter CLS */}
-      <div style={{ minHeight: '200px', contain: 'layout' }}>
-        <LazySection minHeight={200}>
-          <Suspense fallback={<div style={{ height: '200px' }} />}>
-            <ChatCTA />
-          </Suspense>
-        </LazySection>
-      </div>
+      {/* Chat CTA Section */}
+      <ChatCTA />
 
       {/* Testimonial Section */}
-      <div style={{ minHeight: '400px', contain: 'layout' }}>
-        <LazySection minHeight={400}>
-          <Suspense fallback={<div style={{ height: '400px' }} />}>
-            <Testimonial />
-          </Suspense>
-        </LazySection>
-      </div>
+      <Testimonial />
 
-      {/* How It Works Section - PAS dans LazySection car c'est une cible de navigation */}
-      <Suspense fallback={<div style={{ height: '600px' }} />}>
-        <HowItWorks />
-      </Suspense>
+      {/* How It Works Section */}
+      <HowItWorks />
 
-      {/* Other Services Section - PAS dans LazySection car c'est une cible de navigation */}
+      {/* Other Services Section */}
       <OtherServicesSection currentServiceId={service.service_id} />
 
-      {/* FAQ Section - PAS dans LazySection car c'est une cible de navigation */}
-      <Suspense fallback={<div style={{ height: '500px' }} />}>
-        <FAQ />
-      </Suspense>
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Back to Services */}
       <section className="px-[30px] py-12">
@@ -578,10 +521,8 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* Mobile CTA - PAS dans LazySection car c'est fixed (ne prend pas d'espace) */}
-      <Suspense fallback={null}>
-        <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
-      </Suspense>
+      {/* Mobile CTA */}
+      <MobileCTA ctaText={service.cta || t('nav.notarizeNow')} price={service.base_price} serviceId={service?.service_id || serviceId} />
     </div>
   );
 };
