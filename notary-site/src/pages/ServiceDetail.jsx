@@ -606,14 +606,10 @@ const ServiceDetail = () => {
         </LazySection>
       </div>
 
-      {/* How It Works Section */}
-      <div style={{ minHeight: '600px', contain: 'layout' }}>
-        <LazySection minHeight={600}>
-          <Suspense fallback={<div style={{ height: '600px' }} />}>
-            <HowItWorks />
-          </Suspense>
-        </LazySection>
-      </div>
+      {/* How It Works Section - PAS dans LazySection car c'est une cible de navigation */}
+      <Suspense fallback={<div style={{ height: '600px' }} />}>
+        <HowItWorks />
+      </Suspense>
 
       {/* Other Services Section */}
       <div style={{ minHeight: '500px', contain: 'layout' }}>
@@ -622,14 +618,10 @@ const ServiceDetail = () => {
         </LazySection>
       </div>
 
-      {/* FAQ Section */}
-      <div style={{ minHeight: '500px', contain: 'layout' }}>
-        <LazySection minHeight={500}>
-          <Suspense fallback={<div style={{ height: '500px' }} />}>
-            <FAQ />
-          </Suspense>
-        </LazySection>
-      </div>
+      {/* FAQ Section - PAS dans LazySection car c'est une cible de navigation */}
+      <Suspense fallback={<div style={{ height: '500px' }} />}>
+        <FAQ />
+      </Suspense>
 
       {/* Back to Services */}
       <section className="px-[30px] py-12">
