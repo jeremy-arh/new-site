@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react';
+import { memo } from 'react';
 import { trackCTAClick as trackPlausibleCTAClick } from '../utils/plausible';
 import { trackCTAClick } from '../utils/analytics';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -30,43 +30,26 @@ const IconOpenNew = memo(() => (
 // Image Hero
 const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/quality=20,format=webp';
 
-// Hook optimisé avec matchMedia
-const useIsMobile = (breakpoint = 1150) => {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(`(max-width: ${breakpoint}px)`).matches;
-  });
-
-  useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
-    const handler = (e) => setIsMobile(e.matches);
-    if (mq.addEventListener) {
-      mq.addEventListener('change', handler);
-      return () => mq.removeEventListener('change', handler);
-    }
-    mq.addListener(handler);
-    return () => mq.removeListener(handler);
-  }, [breakpoint]);
-
-  return isMobile;
-};
+// SUPPRIMÉ: useIsMobile causait un CLS énorme - utiliser uniquement CSS responsive
 
 const Hero = memo(() => {
   const { currency } = useCurrency();
   const { t } = useTranslation();
-  const isMobile = useIsMobile(1150);
 
   return (
-    <section className={isMobile ? '' : 'px-5 pt-[90px]'} data-hero>
+    <section className="lg:px-5 lg:pt-[90px]" data-hero>
       {/* Hero Block with Background Image - LCP Element */}
       <div
-        className={`relative ${isMobile ? '' : 'rounded-3xl'} overflow-hidden ${isMobile ? 'min-h-screen' : 'min-h-0 h-[calc(100vh-110px)]'} flex items-center`}
+        className="relative lg:rounded-3xl overflow-hidden min-h-screen lg:min-h-0 lg:h-[calc(100vh-110px)] flex items-center"
       >
         {/* Image Hero avec fetchpriority high pour LCP */}
         <img
           src={HERO_IMG}
           alt=""
+          width="1920"
+          height="1080"
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ aspectRatio: '16/9' }}
           fetchpriority="high"
         />
 
@@ -76,17 +59,17 @@ const Hero = memo(() => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight`}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 lg:mb-6 leading-tight">
               {t('hero.title')}
             </h1>
 
-            <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl`}>
+            <p className="text-base sm:text-lg text-white/90 mb-6 lg:mb-8 leading-relaxed max-w-2xl">
               {t('hero.subtitle')}
             </p>
 
             <a 
               href={getFormUrl(currency)} 
-              className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 ${isMobile ? 'mb-8' : 'mb-12'} text-white bg-blue-600 hover:bg-blue-700`}
+              className="primary-cta text-base lg:text-lg inline-flex items-center gap-2 mb-8 lg:mb-12 text-white bg-blue-600 hover:bg-blue-700"
               onClick={() => {
                 trackPlausibleCTAClick('hero', null, window.location.pathname, {
                   ctaText: t('nav.notarizeNow'),
@@ -100,21 +83,21 @@ const Hero = memo(() => {
               <span className="btn-text inline-block">{t('nav.notarizeNow')}</span>
             </a>
 
-            {/* Features */}
-            <div className={`flex ${isMobile ? 'flex-col items-start gap-3 mt-6' : 'flex-row items-center gap-8 mt-8'}`}>
+            {/* Features - CSS responsive uniquement */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-8 mt-6 lg:mt-8">
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconWorld />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature1')}</span>
               </div>
 
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconFlash />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature2')}</span>
               </div>
 
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconLock />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature3')}</span>
               </div>
             </div>
           </div>

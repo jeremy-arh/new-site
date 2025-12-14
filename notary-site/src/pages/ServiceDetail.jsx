@@ -227,49 +227,12 @@ const WhatIsContent = memo(({ service, t }) => {
   );
 });
 
-// Hook optimisé pour détecter mobile avec matchMedia
-// Utilise une initialisation différée pour éviter les forced layouts au chargement initial
-const useIsMobile = (breakpoint = 1150) => {
-  // Valeur par défaut: false (desktop) pour éviter le flash de contenu
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
-    
-    // Différer la lecture initiale pour ne pas bloquer le rendu
-    const initializeState = () => {
-      setIsMobile(mq.matches);
-    };
-    
-    // Utiliser requestIdleCallback pour la lecture initiale
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(initializeState, { timeout: 100 });
-    } else {
-      // Fallback: setTimeout court
-      setTimeout(initializeState, 0);
-    }
-    
-    const handler = (e) => setIsMobile(e.matches);
-    
-    // Modern API
-    if (mq.addEventListener) {
-      mq.addEventListener('change', handler);
-      return () => mq.removeEventListener('change', handler);
-    }
-    // Fallback for older browsers
-    mq.addListener(handler);
-    return () => mq.removeListener(handler);
-  }, [breakpoint]);
-
-  return isMobile;
-};
+// SUPPRIMÉ: useIsMobile causait un CLS énorme car il changeait après le rendu initial
+// Utiliser uniquement des classes CSS responsive Tailwind à la place
 
 const ServiceDetail = () => {
   const { serviceId: rawServiceId } = useParams();
   const location = useLocation();
-  const isMobile = useIsMobile(1150);
   const { formatPrice, currency } = useCurrency();
   const [ctaPrice, setCtaPrice] = useState('');
   const { t } = useTranslation();
@@ -364,18 +327,18 @@ const ServiceDetail = () => {
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 py-16 w-full">
           <div className="max-w-3xl">
-            <h1 className={`text-4xl sm:text-5xl lg:text-6xl text-white ${isMobile ? 'mb-4' : 'mb-6'} leading-tight`}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 lg:mb-6 leading-tight">
               {service.page_h1 || service.name}
             </h1>
 
-            <p className={`text-base sm:text-lg text-white/90 ${isMobile ? 'mb-6' : 'mb-8'} leading-relaxed max-w-2xl`}>
+            <p className="text-base sm:text-lg text-white/90 mb-6 lg:mb-8 leading-relaxed max-w-2xl">
               {service.short_description || service.description}
             </p>
 
-            <div className={`flex flex-row flex-wrap items-center gap-3 ${isMobile ? 'mb-8' : 'mb-12'}`}>
+            <div className="flex flex-row flex-wrap items-center gap-3 mb-8 lg:mb-12">
               <a 
                 href={getFormUrl(currency, service?.service_id || serviceId)} 
-                className={`primary-cta ${isMobile ? 'text-base' : 'text-lg'} inline-flex items-center gap-2 text-white flex-shrink-0 bg-blue-600 hover:bg-blue-700`}
+                className="primary-cta text-base lg:text-lg inline-flex items-center gap-2 text-white flex-shrink-0 bg-blue-600 hover:bg-blue-700"
                 onClick={() => {
                   const ctaCopy = service.cta || t('nav.notarizeNow');
                   const destination = getFormUrl(currency, service?.service_id || serviceId);
@@ -401,21 +364,21 @@ const ServiceDetail = () => {
               )}
             </div>
 
-            {/* Features */}
-            <div className={`flex ${isMobile ? 'flex-col items-start gap-3 mt-6' : 'flex-row items-center gap-8 mt-8'}`}>
+            {/* Features - CSS responsive uniquement, pas de JS */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-8 mt-6 lg:mt-8">
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconWorld />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature1')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature1')}</span>
               </div>
 
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconFlash />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature2')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature2')}</span>
               </div>
 
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <IconLock />
-                <span className={`text-white font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{t('hero.feature3')}</span>
+                <span className="text-white font-medium text-sm lg:text-base">{t('hero.feature3')}</span>
               </div>
             </div>
           </div>
