@@ -1,8 +1,11 @@
-import { useState, useEffect, memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 
-// Posts par défaut statiques - ANTI-CLS: jamais de changement de hauteur
+// IMPORT STATIQUE - Les données sont dans le bundle, ZERO fetch !
+import blogIndexData from '../../public/data/blog-index.json';
+
+// Posts par défaut si le fichier est vide
 const DEFAULT_POSTS = [
   { slug: 'placeholder-1', title: '—' },
   { slug: 'placeholder-2', title: '—' },
@@ -11,26 +14,13 @@ const DEFAULT_POSTS = [
 
 const Footer = memo(() => {
   const { t } = useTranslation();
-  const [recentPosts, setRecentPosts] = useState(DEFAULT_POSTS);
-
-  // Charger les posts depuis les données prebuild (pas de requête Supabase)
-  useEffect(() => {
-    const loadRecentPosts = async () => {
-      try {
-        const response = await fetch('/data/blog-index.json');
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.length > 0) {
-            // Prendre seulement les 3 premiers posts
-            setRecentPosts(data.slice(0, 3));
-          }
-        }
-      } catch (error) {
-        // Silencieux - garder les posts par défaut
-        console.warn('Footer: using default posts');
-      }
-    };
-    loadRecentPosts();
+  
+  // useMemo synchrone - ZERO CLS !
+  const recentPosts = useMemo(() => {
+    if (blogIndexData && blogIndexData.length > 0) {
+      return blogIndexData.slice(0, 3);
+    }
+    return DEFAULT_POSTS;
   }, []);
 
   return (
