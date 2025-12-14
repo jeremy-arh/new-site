@@ -14,7 +14,7 @@ import { formatServiceForLanguage, formatServicesForLanguage, getServiceFields }
 import PriceDisplay from '../components/PriceDisplay';
 
 // Image Hero
-const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/public';
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/763a76aa-aa08-47d4-436f-ca7bea56e900/quality=20,format=webp';
 
 // SVG Icons inline pour éviter les requêtes réseau d'@iconify
 const IconWorld = memo(() => (
@@ -79,31 +79,16 @@ const OtherServicesSection = memo(({ currentServiceId }) => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        let data;
+        const { data, error } = await supabase
+          .from('services')
+          .select(getServiceFields())
+          .eq('is_active', true)
+          .eq('show_in_list', true)
+          .neq('service_id', currentServiceId)
+          .order('created_at', { ascending: true })
+          .limit(6);
 
-        if (import.meta.env.PROD) {
-          // Production: JSON pré-généré
-          const response = await fetch('/data/services.json');
-          if (response.ok) {
-            const allServices = await response.json();
-            data = allServices
-              .filter(s => s.show_in_list && s.service_id !== currentServiceId)
-              .slice(0, 6);
-          }
-        } else {
-          // Développement: Supabase direct
-          const { data: supabaseData, error } = await supabase
-            .from('services')
-            .select(getServiceFields())
-            .eq('is_active', true)
-            .eq('show_in_list', true)
-            .neq('service_id', currentServiceId)
-            .order('created_at', { ascending: true })
-            .limit(6);
-
-          if (error) throw error;
-          data = supabaseData;
-        }
+        if (error) throw error;
         
         const formattedServices = formatServicesForLanguage(data || [], language);
         setServices(formattedServices);
@@ -327,49 +312,39 @@ const ServiceDetail = () => {
     }
 
     try {
-      let serviceData;
+      // Toujours charger depuis la DB pour avoir les dernières traductions
+      // Le cache peut contenir des données obsolètes sans les traductions
+      // Utiliser getServiceFields() pour s'assurer que tous les champs multilingues sont chargés
+      const { data, error } = await supabase
+        .from('services')
+        .select(getServiceFields())
+        .eq('service_id', serviceId)
+        .eq('is_active', true)
+        .single();
 
-      // En production: charger depuis JSON statique (instantané, pas d'appel réseau)
-      // En développement: charger depuis Supabase (données fraîches)
-      if (import.meta.env.PROD) {
-        // Production: JSON pré-généré au build
-        const response = await fetch(`/data/service-${serviceId}.json`);
-        if (!response.ok) {
-          // Fallback: essayer le fichier complet
-          const allResponse = await fetch('/data/services.json');
-          if (allResponse.ok) {
-            const allServices = await allResponse.json();
-            serviceData = allServices.find(s => s.service_id === serviceId);
-          }
-        } else {
-          serviceData = await response.json();
-        }
-      } else {
-        // Développement: Supabase direct
-        const { data, error } = await supabase
-          .from('services')
-          .select(getServiceFields())
-          .eq('service_id', serviceId)
-          .eq('is_active', true)
-          .single();
+      if (error) throw error;
 
-        if (error) throw error;
-        serviceData = data;
-      }
-
-      if (!serviceData) {
+      if (!data) {
         setError(t('common.error'));
         return;
       }
 
-      // Formater le service selon la langue actuelle
+      const serviceData = data;
+
+      // Toujours formater le service selon la langue actuelle (même s'il vient du cache)
       const formattedService = formatServiceForLanguage(serviceData, language);
       
-      // Debug en développement
-      if (import.meta.env.DEV) {
+      // Debug: vérifier la langue et les données
+      if (process.env.NODE_ENV === 'development') {
         console.log('[ServiceDetail] Language:', language);
-        console.log('[ServiceDetail] Mode:', import.meta.env.PROD ? 'PROD (JSON)' : 'DEV (Supabase)');
+        console.log('[ServiceDetail] Service data keys:', Object.keys(serviceData));
         console.log('[ServiceDetail] Formatted service name:', formattedService.name);
+        console.log('[ServiceDetail] French name available:', serviceData.name_fr);
+        console.log('[ServiceDetail] All multilingual fields:', {
+          name_fr: serviceData.name_fr,
+          description_fr: serviceData.description_fr,
+          short_description_fr: serviceData.short_description_fr
+        });
       }
       
       setService(formattedService);
@@ -550,7 +525,7 @@ const ServiceDetail = () => {
             {/* Left Side - Image */}
             <div className="lg:w-2/5 flex items-center justify-center">
               <img
-                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/public"
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/ab3815ee-dd67-4351-09f2-f661ee7d1000/quality=20,format=webp"
                 alt={service.name}
                 className="w-full h-auto rounded-2xl object-cover"
                 loading="lazy"

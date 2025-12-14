@@ -82,33 +82,24 @@ const BlogPost = () => {
     // Check cache first (mais toujours formater selon la langue actuelle)
     let postData = cachedPost;
 
-    // Si pas en cache, charger depuis la DB ou JSON
+    // Si pas en cache, charger depuis la DB
     try {
       if (!postData) {
-        if (import.meta.env.PROD) {
-          // Production: JSON pré-généré
-          const response = await fetch('/data/blog-posts.json');
-          if (response.ok) {
-            const allPosts = await response.json();
-            postData = allPosts.find(p => p.slug === slug);
-          }
-        } else {
-          // Développement: Supabase direct
-          const { data, error } = await supabase
-            .from('blog_posts')
-            .select('*')
-            .eq('slug', slug)
-            .eq('status', 'published')
-            .single();
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('slug', slug)
+          .eq('status', 'published')
+          .single();
 
-          if (error) throw error;
-          postData = data;
-        }
+        if (error) throw error;
 
-        if (!postData) {
+        if (!data) {
           setError('Article not found');
           return;
         }
+
+        postData = data;
         
         // Mettre en cache les données originales (pas formatées)
         cache.set('blog_post', slug, postData, 5 * 60 * 1000);
@@ -121,7 +112,7 @@ const BlogPost = () => {
       // Track blog post view seulement si c'est un nouveau chargement (pas depuis le cache)
       if (!cachedPost) {
         trackBlogPostView(slug, formattedPost.title);
-        // Increment view count (toujours via Supabase, pas critique pour la perf)
+        // Increment view count
         supabase
           .from('blog_posts')
           .update({ views_count: (postData.views_count || 0) + 1 })
@@ -141,31 +132,18 @@ const BlogPost = () => {
     if (!slug) return;
     
     try {
-      let data;
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('status', 'published')
+        .neq('slug', slug) // Exclude current post
+        .order('published_at', { ascending: false })
+        .limit(3); // Get 3 latest articles
 
-      if (import.meta.env.PROD) {
-        // Production: JSON pré-généré
-        const response = await fetch('/data/blog-posts.json');
-        if (response.ok) {
-          const allPosts = await response.json();
-          data = allPosts.filter(p => p.slug !== slug).slice(0, 3);
-        }
-      } else {
-        // Développement: Supabase direct
-        const { data: supabaseData, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('status', 'published')
-          .neq('slug', slug)
-          .order('published_at', { ascending: false })
-          .limit(3);
-
-        if (error) {
-          console.error('Error fetching related posts:', error);
-          setRelatedPosts([]);
-          return;
-        }
-        data = supabaseData;
+      if (error) {
+        console.error('Error fetching related posts:', error);
+        setRelatedPosts([]);
+        return;
       }
       
       // Formater les articles selon la langue
@@ -353,7 +331,7 @@ const BlogPost = () => {
           <div 
             className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center shadow-2xl"
             style={{
-              backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d84aca7a-998a-4ff6-1862-7676557ab400/public)`,
+              backgroundImage: `url(https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d84aca7a-998a-4ff6-1862-7676557ab400/quality=20,format=webp)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'

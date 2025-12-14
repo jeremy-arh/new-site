@@ -28,7 +28,7 @@ const IconOpenNew = memo(() => (
 ));
 
 // Image Hero
-const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/public';
+const HERO_IMG = 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/d0f6bfc4-a8db-41e1-87e2-7c7e0b7a1c00/quality=20,format=webp';
 
 // Hook optimisé avec matchMedia
 const useIsMobile = (breakpoint = 1150) => {

@@ -14,28 +14,14 @@ const Footer = memo(() => {
 
   const fetchRecentPosts = useCallback(async () => {
     try {
-      let data;
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('slug, title')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(3);
 
-      if (import.meta.env.PROD) {
-        // Production: JSON pré-généré
-        const response = await fetch('/data/blog-index.json');
-        if (response.ok) {
-          const posts = await response.json();
-          data = posts.slice(0, 3).map(p => ({ slug: p.slug, title: p.title }));
-        }
-      } else {
-        // Développement: Supabase direct
-        const { data: supabaseData, error } = await supabase
-          .from('blog_posts')
-          .select('slug, title')
-          .eq('status', 'published')
-          .order('published_at', { ascending: false })
-          .limit(3);
-
-        if (error) throw error;
-        data = supabaseData;
-      }
-
+      if (error) throw error;
       if (data && data.length > 0) {
         setRecentPosts(data);
       }
@@ -56,7 +42,7 @@ const Footer = memo(() => {
           <div className="md:col-span-1">
             <a href="/" className="inline-block">
               <img
-                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public"
+                src="https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp"
                 alt="Logo"
                 width="120"
                 height="32"

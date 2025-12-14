@@ -27,12 +27,10 @@ const IconOpenNewLarge = memo(() => (
 const Navbar = memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  // Éviter window.innerWidth au rendu initial pour prévenir forced reflow
-  const [isMobile, setIsMobile] = useState(true); // Default mobile-first
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1150);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  // Éviter window.scrollY au rendu initial pour prévenir forced reflow
-  const [isAtTop, setIsAtTop] = useState(true); // Default at top
+  const [isAtTop, setIsAtTop] = useState(window.scrollY === 0);
   const [isHeroOutOfView, setIsHeroOutOfView] = useState(false);
   const [ctaText, setCtaText] = useState('');
   const [servicePrice, setServicePrice] = useState(null);
@@ -54,27 +52,26 @@ const Navbar = memo(() => {
   const isOnServicePage = isServicePage();
 
   const handleScroll = useCallback(() => {
-    // Utiliser requestAnimationFrame pour battre les lectures de layout
-    requestAnimationFrame(() => {
-      const currentScrollY = window.scrollY;
+    const currentScrollY = window.scrollY;
 
-      setIsScrolled(currentScrollY > 50);
-      setIsAtTop(currentScrollY === 0);
+    setIsScrolled(currentScrollY > 50);
+    setIsAtTop(currentScrollY === 0);
 
-      // Utiliser isMobile du state au lieu de window.innerWidth
-      if (isMobile) {
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          setIsHeaderVisible(false);
-        } else {
-          setIsHeaderVisible(true);
-        }
+    // Only apply hide/show logic on mobile
+    if (window.innerWidth < 1150) {
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setIsHeaderVisible(false);
       } else {
+        // Scrolling up
         setIsHeaderVisible(true);
       }
+    } else {
+      setIsHeaderVisible(true);
+    }
 
-      setLastScrollY(currentScrollY);
-    });
-  }, [lastScrollY, isMobile]);
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY]);
 
   const handleResize = useCallback(() => {
     setIsMobile(window.innerWidth < 1150);
@@ -88,22 +85,13 @@ const Navbar = memo(() => {
     setIsMenuOpen(false);
   }, []);
 
-  // Initialiser les valeurs après le montage pour éviter forced reflow
   useEffect(() => {
-    // Utiliser requestAnimationFrame pour éviter le forced reflow
-    requestAnimationFrame(() => {
-      setIsMobile(window.innerWidth < 1150);
-      setIsAtTop(window.scrollY === 0);
-      setIsScrolled(window.scrollY > 50);
-    });
+    // Vérifier l'état initial au chargement
+    setIsAtTop(window.scrollY === 0);
     
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [handleScroll, handleResize]);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   // Observer pour détecter quand le hero sort complètement de l'écran
   useEffect(() => {
@@ -285,10 +273,10 @@ const Navbar = memo(() => {
               <img
                 src={
                   isMobile && !isMenuOpen 
-                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public' 
+                    ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp' 
                     : (!isMobile && isAtTop && isOnServicePage)
-                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/public'
-                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/public'
+                      ? 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/b9d9d28f-0618-4a93-9210-8d9d18c3d200/quality=20,format=webp'
+                      : 'https://imagedelivery.net/l2xsuW0n52LVdJ7j0fQ5lA/e4a88604-ba5d-44a5-5fe8-a0a26c632d00/quality=20,format=webp'
                 }
                 alt="Logo"
                 className={`${isMobile ? 'h-6' : 'h-8'} w-auto`}
