@@ -411,14 +411,23 @@ const STEP_ANIMATION_STYLES = `
 }
 `;
 
+// Step icons for placeholder
+const STEP_ICONS = {
+  1: 'line-md:uploading-loop',
+  2: 'formkit:people',
+  3: 'mynaui:credit-card-check-solid',
+  4: 'hugeicons:identity-card',
+  5: 'stash:check-solid',
+};
+
 function StepAnimation({ step, isMobile }) {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const containerRef = useRef(null);
   const assetVersion = import.meta.env.VITE_ASSETS_VERSION || '1';
   const baseUrl = 'https://jlizwheftlnhoifbqeex.supabase.co/storage/v1/object/public/assets/how-it-work';
   const videoSrc = `${baseUrl}/step-${step}.mp4?v=${assetVersion}`;
-  const posterSvg = `${baseUrl}/step-${step}.svg?v=${assetVersion}`;
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -451,6 +460,16 @@ function StepAnimation({ step, isMobile }) {
     return () => observer.disconnect();
   }, []);
 
+  // Placeholder component when video isn't available
+  const Placeholder = () => (
+    <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center gap-3">
+      <div className="w-16 h-16 rounded-2xl bg-white shadow-lg flex items-center justify-center">
+        <Icon icon={STEP_ICONS[step] || 'mdi:play'} className="w-8 h-8 text-gray-400" />
+      </div>
+      <span className="text-sm text-gray-400 font-medium">Étape {step}</span>
+    </div>
+  );
+
   if (isMobile) {
     return (
       <div
@@ -459,28 +478,23 @@ function StepAnimation({ step, isMobile }) {
         ref={containerRef}
       >
         {shouldLoad && !videoError ? (
-          <video
-            key={videoSrc}
-            src={videoSrc}
-            poster={posterSvg}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-contain bg-black/5"
-            onError={() => setVideoError(true)}
-            onLoadedData={() => setVideoError(false)}
-          />
-        ) : (
-          <div className="w-full h-full bg-white flex items-center justify-center">
-            <img
-              src={posterSvg}
-              alt={`Illustration de l'étape ${step}`}
-              className="w-full h-full object-contain"
-              loading="lazy"
+          <>
+            <video
+              key={videoSrc}
+              src={videoSrc}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              className={`w-full h-full object-contain bg-black/5 ${videoLoaded ? 'block' : 'hidden'}`}
+              onError={() => setVideoError(true)}
+              onLoadedData={() => setVideoLoaded(true)}
             />
-          </div>
+            {!videoLoaded && <Placeholder />}
+          </>
+        ) : (
+          <Placeholder />
         )}
       </div>
     );
@@ -496,28 +510,23 @@ function StepAnimation({ step, isMobile }) {
       <div className="hiw-anim-body">
         <div className="hiw-anim-window" style={{ height: '100%' }}>
           {shouldLoad && !videoError ? (
-            <video
-              key={videoSrc}
-              src={videoSrc}
-              poster={posterSvg}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover rounded-xl"
-              onError={() => setVideoError(true)}
-              onLoadedData={() => setVideoError(false)}
-            />
-          ) : (
-            <div className="w-full h-full bg-white flex items-center justify-center">
-              <img
-                src={posterSvg}
-                alt={`Illustration de l'étape ${step}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
+            <>
+              <video
+                key={videoSrc}
+                src={videoSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                className={`w-full h-full object-cover rounded-xl ${videoLoaded ? 'block' : 'hidden'}`}
+                onError={() => setVideoError(true)}
+                onLoadedData={() => setVideoLoaded(true)}
               />
-            </div>
+              {!videoLoaded && <Placeholder />}
+            </>
+          ) : (
+            <Placeholder />
           )}
         </div>
       </div>
