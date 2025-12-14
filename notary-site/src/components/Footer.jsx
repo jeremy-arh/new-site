@@ -1,41 +1,46 @@
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { useTranslation } from '../hooks/useTranslation';
+
+// Posts par défaut statiques - ANTI-CLS: jamais de changement de hauteur
+const DEFAULT_POSTS = [
+  { slug: 'placeholder-1', title: '—' },
+  { slug: 'placeholder-2', title: '—' },
+  { slug: 'placeholder-3', title: '—' }
+];
 
 const Footer = memo(() => {
   const { t } = useTranslation();
-  // Posts statiques par défaut - jamais de changement de hauteur
-  const [recentPosts, setRecentPosts] = useState([
-    { slug: 'placeholder-1', title: '—' },
-    { slug: 'placeholder-2', title: '—' },
-    { slug: 'placeholder-3', title: '—' }
-  ]);
+  const [recentPosts, setRecentPosts] = useState(DEFAULT_POSTS);
 
-  const fetchRecentPosts = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('slug, title')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-        .limit(3);
-
-      if (error) throw error;
-      if (data && data.length > 0) {
-        setRecentPosts(data);
+  // Charger les posts depuis les données prebuild (pas de requête Supabase)
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        const response = await fetch('/data/blog-index.json');
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            // Prendre seulement les 3 premiers posts
+            setRecentPosts(data.slice(0, 3));
+          }
+        }
+      } catch (error) {
+        // Silencieux - garder les posts par défaut
+        console.warn('Footer: using default posts');
       }
-    } catch (error) {
-      console.error('Error fetching recent posts:', error);
-    }
+    };
+    loadRecentPosts();
   }, []);
 
-  useEffect(() => {
-    fetchRecentPosts();
-  }, [fetchRecentPosts]);
-
   return (
-    <footer className="bg-gray-900 text-white" style={{ contain: 'layout' }}>
+    <footer 
+      className="bg-gray-900 text-white" 
+      style={{ 
+        contain: 'layout style',
+        minHeight: '380px' // ANTI-CLS: hauteur minimum fixe
+      }}
+    >
       <div className="max-w-[1300px] mx-auto px-[30px] py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Logo */}

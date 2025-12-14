@@ -206,15 +206,63 @@ async function saveServices(services) {
   console.log('📋 Fichier manifest.json mis à jour');
 }
 
+async function fetchBlogPosts(supabaseUrl, supabaseAnonKey) {
+  console.log('📥 Récupération des blog posts pour le footer...');
+  
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('slug, title')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+    
+    console.log(`✅ ${(data || []).length} blog post(s) récupéré(s)`);
+    return data || [];
+  } catch (error) {
+    console.warn('⚠️  Erreur lors de la récupération des blog posts:', error.message);
+    return [];
+  }
+}
+
+async function saveBlogIndex(posts) {
+  const publicDataDir = path.join(__dirname, '..', 'public', 'data');
+  const blogIndexPath = path.join(publicDataDir, 'blog-index.json');
+  
+  fs.writeFileSync(blogIndexPath, JSON.stringify(posts, null, 2), 'utf-8');
+  console.log(`💾 Fichier blog-index.json sauvegardé (${posts.length} posts)`);
+}
+
 async function main() {
   console.log('\n🚀 Prebuild Services - Début\n');
   console.log('=' .repeat(50));
 
+  await loadEnv();
+
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ Variables d\'environnement manquantes');
+    console.log('⚠️  Utilisation des données existantes dans public/data/');
+    process.exit(0);
+  }
+
   try {
+    // 1. Récupérer et sauvegarder les services
     const services = await fetchServices();
-    
     if (services.length > 0) {
       await saveServices(services);
+    }
+
+    // 2. Récupérer et sauvegarder l'index des blog posts (pour le footer)
+    const blogPosts = await fetchBlogPosts(supabaseUrl, supabaseAnonKey);
+    if (blogPosts.length > 0) {
+      await saveBlogIndex(blogPosts);
     }
 
     console.log('=' .repeat(50));
