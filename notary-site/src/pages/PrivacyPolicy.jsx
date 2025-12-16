@@ -42,20 +42,19 @@ const PrivacyPolicy = () => {
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">1. INTRODUCTION</h2>
             <p className="text-gray-600 mb-6">
-              My Notary, SIRET 79116757000021 (hereinafter "we", "our", "My Notary"), places great importance on protecting your personal data and respecting your privacy.
+              My Notary (hereinafter "we", "our", "My Notary"), places great importance on protecting your personal data and respecting your privacy.
             </p>
             <p className="text-gray-600 mb-6">
               This Privacy Policy describes how we collect, use, store, and protect your personal data when you use our platform accessible via the website mynotary.io (hereinafter "the Platform").
             </p>
             <p className="text-gray-600 mb-6">
-              This policy complies with the General Data Protection Regulation (GDPR - Regulation EU 2016/679) and French Data Protection Act (Informatique et Libertés).
+              This policy complies with applicable data protection regulations, including the General Data Protection Regulation (GDPR - Regulation EU 2016/679) where relevant.
             </p>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">2. DATA CONTROLLER</h2>
             <p className="text-gray-600 mb-4">The data controller for your personal data is:</p>
             <div className="text-gray-600 mb-6 space-y-2">
               <p><strong>My Notary</strong></p>
-              <p>SIRET: 79116757000021</p>
               <p>Email: <a href="mailto:support@mynotary.io" className="text-black font-semibold hover:underline">support@mynotary.io</a></p>
             </div>
 
@@ -353,16 +352,8 @@ const PrivacyPolicy = () => {
 
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">7.10 Right to Lodge a Complaint</h3>
             <p className="text-gray-600 mb-4">
-              If you believe your rights are not being respected, you may lodge a complaint with the competent supervisory authority:
+              If you believe your rights are not being respected, you may lodge a complaint with the competent data protection authority in your place of habitual residence, your place of work, or the place of the alleged infringement.
             </p>
-            <div className="text-gray-600 mb-6 space-y-2">
-              <p><strong>CNIL (French Data Protection Authority)</strong></p>
-              <p>3 Place de Fontenoy</p>
-              <p>TSA 80715</p>
-              <p>75334 PARIS CEDEX 07</p>
-              <p>Phone: +33 1 53 73 22 22</p>
-              <p>Website: <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-black font-semibold hover:underline">https://www.cnil.fr</a></p>
-            </div>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">8. DATA SECURITY</h2>
             <p className="text-gray-600 mb-6">
@@ -540,7 +531,6 @@ const PrivacyPolicy = () => {
             </p>
             <div className="text-gray-600 mb-6 space-y-2">
               <p><strong>My Notary</strong></p>
-              <p>SIRET: 79116757000021</p>
               <p>Email: <a href="mailto:support@mynotary.io" className="text-black font-semibold hover:underline">support@mynotary.io</a></p>
             </div>
 

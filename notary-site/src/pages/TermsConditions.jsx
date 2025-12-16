@@ -195,35 +195,50 @@ const TermsConditions = () => {
               An invoice will be sent to you by email after each transaction.
             </p>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">8.4 Refunds</h3>
-            <p className="text-gray-600 mb-4">In case of cancellation by you:</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">8.4 Modifications and Cancellations</h3>
+            <p className="text-gray-600 mb-2">
+              <strong>Schedule changes:</strong>
+            </p>
+            <p className="text-gray-600 mb-4">
+              You may reschedule your appointment free of charge up to 24 hours before the scheduled time via your client area.
+            </p>
+            <p className="text-gray-600 mb-2">
+              <strong>Cancellation by the client:</strong>
+            </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li>More than 48 hours before appointment: full refund</li>
-              <li>Between 24 and 48 hours before: 50% refund</li>
-              <li>Less than 24 hours before: no refund</li>
+              <li>More than 48 hours before: credit valid for 12 months for a new appointment</li>
+              <li>Between 24 and 48 hours before: 50% credit valid for 6 months</li>
+              <li>Less than 24 hours before: no credit or refund</li>
             </ul>
+            <p className="text-gray-600 mb-2">
+              <strong>Exceptional refund:</strong>
+            </p>
             <p className="text-gray-600 mb-6">
-              In case of inability to complete the notarization for technical reasons attributable to My Notary or the notary, you will be fully refunded.
+              A full refund will be granted only if My Notary or the notary is unable to complete the notarization due to technical reasons attributable to us.
             </p>
 
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">9. CANCELLATION AND RESCHEDULING</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">9. RESCHEDULING AND CANCELLATION BY MY NOTARY</h2>
             
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">9.1 Cancellation by Client</h3>
-            <p className="text-gray-600 mb-6">
-              You may cancel or reschedule your appointment via your client area up to 24 hours before the scheduled time, subject to the refund conditions mentioned in Article 8.4.
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">9.1 Rescheduling of the Appointment</h3>
+            <p className="text-gray-600 mb-4">
+              We reserve the right to reschedule an appointment in the event of:
             </p>
-
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">9.2 Cancellation by My Notary or Notary</h3>
-            <p className="text-gray-600 mb-4">We reserve the right to cancel an appointment in case of:</p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
               <li>Force majeure</li>
-              <li>Notary unavailability</li>
+              <li>Unforeseen notary unavailability</li>
               <li>Major technical issues</li>
-              <li>Inappropriate or fraudulent documents</li>
+              <li>Inappropriate documents or suspicion of fraud</li>
             </ul>
-            <p className="text-gray-600 mb-6">
-              In this case, you will be fully refunded or offered a new appointment.
+            
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">9.2 In Case of Rescheduling</h3>
+            <p className="text-gray-600 mb-4">
+              In such cases, you will be offered the choice between:
             </p>
+            <ul className="list-disc pl-6 text-gray-600 mb-6 space-y-2">
+              <li>A new appointment at the earliest availability (priority in scheduling)</li>
+              <li>A credit valid for 12 months</li>
+              <li>A full refund (only upon explicit request)</li>
+            </ul>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">10. INTELLECTUAL PROPERTY</h2>
             
@@ -362,10 +377,10 @@ const TermsConditions = () => {
 
             <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-8">15.3 Applicable Law and Jurisdiction</h3>
             <p className="text-gray-600 mb-4">
-              These T&C are governed by French law.
+              These T&C are governed by the laws applicable in the relevant jurisdiction, without prejudice to mandatory consumer protection rules that may apply in your country of residence.
             </p>
             <p className="text-gray-600 mb-6">
-              In case of dispute, and failing amicable resolution, French courts shall have sole jurisdiction.
+              In case of dispute, and failing amicable resolution, the competent courts determined by applicable conflict-of-law and jurisdiction rules shall have authority.
             </p>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">16. MODIFICATION OF T&C</h2>
