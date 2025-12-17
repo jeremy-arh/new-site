@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import SEOHead from '../components/SEOHead';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatBlogPostsForLanguage, getLocalizedBlogValue } from '../utils/blog';
@@ -23,6 +23,7 @@ const Blog = () => {
 
   const fetchPosts = async () => {
     try {
+      const supabase = await getSupabase();
       let query = supabase
         .from('blog_posts')
         .select('*')
@@ -52,6 +53,7 @@ const Blog = () => {
 
   const fetchCategories = async () => {
     try {
+      const supabase = await getSupabase();
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')

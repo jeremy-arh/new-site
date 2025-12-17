@@ -286,7 +286,7 @@ const ServiceDetail = () => {
     }
   }, [service, serviceId]);
 
-  // Les données sont chargées de manière synchrone (prebuild), pas besoin de skeleton
+  // Les données sont chargées de manière synchrone (prebuild)
 
   if (error || !service) {
     return (

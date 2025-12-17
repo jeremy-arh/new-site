@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
 import { Icon } from '@iconify/react';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { cache } from '../utils/cache';
 import { trackBlogPostView } from '../utils/plausible';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -85,6 +85,7 @@ const BlogPost = () => {
     // Si pas en cache, charger depuis la DB
     try {
       if (!postData) {
+        const supabase = await getSupabase();
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
@@ -113,12 +114,14 @@ const BlogPost = () => {
       if (!cachedPost) {
         trackBlogPostView(slug, formattedPost.title);
         // Increment view count
-        supabase
-          .from('blog_posts')
-          .update({ views_count: (postData.views_count || 0) + 1 })
-          .eq('id', postData.id)
-        .then(() => {})
-        .catch((err) => console.error('Error updating view count:', err));
+        getSupabase().then((supabase) => {
+          supabase
+            .from('blog_posts')
+            .update({ views_count: (postData.views_count || 0) + 1 })
+            .eq('id', postData.id)
+          .then(() => {})
+          .catch((err) => console.error('Error updating view count:', err));
+        }).catch(() => {});
       }
     } catch (error) {
       console.error('Error fetching blog post:', error);
@@ -132,6 +135,7 @@ const BlogPost = () => {
     if (!slug) return;
     
     try {
+      const supabase = await getSupabase();
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')

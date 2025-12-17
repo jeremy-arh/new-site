@@ -70,11 +70,28 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'supabase': ['@supabase/supabase-js'],
-          'icons': ['@iconify/react'],
-          'helmet': ['react-helmet-async']
+        manualChunks: (id) => {
+          // Vendor chunks séparés pour optimiser le cache
+          if (id.includes('node_modules')) {
+            // React et React Router ensemble (souvent utilisés ensemble)
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor';
+            }
+            // Supabase seulement si importé directement (sinon lazy-loaded)
+            if (id.includes('@supabase/supabase-js')) {
+              return 'supabase';
+            }
+            // Iconify séparé (pas toujours nécessaire)
+            if (id.includes('@iconify')) {
+              return 'icons';
+            }
+            // React Helmet séparé
+            if (id.includes('react-helmet')) {
+              return 'helmet';
+            }
+            // Autres node_modules
+            return 'vendor';
+          }
         },
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',

@@ -2,9 +2,12 @@
  * Analytics Tracking for Supabase
  * Tracks user interactions, page views, scroll depth, and CTA clicks
  * Also sends events to GTM for Google Ads tracking
+ * 
+ * OPTIMISATION: Supabase est lazy-loaded pour ne pas impacter les performances
+ * des pages qui n'utilisent pas les analytics Supabase (comme ServiceDetail)
  */
 
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { getSharedVisitorId, syncVisitorId, generateUUID } from './sharedVisitorId';
 import { pushGTMEvent } from './gtm';
 
@@ -147,14 +150,21 @@ const getUTMParams = () => {
 
 // Generic event tracking function - ULTRA OPTIMISÉ pour ne JAMAIS bloquer
 // Utilise setTimeout pour être complètement non-bloquant
+// LAZY LOAD Supabase - ne charge le bundle que si vraiment nécessaire
 export const trackEvent = async (eventType, pagePath = null, metadata = {}) => {
-  if (typeof window === 'undefined' || !supabase) {
+  if (typeof window === 'undefined') {
     return;
   }
 
   // Exécuter de manière complètement asynchrone après le rendu
   setTimeout(async () => {
     try {
+      // Lazy load Supabase uniquement maintenant (ne bloque pas le rendu initial)
+      const supabase = await getSupabase().catch(() => null);
+      if (!supabase) {
+        return; // Si Supabase n'est pas disponible, ignorer silencieusement
+      }
+
       const visitorId = getVisitorId();
       const sessionId = getSessionId();
       const deviceInfo = getDeviceInfo();

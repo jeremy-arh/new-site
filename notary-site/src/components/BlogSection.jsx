@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatBlogPostsForLanguage } from '../utils/blog';
@@ -17,6 +17,7 @@ const BlogSection = () => {
 
   const fetchPosts = async () => {
     try {
+      const supabase = await getSupabase();
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
